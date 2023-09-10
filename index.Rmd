@@ -1,5 +1,5 @@
 --- 
-title: "Artifex - Spring 2023"
+title: "Artifex - Fall 2023"
 author: "David Reynolds"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
@@ -9,7 +9,64 @@ bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: openscapes/series
-description: "(Partial) course materials for Artifex, Fall 2022."
+description: "(Partial) course materials for Artifex, Spring 2023."
 ---
 
-# Hi
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+library(tidyverse)
+library(lubridate)
+library(quantmod)
+```
+
+
+# Kayak Data Analysis
+
+We are going to do some analysis on a dataset sent from Kayak. The prompts and data are from their data science recruiting process. To access the data, use the following code:
+
+```{r echo=TRUE, eval=FALSE}
+visits = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv")
+conversions = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv")
+channels = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/channel_descriptions.csv")
+```
+
+## Prompt 
+
+One of our team's goals is to accurately evaluate how successful our marketing campaigns are and to predict how successful future campaigns will be. In this assignment, we want you to explore how to evaluate one notion of success: conversion rate. Depending on the context, a conversion can mean different things, including a flight or hotel booking, a click on a specific part of our site, or an account sign up. Conversion rate in the first case could therefore be defined as completed flight bookings per user visit.
+You were given some datasets that contain a sanitized version of some of our logging data. Explore the datasets and work on the questions below. One of the CSVs contains data on daily user visits broken down by user location and marketing channel, and another contains data on conversions also broken down by user location and channel. You also have been given a file with a brief description of the channels.
+
+1. Do you see any interesting patterns in the data? For example, are there any seasonality trends in user visits? Do these seasonality trends differ between countries? Can you think of any potential explanations for any of the patterns/trends/differences you saw?
+
+2. Which channels have the best and worst conversion rates? What reasons can you think of to explain the differences? Do you see any major conversion differences for the same channel in different countries?
+
+3. Predict next month's (September 2015) aggregate conversion rates for each channel and country combination? How good are your predictions?
+
+
+```{r echo=F}
+visits = read.csv("data/visits.csv")
+conversions = read.csv("data/conversions.csv")
+channels = read.csv("data/channel_descriptions.csv")
+```
+
+
+```{r eval = F}
+visits$datestamp = ymd(visits$datestamp)
+head(visits)
+d2 = visits %>% group_by(datestamp, marketing_channel) %>% summarise(visits = sum(user_visits))
+
+ggplot(filter(d2, marketing_channel == "Display Ads"), aes(x = datestamp, y = visits, color = marketing_channel)) + 
+  geom_line()
+
+
+d3 = filter(d2, marketing_channel == "KAYAK Deals Email")
+acf(d3$visits)
+
+getSymbols("AAPL")
+head(AAPL)
+AAPL2 = AAPL['2021/2023']
+d = diff (AAPL2$AAPL.Adjusted) 
+acf(d$AAPL.Adjusted[-1])
+```
+
+
+
