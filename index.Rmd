@@ -15,7 +15,7 @@ description: "(Partial) course materials for Artifex, Spring 2023."
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
 library(tidyverse)
-library(lubridate)
+#library(lubridate)
 library(quantmod)
 ```
 
@@ -50,6 +50,23 @@ channels = read.csv("data/channel_descriptions.csv")
 
 
 ```{r eval = F}
+visits %>% group_by(country_code) %>% summarise(s = sum(user_visits), .groups = 'drop') %>% arrange(desc(s))
+visits %>% group_by(country_code, marketing_channel) %>% summarise(s = sum(user_visits), .groups = 'drop') 
+
+visits %>% group_by(country_code) %>% mutate(s = sum(user_visits)) %>% 
+  group_by(country_code, marketing_channel) %>% summarise(m = (sum(user_visits) / min(s)) * 100 ) %>% arrange(country_code,desc(m))
+
+visits %>% 
+  mutate(date = ymd(datestamp)) %>% 
+  mutate(day = wday(date, label = T)) %>% 
+  group_by(marketing_channel, day) %>% 
+  summarise(mean_v = mean(user_visits)) %>% 
+  ggplot(aes(day, mean_v)) + geom_col() + facet_wrap(~marketing_channel)
+
+```
+
+
+```{r eval=FALSE}
 visits$datestamp = ymd(visits$datestamp)
 head(visits)
 d2 = visits %>% group_by(datestamp, marketing_channel) %>% summarise(visits = sum(user_visits))
