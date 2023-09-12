@@ -35,7 +35,7 @@ channels = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/
 One of our team's goals is to accurately evaluate how successful our marketing campaigns are and to predict how successful future campaigns will be. In this assignment, we want you to explore how to evaluate one notion of success: conversion rate. Depending on the context, a conversion can mean different things, including a flight or hotel booking, a click on a specific part of our site, or an account sign up. Conversion rate in the first case could therefore be defined as completed flight bookings per user visit.
 You were given some datasets that contain a sanitized version of some of our logging data. Explore the datasets and work on the questions below. One of the CSVs contains data on daily user visits broken down by user location and marketing channel, and another contains data on conversions also broken down by user location and channel. You also have been given a file with a brief description of the channels.
 
-1. Do you see any interesting patterns in the data? For example, are there any seasonality trends in user visits? Do these seasonality trends differ between countries? Can you think of any potential explanations for any of the patterns/trends/differences you saw?
+1. Do you see any interesting patterns in the data? For example, are there any seasonality trends in user visits or conversion rates (conversions/visits)? Do these seasonality trends differ between countries or channel? Can you think of any potential explanations for any of the patterns/trends/differences you saw?
 
 2. Which channels have the best and worst conversion rates? What reasons can you think of to explain the differences? Do you see any major conversion differences for the same channel in different countries?
 
@@ -67,6 +67,16 @@ visits %>%
 
 
 ```{r eval=FALSE}
+v2 = visits %>% 
+  group_by(datestamp) %>% 
+  summarise(s = sum(user_visits)) %>% 
+  mutate(date = ymd(datestamp)) %>%
+  mutate(day = factor(wday(date, label = T), ordered = F)) %>% 
+  mutate(mon = factor(month(date)))
+                                                
+m0 = lm(s ~ day, data = v2)
+m1 = lm(s ~ day * mon, data = v2)
+
 visits$datestamp = ymd(visits$datestamp)
 head(visits)
 d2 = visits %>% group_by(datestamp, marketing_channel) %>% summarise(visits = sum(user_visits))
@@ -84,6 +94,25 @@ AAPL2 = AAPL['2021/2023']
 d = diff (AAPL2$AAPL.Adjusted) 
 acf(d$AAPL.Adjusted[-1])
 ```
+
+
+```{r eval=FALSE}
+
+t1= arima.sim(n = 63, list(ar = c(0.8897, -0.4858), ma = c(-0.2279, 0.2488)),sd = sqrt(0.1796))
+plot(t1)
+
+set.seed(1)
+seq = rnorm(100)
+(acf(seq, type = "partial"))
+(acf(seq, type = "correlation"))
+cor ( seq[1:99], seq[2:100] )
+
+# residuals from first lag 1
+r1 = residuals( lm(seq[1:99] ~ seq[2:100] ))
+r2 = residuals(lm (seq[3:100] ~ seq[2:99] ))
+cor(r1[1:98], r2)
+```
+
 
 
 
