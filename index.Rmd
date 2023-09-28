@@ -21,6 +21,9 @@ library(quantmod)
 
 # Regression Revisited
 
+
+
+
 # Kayak Data Analysis
 
 We are going to do some analysis on a dataset sent from Kayak. The prompts and data are from their data science recruiting process. To access the data, use the following code:
