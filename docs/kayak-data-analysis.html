@@ -138,7 +138,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">Artifex Fall 2023</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Regression Revisited</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Linear Regression Revisited</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#assignment-2"><i class="fa fa-check"></i><b>1.1</b> Assignment 2</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="kayak-data-analysis.html"><a href="kayak-data-analysis.html"><i class="fa fa-check"></i><b>2</b> Kayak Data Analysis</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="kayak-data-analysis.html"><a href="kayak-data-analysis.html#prompt"><i class="fa fa-check"></i><b>2.1</b> Prompt</a></li>
@@ -163,9 +166,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="kayak-data-analysis" class="section level1 hasAnchor" number="2">
 <h1><span class="header-section-number">Chapter 2</span> Kayak Data Analysis<a href="kayak-data-analysis.html#kayak-data-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>We are going to do some analysis on a dataset sent from Kayak. The prompts and data are from their data science recruiting process. To access the data, use the following code:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="kayak-data-analysis.html#cb1-1" aria-hidden="true" tabindex="-1"></a>visits <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv&quot;</span>)</span>
-<span id="cb1-2"><a href="kayak-data-analysis.html#cb1-2" aria-hidden="true" tabindex="-1"></a>conversions <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv&quot;</span>)</span>
-<span id="cb1-3"><a href="kayak-data-analysis.html#cb1-3" aria-hidden="true" tabindex="-1"></a>channels <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/channel_descriptions.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="kayak-data-analysis.html#cb2-1" aria-hidden="true" tabindex="-1"></a>visits <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv&quot;</span>)</span>
+<span id="cb2-2"><a href="kayak-data-analysis.html#cb2-2" aria-hidden="true" tabindex="-1"></a>conversions <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv&quot;</span>)</span>
+<span id="cb2-3"><a href="kayak-data-analysis.html#cb2-3" aria-hidden="true" tabindex="-1"></a>channels <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/channel_descriptions.csv&quot;</span>)</span></code></pre></div>
 <div id="prompt" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> Prompt<a href="kayak-data-analysis.html#prompt" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>One of our team’s goals is to accurately evaluate how successful our marketing campaigns are and to predict how successful future campaigns will be. In this assignment, we want you to explore how to evaluate one notion of success: conversion rate. Depending on the context, a conversion can mean different things, including a flight or hotel booking, a click on a specific part of our site, or an account sign up. Conversion rate in the first case could therefore be defined as completed flight bookings per user visit.

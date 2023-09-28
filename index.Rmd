@@ -16,11 +16,60 @@ description: "(Partial) course materials for Artifex, Spring 2023."
 knitr::opts_chunk$set(echo = F)
 library(tidyverse)
 library(quantmod)
+library(broom) # for the 'tidy' function
 ```
 
 
-# Regression Revisited
+# Linear Regression Revisited
 
+Let's investigate the relationship between home prices and mortgage rates. To start, let's use data from the <code>quantmod</code> package and look at the relationship between these two variables from 2000 to 2004.
+
+
+```{r echo=TRUE}
+# https://fred.stlouisfed.org/
+pr = getSymbols('MORTGAGE30US',src='FRED', warnings = F) # 30-Year Fixed Rate Mortgage Average
+home = getSymbols('CSUSHPINSA', src = 'FRED') # S&P/Case-Shiller U.S. National Home Price Index
+
+
+# clean up dataset
+mort = tidy(MORTGAGE30US) %>% # tidy is from the broom pkg - coerces xts object to a data frame
+  mutate(date = ymd(index)) %>% # coerce the index to be a date
+  filter(year(date) >= 2000, year(date) <= 2004) %>% # date range
+  mutate(mo_year = ymd ( str_c (year(date), "-", month(date), "-", 01 )) ) %>% # make a new date so we can group by month/year 
+  group_by(mo_year) %>% 
+  summarise(val = mean(value)) %>% 
+  filter(mo_year < "2023-08-01")
+
+
+home_pr = tidy(CSUSHPINSA) %>% 
+  mutate(date = ymd(index)) %>% 
+  filter(year(date) >= 2000, year(date) <= 2004)
+
+combined_dat = data.frame(mort = mort$val, pr = home_pr$value, date = home_pr$date)
+
+ggplot(combined_dat, aes( mort, pr, color = as.factor( year(date) ) ) ) + 
+  geom_point() + 
+  theme_minimal() + 
+  ggtitle("Case Shiller Index (y) and Avg. Mortgage Rates (x)") + 
+  xlab("30-Year Fixed Rate Mortgage Average") + 
+  ylab("S&P/Case-Shiller U.S. National Home Price Index")
+```
+
+How would you describe this relationship? Based on the relationship, do you think a simple linear regression model is appropriate for these data?
+
+## Assignment 2
+
+1. Fit a linear regression model to these two variables and write out the model equation.
+
+2. Make a histogram of the residuals from this model and comment on how they correspond with the assumption of normal residuals.
+
+3. Plot the residuals over time. What do you see?
+
+4. Based on the residuals over time (plot from question 3), is there any additional variable you could add to the model to improve fit? If so, add this variable as a covariate to the linear regression and compare the fit of the augmented model with the one you fit in question 1.
+
+5. Currently, the 30-Year Fixed Rate Mortgage Average is around 8%. What does the model predict for the Case-Shiller Index? The current value of the Case-Shiller Index is 305. What is the residual?
+
+6. Now, using a scatterplot, check the relationship between these two variables for a more recent time frame (such as the last 10 years). Do you see the same relationship? Color code observations by year. 
 
 
 
