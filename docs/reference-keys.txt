@@ -1,3 +1,6 @@
+topics-in-time-series
+autocorrelation
+assignment-3
 linear-regression-revisited
 assignment-2
 kayak-data-analysis

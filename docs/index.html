@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2023-09-28" />
+<meta name="date" content="2023-10-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 
-<link rel="next" href="kayak-data-analysis.html"/>
+<link rel="next" href="linear-regression-revisited.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -138,13 +138,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">Artifex Fall 2023</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Linear Regression Revisited</a>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Topics in Time Series</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#assignment-2"><i class="fa fa-check"></i><b>1.1</b> Assignment 2</a></li>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#autocorrelation"><i class="fa fa-check"></i><b>1.1</b> Autocorrelation</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#assignment-3"><i class="fa fa-check"></i><b>1.2</b> Assignment 3</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="kayak-data-analysis.html"><a href="kayak-data-analysis.html"><i class="fa fa-check"></i><b>2</b> Kayak Data Analysis</a>
+<li class="chapter" data-level="2" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html"><i class="fa fa-check"></i><b>2</b> Linear Regression Revisited</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="kayak-data-analysis.html"><a href="kayak-data-analysis.html#prompt"><i class="fa fa-check"></i><b>2.1</b> Prompt</a></li>
+<li class="chapter" data-level="2.1" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html#assignment-2"><i class="fa fa-check"></i><b>2.1</b> Assignment 2</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="kayak-data-analysis.html"><a href="kayak-data-analysis.html"><i class="fa fa-check"></i><b>3</b> Kayak Data Analysis</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="kayak-data-analysis.html"><a href="kayak-data-analysis.html#prompt"><i class="fa fa-check"></i><b>3.1</b> Prompt</a></li>
 </ul></li>
 </ul>
 
@@ -166,49 +171,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Artifex - Fall 2023</h1>
 <p class="author"><em>David Reynolds</em></p>
-<p class="date"><em>2023-09-28</em></p>
+<p class="date"><em>2023-10-10</em></p>
 </div>
-<div id="linear-regression-revisited" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Linear Regression Revisited<a href="index.html#linear-regression-revisited" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Let’s investigate the relationship between home prices and mortgage rates. To start, let’s use data from the <code>quantmod</code> package and look at the relationship between these two variables from 2000 to 2004.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="index.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># https://fred.stlouisfed.org/</span></span>
-<span id="cb1-2"><a href="index.html#cb1-2" aria-hidden="true" tabindex="-1"></a>pr <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;MORTGAGE30US&#39;</span>,<span class="at">src=</span><span class="st">&#39;FRED&#39;</span>, <span class="at">warnings =</span> F) <span class="co"># 30-Year Fixed Rate Mortgage Average</span></span>
-<span id="cb1-3"><a href="index.html#cb1-3" aria-hidden="true" tabindex="-1"></a>home <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;CSUSHPINSA&#39;</span>, <span class="at">src =</span> <span class="st">&#39;FRED&#39;</span>) <span class="co"># S&amp;P/Case-Shiller U.S. National Home Price Index</span></span>
-<span id="cb1-4"><a href="index.html#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<div id="topics-in-time-series" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">Chapter 1</span> Topics in Time Series<a href="index.html#topics-in-time-series" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="autocorrelation" class="section level2 hasAnchor" number="1.1">
+<h2><span class="header-section-number">1.1</span> Autocorrelation<a href="index.html#autocorrelation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A central concept in time series analysis is autocorrelation. This is the correlation between <span class="math inline">\(y_t\)</span> and its lagged value. For a lag of <span class="math inline">\(h\)</span>, this is the correlation between <span class="math inline">\(y_t\)</span> and <span class="math inline">\(y_{t-h}\)</span>. Let’s first review correlation. For two vectors of data, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, the correlation between the two is,</p>
+<p><span class="math display">\[\begin{align}
+\text{cor}(x,y) &amp;= \frac{\text{cov}(x,y)}{\sigma_x \sigma_y} \\
+                &amp;= \frac{ \sum_i (x_i - \bar{x})(y_i - \bar{y})}{ \sqrt{ \sum_i (x_i - \bar{x})^2 \sum_i (y_i - \bar{y})^2 }}
+\end{align}\]</span></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="index.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb1-2"><a href="index.html#cb1-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">5</span></span>
+<span id="cb1-3"><a href="index.html#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb1-4"><a href="index.html#cb1-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">rnorm</span>(n)</span>
 <span id="cb1-5"><a href="index.html#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="index.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># clean up dataset</span></span>
-<span id="cb1-7"><a href="index.html#cb1-7" aria-hidden="true" tabindex="-1"></a>mort <span class="ot">=</span> <span class="fu">tidy</span>(MORTGAGE30US) <span class="sc">%&gt;%</span> <span class="co"># tidy is from the broom pkg - coerces xts object to a data frame</span></span>
-<span id="cb1-8"><a href="index.html#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">ymd</span>(index)) <span class="sc">%&gt;%</span> <span class="co"># coerce the index to be a date</span></span>
-<span id="cb1-9"><a href="index.html#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(date) <span class="sc">&gt;=</span> <span class="dv">2000</span>, <span class="fu">year</span>(date) <span class="sc">&lt;=</span> <span class="dv">2004</span>) <span class="sc">%&gt;%</span> <span class="co"># date range</span></span>
-<span id="cb1-10"><a href="index.html#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mo_year =</span> <span class="fu">ymd</span> ( <span class="fu">str_c</span> (<span class="fu">year</span>(date), <span class="st">&quot;-&quot;</span>, <span class="fu">month</span>(date), <span class="st">&quot;-&quot;</span>, <span class="dv">01</span> )) ) <span class="sc">%&gt;%</span> <span class="co"># make a new date so we can group by month/year </span></span>
-<span id="cb1-11"><a href="index.html#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(mo_year) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-12"><a href="index.html#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">val =</span> <span class="fu">mean</span>(value)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-13"><a href="index.html#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(mo_year <span class="sc">&lt;</span> <span class="st">&quot;2023-08-01&quot;</span>)</span>
-<span id="cb1-14"><a href="index.html#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="index.html#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="index.html#cb1-16" aria-hidden="true" tabindex="-1"></a>home_pr <span class="ot">=</span> <span class="fu">tidy</span>(CSUSHPINSA) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-17"><a href="index.html#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">ymd</span>(index)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-18"><a href="index.html#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(date) <span class="sc">&gt;=</span> <span class="dv">2000</span>, <span class="fu">year</span>(date) <span class="sc">&lt;=</span> <span class="dv">2004</span>)</span>
-<span id="cb1-19"><a href="index.html#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="index.html#cb1-20" aria-hidden="true" tabindex="-1"></a>combined_dat <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">mort =</span> mort<span class="sc">$</span>val, <span class="at">pr =</span> home_pr<span class="sc">$</span>value, <span class="at">date =</span> home_pr<span class="sc">$</span>date)</span>
-<span id="cb1-21"><a href="index.html#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="index.html#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined_dat, <span class="fu">aes</span>( mort, pr, <span class="at">color =</span> <span class="fu">as.factor</span>( <span class="fu">year</span>(date) ) ) ) <span class="sc">+</span> </span>
-<span id="cb1-23"><a href="index.html#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb1-24"><a href="index.html#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
-<span id="cb1-25"><a href="index.html#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Case Shiller Index (y) and Avg. Mortgage Rates (x)&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb1-26"><a href="index.html#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;30-Year Fixed Rate Mortgage Average&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb1-27"><a href="index.html#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;S&amp;P/Case-Shiller U.S. National Home Price Index&quot;</span>)</span></code></pre></div>
-<p><img src="series_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
-<p>How would you describe this relationship? Based on the relationship, do you think a simple linear regression model is appropriate for these data?</p>
-<div id="assignment-2" class="section level2 hasAnchor" number="1.1">
-<h2><span class="header-section-number">1.1</span> Assignment 2<a href="index.html#assignment-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<span id="cb1-6"><a href="index.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>( (x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">*</span> (y <span class="sc">-</span> <span class="fu">mean</span>(y))) <span class="sc">/</span> ( (n<span class="dv">-1</span>) <span class="sc">*</span> <span class="fu">sd</span>(x) <span class="sc">*</span> <span class="fu">sd</span>(y) )</span>
+<span id="cb1-7"><a href="index.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(x, y)</span></code></pre></div>
+<p>The autocorrelation applies this concept to a single time series. Autocorrelation is the correlation of a time series with a delayed copy of itself as a function of delay. The autocorrelation for a time series <span class="math inline">\(y\)</span> at lag <span class="math inline">\(k\)</span> is:</p>
+<p><span class="math display">\[\begin{equation}
+r_k = \frac{ \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y}) }{\sum_{t=1}^T (y_t - \bar{y})^2 }
+\end{equation}\]</span></p>
+<p>Here is a simple example of computing a lag 1 autocorrelation.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="index.html#cb2-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
+<span id="cb2-2"><a href="index.html#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="index.html#cb2-3" aria-hidden="true" tabindex="-1"></a>a1 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)</span>
+<span id="cb2-4"><a href="index.html#cb2-4" aria-hidden="true" tabindex="-1"></a>a2 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
+<span id="cb2-5"><a href="index.html#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="index.html#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># lag 1 autocorrelation</span></span>
+<span id="cb2-7"><a href="index.html#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>( (a1 <span class="sc">-</span> <span class="fu">mean</span>(a)) <span class="sc">*</span> (a2 <span class="sc">-</span> <span class="fu">mean</span>(a))) <span class="sc">/</span> (<span class="fu">sum</span>( (a <span class="sc">-</span> <span class="fu">mean</span>(a))<span class="sc">^</span><span class="dv">2</span> ) )  <span class="co"># by hand</span></span>
+<span id="cb2-8"><a href="index.html#cb2-8" aria-hidden="true" tabindex="-1"></a>(<span class="fu">acf</span>(a))</span></code></pre></div>
+</div>
+<div id="assignment-3" class="section level2 hasAnchor" number="1.2">
+<h2><span class="header-section-number">1.2</span> Assignment 3<a href="index.html#assignment-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li><p>Fit a linear regression model to these two variables and write out the model equation.</p></li>
-<li><p>Make a histogram of the residuals from this model and comment on how they correspond with the assumption of normal residuals.</p></li>
-<li><p>Plot the residuals over time. What do you see?</p></li>
-<li><p>Based on the residuals over time (plot from question 3), is there any additional variable you could add to the model to improve fit? If so, add this variable as a covariate to the linear regression and compare the fit of the augmented model with the one you fit in question 1.</p></li>
-<li><p>Currently, the 30-Year Fixed Rate Mortgage Average is around 8%. What does the model predict for the Case-Shiller Index? The current value of the Case-Shiller Index is 305. What is the residual?</p></li>
-<li><p>Now, using a scatterplot, check the relationship between these two variables for a more recent time frame (such as the last 10 years). Do you see the same relationship? Color code observations by year.</p></li>
+<li><p>Write a function in R that takes a vector and a lag value, <span class="math inline">\(k\)</span>, as arguments and outputs that autocorrelation of the vector with the lag <span class="math inline">\(k\)</span> copy of itself.</p></li>
+<li><p>Find an economic variable of interest and compute the lag 1 through lag 10 acf of the variable. Do the same thing after applying the <code>diff</code> function to your data. Compare your function’s output with that of <code>acf</code>. Describe the results of this analysis. What does it tell you, if anything, about the variable you chose.</p></li>
 </ol>
 </div>
 </div>
@@ -218,7 +217,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 
-<a href="kayak-data-analysis.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="linear-regression-revisited.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -272,6 +271,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

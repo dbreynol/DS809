@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2023-09-28" />
+<meta name="date" content="2023-10-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -138,13 +138,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">Artifex Fall 2023</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Linear Regression Revisited</a>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Topics in Time Series</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#assignment-2"><i class="fa fa-check"></i><b>1.1</b> Assignment 2</a></li>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#autocorrelation"><i class="fa fa-check"></i><b>1.1</b> Autocorrelation</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#assignment-3"><i class="fa fa-check"></i><b>1.2</b> Assignment 3</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="kayak-data-analysis.html"><a href="kayak-data-analysis.html"><i class="fa fa-check"></i><b>2</b> Kayak Data Analysis</a>
+<li class="chapter" data-level="2" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html"><i class="fa fa-check"></i><b>2</b> Linear Regression Revisited</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="kayak-data-analysis.html"><a href="kayak-data-analysis.html#prompt"><i class="fa fa-check"></i><b>2.1</b> Prompt</a></li>
+<li class="chapter" data-level="2.1" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html#assignment-2"><i class="fa fa-check"></i><b>2.1</b> Assignment 2</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="kayak-data-analysis.html"><a href="kayak-data-analysis.html"><i class="fa fa-check"></i><b>3</b> Kayak Data Analysis</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="kayak-data-analysis.html"><a href="kayak-data-analysis.html#prompt"><i class="fa fa-check"></i><b>3.1</b> Prompt</a></li>
 </ul></li>
 </ul>
 
@@ -229,6 +234,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
