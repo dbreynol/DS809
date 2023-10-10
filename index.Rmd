@@ -63,7 +63,9 @@ sum( (a1 - mean(a)) * (a2 - mean(a))) / (sum( (a - mean(a))^2 ) )  # by hand
 
 1. Write a function in R that takes a vector and a lag value, $k$, as arguments and outputs that autocorrelation of the vector with the lag $k$ copy of itself.
 
-2. Find an economic variable of interest and compute the lag 1 through lag 10 acf of the variable. Do the same thing after applying the <code>diff</code> function to your data. Compare your function's output with that of <code>acf</code>. Describe the results of this analysis. What does it tell you, if anything, about the variable you chose.
+2. Compute the lag 1 through 14 acf for the Kayak visits data (group by date to get total visits per day). What do you notice? Verify the results of your function using <code>acf</code>.
+
+3. Find an economic variable of interest and compute the lag 1 through lag 10 acf of the variable. Do the same thing after applying the <code>diff</code> function to your data. Describe the results of this analysis. What does it tell you, if anything, about the variable you chose?
 
 ```{r echo=FALSE, eval=FALSE}
 set.seed(1)

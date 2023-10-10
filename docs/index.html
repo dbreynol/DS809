@@ -207,7 +207,8 @@ r_k = \frac{ \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y}) }{\sum_{t=1
 <h2><span class="header-section-number">1.2</span> Assignment 3<a href="index.html#assignment-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
 <li><p>Write a function in R that takes a vector and a lag value, <span class="math inline">\(k\)</span>, as arguments and outputs that autocorrelation of the vector with the lag <span class="math inline">\(k\)</span> copy of itself.</p></li>
-<li><p>Find an economic variable of interest and compute the lag 1 through lag 10 acf of the variable. Do the same thing after applying the <code>diff</code> function to your data. Compare your function’s output with that of <code>acf</code>. Describe the results of this analysis. What does it tell you, if anything, about the variable you chose.</p></li>
+<li><p>Compute the lag 1 through 14 acf for the Kayak visits data (group by date to get total visits per day). What do you notice? Verify the results of your function using <code>acf</code>.</p></li>
+<li><p>Find an economic variable of interest and compute the lag 1 through lag 10 acf of the variable. Do the same thing after applying the <code>diff</code> function to your data. Describe the results of this analysis. What does it tell you, if anything, about the variable you chose?</p></li>
 </ol>
 </div>
 </div>
