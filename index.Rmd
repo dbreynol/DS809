@@ -84,31 +84,31 @@ sum( (s1 - mean(y)) * (s2 - mean(y)) ) / sum( (y-mean(y))^2 )
 
 ### CUSUM
 
-Consider the following time series $x_t$, for $t = 1, \ldots, 100$. Suppose you are an analyst at an industrial company and this is a data stream from some instrument that you expect to generate random noise around 0. If there is a shift in the mean of this process, that signals trouble. Looking at this data, do you think theres any shift?
+Consider the following time series $x_t$, for $t = 1, \ldots, T$, where $T=100$. Suppose you are an analyst at an industrial company and this is a data stream from some instrument that you expect to generate random noise around 0. If there is a shift in the mean of this process, that signals trouble. Looking at this data, do you think there is any shift?
 
-```{r}
+```{r echo=TRUE}
 set.seed(1)
 x1 = rnorm(75, 0, 0.5)
 x2 = rnorm(25, 0.25, 0.5)
 xt = c(x1, x2)
-
 plot(xt, type = "l")
-
 ```
 
-It is hard to say. One method to detect change points is CUSUM. To 
+It is hard to say. One method to detect change points is CUSUM. This method works by incorporating all of the information in the sequence in the form of a cumulative sum. To implement this method, first standardize the data. We can call the new time series $y$ where each element, $y_i$, can is a standardized version of the corresponding $x_i$:
+
 \begin{align}
 y_i = \frac{x_i - \mu_0}{\sigma}
 \end{align}
 
-Then, define two vectors, $C_i^+$ and $C_i^-$ whose first element is 0. Then, for $i \in (2,\ldots,T)$,
+Then, define two vectors, $C_i^+$ and $C_i^-$ whose first element is 0. That is, $C_1^+ = C_1^- = 0$.  For $i \in (2,\ldots,T)$,
 
 \begin{align}
 C_i^+ &= \text{max}(0, y_i - K + C_{i-1}^+) \\
 C_i^- &= \text{min}(0, y_i + K + C_{i-1}^-)
 \end{align}
 
-The parameter $K$ is typically defined as the shift in means that you hope to detect, $\delta  \sigma$, measured in standard deviations. This is implemented in the <code>qcc</code> package within the <code>cusum</code> function. 
+The parameter $K$ is typically defined as the shift in means that you hope to detect, $\delta  \sigma$, measured in standard deviations. This is implemented in the <code>qcc</code> package within the <code>cusum</code> function, where the parameter $\delta$ is controlled by <code>se.shift</code>.
+
 
 ```{r}
 mu_0 = 0
@@ -132,6 +132,10 @@ ob = cusum(xt, se.shift = shift_detect, center = mu_0,
 ```
 
 ## Assignment 4
+
+1. Write a function to generate vectors $C_i^+$ and $C_i^-$ for a given time series and $\delta = 1$.
+
+2. Use the function on simulated data. How does it perform? Compare with output from <code>cusum</code>. Show the plotted data to another team and ask them for an eyeball estimate of the changepoint. Who won: (wo)man or machine?
 
 # Linear Regression Revisited
 
