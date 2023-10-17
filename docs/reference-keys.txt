@@ -1,7 +1,12 @@
 topics-in-time-series
 autocorrelation
 assignment-3
+change-points
+cusum
+assignment-4
 linear-regression-revisited
+estimation
+example
 assignment-2
 kayak-data-analysis
 prompt

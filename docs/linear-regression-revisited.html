@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2023-10-10" />
+<meta name="date" content="2023-10-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -142,10 +142,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#autocorrelation"><i class="fa fa-check"></i><b>1.1</b> Autocorrelation</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#assignment-3"><i class="fa fa-check"></i><b>1.2</b> Assignment 3</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#change-points"><i class="fa fa-check"></i><b>1.3</b> Change Points</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="index.html"><a href="index.html#cusum"><i class="fa fa-check"></i><b>1.3.1</b> CUSUM</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#assignment-4"><i class="fa fa-check"></i><b>1.4</b> Assignment 4</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html"><i class="fa fa-check"></i><b>2</b> Linear Regression Revisited</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html#assignment-2"><i class="fa fa-check"></i><b>2.1</b> Assignment 2</a></li>
+<li class="chapter" data-level="2.1" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html#estimation"><i class="fa fa-check"></i><b>2.1</b> Estimation</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html#example"><i class="fa fa-check"></i><b>2.2</b> Example</a></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html#assignment-2"><i class="fa fa-check"></i><b>2.3</b> Assignment 2</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="kayak-data-analysis.html"><a href="kayak-data-analysis.html"><i class="fa fa-check"></i><b>3</b> Kayak Data Analysis</a>
 <ul>
@@ -170,6 +177,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="linear-regression-revisited" class="section level1 hasAnchor" number="2">
 <h1><span class="header-section-number">Chapter 2</span> Linear Regression Revisited<a href="linear-regression-revisited.html#linear-regression-revisited" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Let’s consider a scenario in which we have information on a response variable, <span class="math inline">\(y\)</span>, and <span class="math inline">\(p\)</span> predictor variables organized in a design matrix <span class="math inline">\(X\)</span>. We want to model the conditional mean, <span class="math inline">\(E(Y | X)\)</span> using a linear combination of predictor variables. So, our model is:</p>
+<p><span class="math display">\[\begin{align}
+y = X \beta + \epsilon
+\end{align}\]</span></p>
+<p>For now, let us assume that there is a linear relationship between <span class="math inline">\(y\)</span> and <span class="math inline">\(X\)</span> and that the errors (the elements of <span class="math inline">\(\epsilon\)</span>) are independent with mean of 0 and variance of <span class="math inline">\(\sigma^2\)</span>.</p>
+<div id="estimation" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Estimation<a href="linear-regression-revisited.html#estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>To find the estimate for <span class="math inline">\(\beta\)</span>, we can use the criteria of least squares and find the <span class="math inline">\(\beta\)</span> that minimizes the sum of the squared errors. That is, our <span class="math inline">\(\hat{\beta}\)</span> is the vector that minimizes,</p>
+<p><span class="math display">\[\begin{align}
+(y - X \beta) ^ T (y - X \beta)
+\end{align}\]</span></p>
+<p>In order to minimize this function, we need some basic results for matrix derivatives.</p>
+<p><span class="math display">\[\begin{align}
+\frac{\partial}{\partial \beta} (A \beta) &amp;= A \\
+\frac{\partial}{\partial \beta} (\beta^T M \beta) &amp;= 2 M \beta
+\end{align}\]</span></p>
+</div>
+<div id="example" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Example<a href="linear-regression-revisited.html#example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Let’s investigate the relationship between home prices and mortgage rates. To start, let’s use data from the <code>quantmod</code> package and look at the relationship between these two variables from 2000 to 2004.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="linear-regression-revisited.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># https://fred.stlouisfed.org/</span></span>
 <span id="cb3-2"><a href="linear-regression-revisited.html#cb3-2" aria-hidden="true" tabindex="-1"></a>pr <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;MORTGAGE30US&#39;</span>,<span class="at">src=</span><span class="st">&#39;FRED&#39;</span>, <span class="at">warnings =</span> F) <span class="co"># 30-Year Fixed Rate Mortgage Average</span></span>
@@ -199,8 +225,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-26"><a href="linear-regression-revisited.html#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;30-Year Fixed Rate Mortgage Average&quot;</span>) <span class="sc">+</span> </span>
 <span id="cb3-27"><a href="linear-regression-revisited.html#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;S&amp;P/Case-Shiller U.S. National Home Price Index&quot;</span>)</span></code></pre></div>
 <p>How would you describe this relationship? Based on the relationship, do you think a simple linear regression model is appropriate for these data?</p>
-<div id="assignment-2" class="section level2 hasAnchor" number="2.1">
-<h2><span class="header-section-number">2.1</span> Assignment 2<a href="linear-regression-revisited.html#assignment-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="assignment-2" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Assignment 2<a href="linear-regression-revisited.html#assignment-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
 <li><p>Fit a linear regression model to these two variables and write out the model equation.</p></li>
 <li><p>Make a histogram of the residuals from this model and comment on how they correspond with the assumption of normal residuals.</p></li>

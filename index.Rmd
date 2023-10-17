@@ -17,6 +17,7 @@ knitr::opts_chunk$set(echo = F)
 library(tidyverse)
 library(quantmod)
 library(broom) # for the 'tidy' function
+library(qcc)
 ```
 
 # Topics in Time Series
@@ -79,8 +80,88 @@ sum( (s1 - mean(y)) * (s2 - mean(y)) ) / sum( (y-mean(y))^2 )
 
 ```
 
+## Change Points 
+
+### CUSUM
+
+Consider the following time series $x_t$, for $t = 1, \ldots, 100$. Suppose you are an analyst at an industrial company and this is a data stream from some instrument that you expect to generate random noise around 0. If there is a shift in the mean of this process, that signals trouble. Looking at this data, do you think theres any shift?
+
+```{r}
+set.seed(1)
+x1 = rnorm(75, 0, 0.5)
+x2 = rnorm(25, 0.25, 0.5)
+xt = c(x1, x2)
+
+plot(xt, type = "l")
+
+```
+
+It is hard to say. One method to detect change points is CUSUM. To 
+\begin{align}
+y_i = \frac{x_i - \mu_0}{\sigma}
+\end{align}
+
+Then, define two vectors, $C_i^+$ and $C_i^-$ whose first element is 0. Then, for $i \in (2,\ldots,T)$,
+
+\begin{align}
+C_i^+ &= \text{max}(0, y_i - K + C_{i-1}^+) \\
+C_i^- &= \text{min}(0, y_i + K + C_{i-1}^-)
+\end{align}
+
+The parameter $K$ is typically defined as the shift in means that you hope to detect, $\delta  \sigma$, measured in standard deviations. This is implemented in the <code>qcc</code> package within the <code>cusum</code> function. 
+
+```{r}
+mu_0 = 0
+y = (xt - mu_0)/sd(xt)
+
+shift_detect = 1
+
+K = (shift_detect * sd(xt) -mu_0) # half of the mu_1 -  mu_0
+
+st_hi = c(0)
+st_lo = c(0)
+
+for(i in 2:length(xt)) {
+  st_hi[i] = max(0, y[i] - K + st_hi[i-1])
+  st_lo[i] = min(0, y[i] + K + st_lo[i-1])
+}
+
+ob = cusum(xt, se.shift = shift_detect, center = mu_0,
+           add.stats = T)
+
+```
+
+## Assignment 4
 
 # Linear Regression Revisited
+
+Let's consider a scenario in which we have information on a response variable, $y$, and $p$ predictor variables organized in a design matrix $X$. We want to model the conditional mean, $E(Y | X)$ using a linear combination of predictor variables. So, our model is:
+
+\begin{align}
+y = X \beta + \epsilon
+\end{align}
+
+For now, let us assume that there is a linear relationship between $y$ and $X$ and that the errors (the elements of $\epsilon$) are independent with mean of 0 and variance of $\sigma^2$.
+
+## Estimation
+
+To find the estimate for $\beta$, we can use the criteria of least squares and find the $\beta$ that minimizes the sum of the squared errors. That is, our $\hat{\beta}$ is the vector that minimizes,
+
+\begin{align}
+(y - X \beta) ^ T (y - X \beta)
+\end{align}
+
+In order to minimize this function, we need some basic results for matrix derivatives. 
+
+\begin{align}
+\frac{\partial}{\partial \beta} (A \beta) &= A \\
+\frac{\partial}{\partial \beta} (\beta^T M \beta) &= 2 M \beta
+\end{align}
+
+
+
+
+## Example
 
 Let's investigate the relationship between home prices and mortgage rates. To start, let's use data from the <code>quantmod</code> package and look at the relationship between these two variables from 2000 to 2004.
 
