@@ -133,7 +133,7 @@ ob = cusum(xt, se.shift = shift_detect, center = mu_0,
 
 ## Assignment 4
 
-1. Write a function to generate vectors $C_i^+$ and $C_i^-$ for a given time series and $\delta = 1$.
+1. Write a function to generate vectors $C^+$ and $C^-$ for a given time series and $\delta = 1$.
 
 2. Use the function on simulated data. How does it perform? Compare with output from <code>cusum</code>. Show the plotted data to another team and ask them for an eyeball estimate of the changepoint. Who won: (wo)man or machine?
 
