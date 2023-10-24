@@ -100,7 +100,7 @@ It is hard to say. One method to detect change points is CUSUM. This method work
 y_i = \frac{x_i - \mu_0}{\sigma}
 \end{align}
 
-Then, define two vectors, $C_i^+$ and $C_i^-$ whose first element is 0. That is, $C_1^+ = C_1^- = 0$.  For $i \in (2,\ldots,T)$,
+Then, define two vectors, $C^+$ and $C^-$ whose first element is 0. That is, $C_1^+ = C_1^- = 0$.  For $i \in (2,\ldots,T)$,
 
 \begin{align}
 C_i^+ &= \text{max}(0, y_i - K + C_{i-1}^+) \\
