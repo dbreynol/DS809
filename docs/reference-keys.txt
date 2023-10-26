@@ -4,6 +4,7 @@ assignment-3
 change-points
 cusum
 assignment-4
+moving-average
 linear-regression-revisited
 estimation
 example

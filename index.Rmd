@@ -107,7 +107,7 @@ C_i^+ &= \text{max}(0, y_i - K + C_{i-1}^+) \\
 C_i^- &= \text{min}(0, y_i + K + C_{i-1}^-)
 \end{align}
 
-The parameter $K$ is typically defined as the shift in means that you hope to detect, $\delta  \sigma$, measured in standard deviations. This is implemented in the <code>qcc</code> package within the <code>cusum</code> function, where the parameter $\delta$ is controlled by <code>se.shift</code>.
+The parameter $K$ is the shift in means that you hope to detect, $\delta  \sigma$, measured in standard deviations. For example, if you want to detect a shift of a half standard deviation, use $K=0.5$. This is implemented in the <code>qcc</code> package within the <code>cusum</code> function, where the parameter $\delta$ is controlled by <code>se.shift</code>.
 
 
 ```{r}
@@ -129,6 +129,64 @@ for(i in 2:length(xt)) {
 ob = cusum(xt, se.shift = shift_detect, center = mu_0,
            add.stats = T)
 
+y1 = rnorm(50, 25, 1)
+y2 = rnorm(25, 27, 1)
+y = c(y1, y2)
+#cusum(y)
+
+st_hi = c(0)
+st_lo = c(0)
+
+z = (y - mean(y)) / sd(y)
+
+K = (shift_detect * sd(y) - mu_0) 
+
+for(i in 2:length(y)) {
+  st_hi[i] = max(0, z[i] - K + st_hi[i-1])
+  st_lo[i] = min(0, z[i] + K + st_lo[i-1])
+}
+
+#plot(st_hi, cusum(y)$pos)
+
+
+
+# cusum fcn
+
+cusum_us = function(time_series, mu_0) {
+  # first, standardize
+  y = (time_series - mu_0)/sd(time_series)
+  
+  # initialize hi and lo vectors
+  st_hi = c(0)
+  st_lo = c(0)
+  
+  #K = (shift_detect * sd(y) - mu_0) 
+  k1 = 0.5
+  
+  
+  for(i in 2:length(y)) {
+    st_hi[i] = max(0, y[i] - k1 + st_hi[i-1])
+    st_lo[i] = min(0, y[i] + k1 + st_lo[i-1])
+  }
+  
+  return(list(lo = st_lo, hi = st_hi))
+
+}
+
+y1 = rnorm(50, 25, 2)
+y2 = rnorm(25, 27, 2)
+y = c(y1, y2)
+
+#plot ( cusum_us(y, mu_0 = mean(y))$hi, cusum(y)$pos)
+#plot ( cusum_us(y, mu_0 = mean(y))$lo, cusum(y)$neg)
+
+#df = data.frame(ind = rep(1:length(y), 2), type = c(rep("us", length(y)), rep("cusum", length(y))), vals = c(cusum_us(y, mu_0 = mean(y))$lo, cusum(y)$neg) )
+
+#df2 = data.frame(ind = rep(1:length(y), 2), type = c(rep("us", length(y)), rep("cusum", length(y))), vals = c(cusum_us(y, mu_0 = mean(y))$hi, cusum(y)$pos) )
+
+#ggplot(df, aes(x = ind, y = vals, color = type)) + geom_line()
+#ggplot(df2, aes(x = ind, y = vals, color = type)) + geom_line()
+#cusum(y)
 ```
 
 ## Assignment 4
@@ -136,6 +194,10 @@ ob = cusum(xt, se.shift = shift_detect, center = mu_0,
 1. Write a function to generate vectors $C^+$ and $C^-$ for a given time series and $\delta = 1$.
 
 2. Use the function on simulated data. How does it perform? Compare with output from <code>cusum</code>. Show the plotted data to another team and ask them for an eyeball estimate of the changepoint. Who won: (wo)man or machine?
+
+## Moving Average
+
+
 
 # Linear Regression Revisited
 
