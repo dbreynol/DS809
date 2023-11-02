@@ -17,7 +17,8 @@ knitr::opts_chunk$set(echo = F)
 library(tidyverse)
 library(quantmod)
 library(broom) # for the 'tidy' function
-library(qcc)
+library(forecast) # ma
+library(qcc) # CUSUM
 ```
 
 # Topics in Time Series
@@ -197,6 +198,100 @@ y = c(y1, y2)
 
 ## Moving Average
 
+Another way to detect whether changes are occurring in a process is with a simple moving average. For a time series $y_t$, $t = 1, \ldots, T$, a moving average of order $m$ can be written,
+
+\begin{align}
+\hat{y_t} = \frac{1}{m} \sum_{j=-k}^{k} y_{t+j},
+\end{align}
+
+where $m=2k+1$. The concept behind this technique is that observations that are close in time are likely to be close in value. 
+
+Below, I have simulated a noisy time series with a strong trend component and plotted the data long with the order 5 moving average and the order 10 moving average.
+
+```{r echo = T, warning=FALSE}
+set.seed(1)
+xt = 0.5 * 1:100 + rnorm(100, 0, 5)
+#plot(xt, type = "l", main = "Simulated Data")
+
+df = data.frame(t = 1:100,
+                data = xt,
+                ma_5 = forecast::ma(xt, 3),
+                ma_10 = forecast::ma(xt,11)) %>% 
+  pivot_longer(-t)
+
+ggplot(df, aes(x = t, y = value, color = name)) + 
+  geom_line() + 
+  theme_minimal() + 
+  ggtitle("Higher order MA leads to a smoother series")
+
+```
+
+## Exponential Smoothing
+
+When you have data that does not have a clear trend, you may want a forecasting method that averages over the past data values but that assigns relatively more weight to observations that are relatively closer. One way to achieve this is with simple exponential smoothing. This idea can be expressed as,
+
+\begin{align}
+\hat{y}_{t+1 | t} = \alpha y_t + (1-\alpha) \hat{y}_{t | t-1}.
+\end{align}
+
+Since we don't have data prior to $y_1$, let us denote $\hat{y}_{1 | 0} = l_0$. Therefore, this model depends on two parameters, $(l_0, \alpha)$. More generally, each predicted value $\hat{y_t}$ can be expressed,
+
+\begin{align}
+\hat{y}_{t+1 | t} = (1-\alpha) ^ t l_0  + \sum_{j=0}^{t-1} \alpha (1-\alpha) ^ j y_{t-j}. \\
+\end{align}
+
+## Assignment 5
+
+1. Write your own moving average function that takes a vector (your time series) and a scalar (order of the moving average, $m$) as arguments and outputs an order $m$ moving average of the vector input. Make sure that your output has the same length as the vector input, with NA values where appropriate.
+
+2. For $\alpha = 0.3172$ and $l_0 = 1.1199$, write a function that computes a vector of predictions using exponential smoothing. Use the <code>xt</code> vector from the code block above (using a seed value of 1) and compare your results with the vector generated below.
+
+```{r echo=TRUE}
+fitted_vals = forecast::ets(xt, model = "ANN")$fitted
+```
+
+
+```{r eval=FALSE}
+library(forecast)
+
+# compute moving average on xt
+t = 1:100
+xt2 = t * 1.1 + rnorm(100, 1, 1)
+
+l0 = 1
+preds = c(l0)
+alpha = 0.5
+upperT = length(xt)
+#l0 = 1
+for(j in 2:length(xt)) {
+  #t = j
+  preds[j] = sum ( sapply(0:(j-1), function(x) (alpha * (1-alpha)^j * xt[j-x]) ))  + (1-alpha)^(j-1)* l0 
+}
+
+gen_preds = function(ts_data, alpha, l0) {
+  preds = c(l0)
+  #alpha = 0.5
+  upperT = length(ts_data)
+  #l0 = 1
+  for(j in 2:length(ts_data)) {
+    #t = j
+    preds[j] = sum ( sapply(1:(j-1), function(x) (alpha * (1-alpha)^(x-1) * ts_data[j-x]) ))  + (1-alpha)^(j-1)* l0 
+  }
+  return(preds)
+}
+
+opt_fn = function(par) {
+  sum( (gen_preds(xt2, par[1], par[2]) - xt2)^ 2)
+}
+
+optim(par = c(0,0), fn = opt_fn)
+
+head( gen_preds(xt2, 0.9, 1) ) 
+.9 * xt2[1] + .1 * 1
+
+library(forecast)
+m0 = ets(xt2, model = "ANN")
+```
 
 
 # Linear Regression Revisited

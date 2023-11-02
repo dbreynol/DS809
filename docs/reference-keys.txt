@@ -5,6 +5,8 @@ change-points
 cusum
 assignment-4
 moving-average
+exponential-smoothing
+assignment-5
 linear-regression-revisited
 estimation
 example

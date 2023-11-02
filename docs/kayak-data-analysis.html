@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2023-10-26" />
+<meta name="date" content="2023-11-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -148,6 +148,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#assignment-4"><i class="fa fa-check"></i><b>1.4</b> Assignment 4</a></li>
 <li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#moving-average"><i class="fa fa-check"></i><b>1.5</b> Moving Average</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#exponential-smoothing"><i class="fa fa-check"></i><b>1.6</b> Exponential Smoothing</a></li>
+<li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#assignment-5"><i class="fa fa-check"></i><b>1.7</b> Assignment 5</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html"><i class="fa fa-check"></i><b>2</b> Linear Regression Revisited</a>
 <ul>
@@ -179,9 +181,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="kayak-data-analysis" class="section level1 hasAnchor" number="3">
 <h1><span class="header-section-number">Chapter 3</span> Kayak Data Analysis<a href="kayak-data-analysis.html#kayak-data-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>We are going to do some analysis on a dataset sent from Kayak. The prompts and data are from their data science recruiting process. To access the data, use the following code:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="kayak-data-analysis.html#cb5-1" aria-hidden="true" tabindex="-1"></a>visits <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv&quot;</span>)</span>
-<span id="cb5-2"><a href="kayak-data-analysis.html#cb5-2" aria-hidden="true" tabindex="-1"></a>conversions <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv&quot;</span>)</span>
-<span id="cb5-3"><a href="kayak-data-analysis.html#cb5-3" aria-hidden="true" tabindex="-1"></a>channels <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/channel_descriptions.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="kayak-data-analysis.html#cb7-1" aria-hidden="true" tabindex="-1"></a>visits <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv&quot;</span>)</span>
+<span id="cb7-2"><a href="kayak-data-analysis.html#cb7-2" aria-hidden="true" tabindex="-1"></a>conversions <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv&quot;</span>)</span>
+<span id="cb7-3"><a href="kayak-data-analysis.html#cb7-3" aria-hidden="true" tabindex="-1"></a>channels <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/channel_descriptions.csv&quot;</span>)</span></code></pre></div>
 <div id="prompt" class="section level2 hasAnchor" number="3.1">
 <h2><span class="header-section-number">3.1</span> Prompt<a href="kayak-data-analysis.html#prompt" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>One of our team’s goals is to accurately evaluate how successful our marketing campaigns are and to predict how successful future campaigns will be. In this assignment, we want you to explore how to evaluate one notion of success: conversion rate. Depending on the context, a conversion can mean different things, including a flight or hotel booking, a click on a specific part of our site, or an account sign up. Conversion rate in the first case could therefore be defined as completed flight bookings per user visit.

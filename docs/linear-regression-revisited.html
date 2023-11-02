@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2023-10-26" />
+<meta name="date" content="2023-11-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -148,6 +148,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#assignment-4"><i class="fa fa-check"></i><b>1.4</b> Assignment 4</a></li>
 <li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#moving-average"><i class="fa fa-check"></i><b>1.5</b> Moving Average</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#exponential-smoothing"><i class="fa fa-check"></i><b>1.6</b> Exponential Smoothing</a></li>
+<li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#assignment-5"><i class="fa fa-check"></i><b>1.7</b> Assignment 5</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html"><i class="fa fa-check"></i><b>2</b> Linear Regression Revisited</a>
 <ul>
@@ -198,33 +200,33 @@ y = X \beta + \epsilon
 <div id="example" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Example<a href="linear-regression-revisited.html#example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Let’s investigate the relationship between home prices and mortgage rates. To start, let’s use data from the <code>quantmod</code> package and look at the relationship between these two variables from 2000 to 2004.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="linear-regression-revisited.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># https://fred.stlouisfed.org/</span></span>
-<span id="cb4-2"><a href="linear-regression-revisited.html#cb4-2" aria-hidden="true" tabindex="-1"></a>pr <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;MORTGAGE30US&#39;</span>,<span class="at">src=</span><span class="st">&#39;FRED&#39;</span>, <span class="at">warnings =</span> F) <span class="co"># 30-Year Fixed Rate Mortgage Average</span></span>
-<span id="cb4-3"><a href="linear-regression-revisited.html#cb4-3" aria-hidden="true" tabindex="-1"></a>home <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;CSUSHPINSA&#39;</span>, <span class="at">src =</span> <span class="st">&#39;FRED&#39;</span>) <span class="co"># S&amp;P/Case-Shiller U.S. National Home Price Index</span></span>
-<span id="cb4-4"><a href="linear-regression-revisited.html#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="linear-regression-revisited.html#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="linear-regression-revisited.html#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># clean up dataset</span></span>
-<span id="cb4-7"><a href="linear-regression-revisited.html#cb4-7" aria-hidden="true" tabindex="-1"></a>mort <span class="ot">=</span> <span class="fu">tidy</span>(MORTGAGE30US) <span class="sc">%&gt;%</span> <span class="co"># tidy is from the broom pkg - coerces xts object to a data frame</span></span>
-<span id="cb4-8"><a href="linear-regression-revisited.html#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">ymd</span>(index)) <span class="sc">%&gt;%</span> <span class="co"># coerce the index to be a date</span></span>
-<span id="cb4-9"><a href="linear-regression-revisited.html#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(date) <span class="sc">&gt;=</span> <span class="dv">2000</span>, <span class="fu">year</span>(date) <span class="sc">&lt;=</span> <span class="dv">2004</span>) <span class="sc">%&gt;%</span> <span class="co"># date range</span></span>
-<span id="cb4-10"><a href="linear-regression-revisited.html#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mo_year =</span> <span class="fu">ymd</span> ( <span class="fu">str_c</span> (<span class="fu">year</span>(date), <span class="st">&quot;-&quot;</span>, <span class="fu">month</span>(date), <span class="st">&quot;-&quot;</span>, <span class="dv">01</span> )) ) <span class="sc">%&gt;%</span> <span class="co"># make a new date so we can group by month/year </span></span>
-<span id="cb4-11"><a href="linear-regression-revisited.html#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(mo_year) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-12"><a href="linear-regression-revisited.html#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">val =</span> <span class="fu">mean</span>(value)) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-13"><a href="linear-regression-revisited.html#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(mo_year <span class="sc">&lt;</span> <span class="st">&quot;2023-08-01&quot;</span>)</span>
-<span id="cb4-14"><a href="linear-regression-revisited.html#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="linear-regression-revisited.html#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-16"><a href="linear-regression-revisited.html#cb4-16" aria-hidden="true" tabindex="-1"></a>home_pr <span class="ot">=</span> <span class="fu">tidy</span>(CSUSHPINSA) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-17"><a href="linear-regression-revisited.html#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">ymd</span>(index)) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-18"><a href="linear-regression-revisited.html#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(date) <span class="sc">&gt;=</span> <span class="dv">2000</span>, <span class="fu">year</span>(date) <span class="sc">&lt;=</span> <span class="dv">2004</span>)</span>
-<span id="cb4-19"><a href="linear-regression-revisited.html#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-20"><a href="linear-regression-revisited.html#cb4-20" aria-hidden="true" tabindex="-1"></a>combined_dat <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">mort =</span> mort<span class="sc">$</span>val, <span class="at">pr =</span> home_pr<span class="sc">$</span>value, <span class="at">date =</span> home_pr<span class="sc">$</span>date)</span>
-<span id="cb4-21"><a href="linear-regression-revisited.html#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-22"><a href="linear-regression-revisited.html#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined_dat, <span class="fu">aes</span>( mort, pr, <span class="at">color =</span> <span class="fu">as.factor</span>( <span class="fu">year</span>(date) ) ) ) <span class="sc">+</span> </span>
-<span id="cb4-23"><a href="linear-regression-revisited.html#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb4-24"><a href="linear-regression-revisited.html#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
-<span id="cb4-25"><a href="linear-regression-revisited.html#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Case Shiller Index (y) and Avg. Mortgage Rates (x)&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb4-26"><a href="linear-regression-revisited.html#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;30-Year Fixed Rate Mortgage Average&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb4-27"><a href="linear-regression-revisited.html#cb4-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;S&amp;P/Case-Shiller U.S. National Home Price Index&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="linear-regression-revisited.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># https://fred.stlouisfed.org/</span></span>
+<span id="cb6-2"><a href="linear-regression-revisited.html#cb6-2" aria-hidden="true" tabindex="-1"></a>pr <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;MORTGAGE30US&#39;</span>,<span class="at">src=</span><span class="st">&#39;FRED&#39;</span>, <span class="at">warnings =</span> F) <span class="co"># 30-Year Fixed Rate Mortgage Average</span></span>
+<span id="cb6-3"><a href="linear-regression-revisited.html#cb6-3" aria-hidden="true" tabindex="-1"></a>home <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;CSUSHPINSA&#39;</span>, <span class="at">src =</span> <span class="st">&#39;FRED&#39;</span>) <span class="co"># S&amp;P/Case-Shiller U.S. National Home Price Index</span></span>
+<span id="cb6-4"><a href="linear-regression-revisited.html#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="linear-regression-revisited.html#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="linear-regression-revisited.html#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># clean up dataset</span></span>
+<span id="cb6-7"><a href="linear-regression-revisited.html#cb6-7" aria-hidden="true" tabindex="-1"></a>mort <span class="ot">=</span> <span class="fu">tidy</span>(MORTGAGE30US) <span class="sc">%&gt;%</span> <span class="co"># tidy is from the broom pkg - coerces xts object to a data frame</span></span>
+<span id="cb6-8"><a href="linear-regression-revisited.html#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">ymd</span>(index)) <span class="sc">%&gt;%</span> <span class="co"># coerce the index to be a date</span></span>
+<span id="cb6-9"><a href="linear-regression-revisited.html#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(date) <span class="sc">&gt;=</span> <span class="dv">2000</span>, <span class="fu">year</span>(date) <span class="sc">&lt;=</span> <span class="dv">2004</span>) <span class="sc">%&gt;%</span> <span class="co"># date range</span></span>
+<span id="cb6-10"><a href="linear-regression-revisited.html#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mo_year =</span> <span class="fu">ymd</span> ( <span class="fu">str_c</span> (<span class="fu">year</span>(date), <span class="st">&quot;-&quot;</span>, <span class="fu">month</span>(date), <span class="st">&quot;-&quot;</span>, <span class="dv">01</span> )) ) <span class="sc">%&gt;%</span> <span class="co"># make a new date so we can group by month/year </span></span>
+<span id="cb6-11"><a href="linear-regression-revisited.html#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(mo_year) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-12"><a href="linear-regression-revisited.html#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">val =</span> <span class="fu">mean</span>(value)) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-13"><a href="linear-regression-revisited.html#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(mo_year <span class="sc">&lt;</span> <span class="st">&quot;2023-08-01&quot;</span>)</span>
+<span id="cb6-14"><a href="linear-regression-revisited.html#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="linear-regression-revisited.html#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="linear-regression-revisited.html#cb6-16" aria-hidden="true" tabindex="-1"></a>home_pr <span class="ot">=</span> <span class="fu">tidy</span>(CSUSHPINSA) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-17"><a href="linear-regression-revisited.html#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">ymd</span>(index)) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-18"><a href="linear-regression-revisited.html#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(date) <span class="sc">&gt;=</span> <span class="dv">2000</span>, <span class="fu">year</span>(date) <span class="sc">&lt;=</span> <span class="dv">2004</span>)</span>
+<span id="cb6-19"><a href="linear-regression-revisited.html#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="linear-regression-revisited.html#cb6-20" aria-hidden="true" tabindex="-1"></a>combined_dat <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">mort =</span> mort<span class="sc">$</span>val, <span class="at">pr =</span> home_pr<span class="sc">$</span>value, <span class="at">date =</span> home_pr<span class="sc">$</span>date)</span>
+<span id="cb6-21"><a href="linear-regression-revisited.html#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="linear-regression-revisited.html#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined_dat, <span class="fu">aes</span>( mort, pr, <span class="at">color =</span> <span class="fu">as.factor</span>( <span class="fu">year</span>(date) ) ) ) <span class="sc">+</span> </span>
+<span id="cb6-23"><a href="linear-regression-revisited.html#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb6-24"><a href="linear-regression-revisited.html#cb6-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb6-25"><a href="linear-regression-revisited.html#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Case Shiller Index (y) and Avg. Mortgage Rates (x)&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb6-26"><a href="linear-regression-revisited.html#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;30-Year Fixed Rate Mortgage Average&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb6-27"><a href="linear-regression-revisited.html#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;S&amp;P/Case-Shiller U.S. National Home Price Index&quot;</span>)</span></code></pre></div>
 <p>How would you describe this relationship? Based on the relationship, do you think a simple linear regression model is appropriate for these data?</p>
 </div>
 <div id="assignment-2" class="section level2 hasAnchor" number="2.3">
