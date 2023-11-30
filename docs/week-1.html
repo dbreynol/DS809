@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Kayak Data Analysis | Artifex - Fall 2023</title>
+  <title>Chapter 4 Week 1 | Artifex - Fall 2023</title>
   <meta name="description" content="(Partial) course materials for Artifex, Spring 2023." />
   <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Kayak Data Analysis | Artifex - Fall 2023" />
+  <meta property="og:title" content="Chapter 4 Week 1 | Artifex - Fall 2023" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="(Partial) course materials for Artifex, Spring 2023." />
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Kayak Data Analysis | Artifex - Fall 2023" />
+  <meta name="twitter:title" content="Chapter 4 Week 1 | Artifex - Fall 2023" />
   
   <meta name="twitter:description" content="(Partial) course materials for Artifex, Spring 2023." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="linear-regression-revisited.html"/>
-<link rel="next" href="week-1.html"/>
+<link rel="prev" href="kayak-data-analysis.html"/>
+
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -185,43 +185,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="kayak-data-analysis" class="section level1 hasAnchor" number="3">
-<h1><span class="header-section-number">Chapter 3</span> Kayak Data Analysis<a href="kayak-data-analysis.html#kayak-data-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>We are going to do some analysis on a dataset sent from Kayak. The prompts and data are from their data science recruiting process. To access the data, use the following code:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="kayak-data-analysis.html#cb7-1" aria-hidden="true" tabindex="-1"></a>visits <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv&quot;</span>)</span>
-<span id="cb7-2"><a href="kayak-data-analysis.html#cb7-2" aria-hidden="true" tabindex="-1"></a>conversions <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv&quot;</span>)</span>
-<span id="cb7-3"><a href="kayak-data-analysis.html#cb7-3" aria-hidden="true" tabindex="-1"></a>channels <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/channel_descriptions.csv&quot;</span>)</span></code></pre></div>
-<div id="prompt" class="section level2 hasAnchor" number="3.1">
-<h2><span class="header-section-number">3.1</span> Prompt<a href="kayak-data-analysis.html#prompt" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>One of our team’s goals is to accurately evaluate how successful our marketing campaigns are and to predict how successful future campaigns will be. In this assignment, we want you to explore how to evaluate one notion of success: conversion rate. Depending on the context, a conversion can mean different things, including a flight or hotel booking, a click on a specific part of our site, or an account sign up. Conversion rate in the first case could therefore be defined as completed flight bookings per user visit.
-You were given some datasets that contain a sanitized version of some of our logging data. Explore the datasets and work on the questions below. One of the CSVs contains data on daily user visits broken down by user location and marketing channel, and another contains data on conversions also broken down by user location and channel. You also have been given a file with a brief description of the channels.</p>
-<ol style="list-style-type: decimal">
-<li><p>Do you see any interesting patterns in the data? For example, are there any seasonality trends in user visits or conversion rates (conversions/visits)? Do these seasonality trends differ between countries or channel? Can you think of any potential explanations for any of the patterns/trends/differences you saw?</p></li>
-<li><p>Which channels have the best and worst conversion rates? What reasons can you think of to explain the differences? Do you see any major conversion differences for the same channel in different countries?</p></li>
-<li><p>Predict next month’s (September 2015) aggregate conversion rates for each channel and country combination? How good are your predictions?</p></li>
-</ol>
-<p>Last time, we discussed a few ways to estimate the slope coefficient in a linear regression model. This yields a point estimate. The other key ingredient for inference is to determine how much uncertainty there is in our estimate. For the case of <span class="math inline">\(\hat{\beta_1}\)</span>, we want to know how much this estimate varies from sample to sample for the specified sample size. That is, we want to know the variance of the estimate:</p>
-<p><span class="math display">\[\begin{align}
-Var(\hat{\beta_1}).
-\end{align}\]</span></p>
-<p>To find what this is, let’s just try to figure out the variance directly, using the analytic formula for <span class="math inline">\(\hat{\beta_1}\)</span> in simple linear regression:</p>
-<p><span class="math display">\[\begin{align}
-Var \bigg( \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2 }  \bigg).
-\end{align}\]</span></p>
-<p>To carry out this calculation, recall that <span class="math inline">\(\text{var}(cx) = c^2 \text{var}(x)\)</span>. Also, recall the model assumption of independence across observations. After carrying out this calculation, we can show that,</p>
-<p><span class="math display">\[\begin{equation}
-Var(\hat{\beta}) = \frac{\hat{\sigma}^2}{(n-1) \hat{var}(x)}
-\end{equation}\]</span></p>
-<p>How does variation in <span class="math inline">\(\hat{\beta}\)</span> respond to changes in sample size? How about to variation in the predictor?</p>
-<p>Before moving on, let’s write some code to make sure our calculations correspond with those generated by <code>lm</code>.</p>
-<p>In this case, we are able to obtain not only the variation of the estimate but also the distribution of the estimate as well as the test statistic,</p>
-<p><span class="math display">\[\begin{align}
-T = \frac{\hat{\beta_1} - \beta}{\sqrt{\text{var}\beta}} \sim t_{n-2}
-\end{align}\]</span></p>
-<p>This allows us to compute confidence intervals. For instance, if we want to compute a (1-<span class="math inline">\(\alpha\)</span>) confidence interval, note that:</p>
-<p><span class="math display">\[\begin{align}
-P(t_{\alpha/2} &lt; T &lt; t_{1-\alpha/2}) = (1-\alpha)
-\end{align}\]</span></p>
+<div id="week-1" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Week 1<a href="week-1.html#week-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="time-series-data" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Time Series Data<a href="week-1.html#time-series-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>What is time series data</p>
+</div>
+<div id="time-series-eda" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Time Series EDA<a href="week-1.html#time-series-eda" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Kayak demo</p>
+<p>assignment - nycflights</p>
+</div>
+<div id="multiple-time-series" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Multiple Time Series<a href="week-1.html#multiple-time-series" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>demo - case shiller home prices vs. gdp per capita</p>
+<p>assignment - kayak</p>
+</div>
+<div id="autocorrelation-1" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> Autocorrelation<a href="week-1.html#autocorrelation-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>def</p>
+<p>functions in R</p>
+<p>assignment - write a function</p>
 
 </div>
 </div>
@@ -230,8 +214,8 @@ P(t_{\alpha/2} &lt; T &lt; t_{1-\alpha/2}) = (1-\alpha)
           </div>
         </div>
       </div>
-<a href="linear-regression-revisited.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="week-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="kayak-data-analysis.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -262,7 +246,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/dbreynol/artifex_fall2022/edit/master/index.Rmd",
+"link": "https://github.com/dbreynol/artifex_fall2022/edit/master/set1.Rmd",
 "text": "Edit"
 },
 "history": {

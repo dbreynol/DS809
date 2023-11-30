@@ -15,8 +15,6 @@ description: "(Partial) course materials for Artifex, Spring 2023."
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
 library(tidyverse)
-library(quantmod)
-library(broom) # for the 'tidy' function
 library(forecast) # ma
 library(qcc) # CUSUM
 ```
@@ -59,6 +57,8 @@ a2 = c(2,3,4,5)
 # lag 1 autocorrelation
 sum( (a1 - mean(a)) * (a2 - mean(a))) / (sum( (a - mean(a))^2 ) )  # by hand
 (acf(a))
+
+
 ```
 
 ## Assignment 3
@@ -244,7 +244,7 @@ Since we don't have data prior to $y_1$, let us denote $\hat{y}_{1 | 0} = l_0$. 
 
 1. Write your own moving average function that takes a vector (your time series) and a scalar (order of the moving average, $m$) as arguments and outputs an order $m$ moving average of the vector input. Make sure that your output has the same length as the vector input, with NA values where appropriate.
 
-2. For $\alpha = 0.3172$ and $l_0 = 1.1199$, write a function that computes a vector of predictions using exponential smoothing. Use the <code>xt</code> vector from the code block above (using a seed value of 1) and compare your results with the vector generated below.
+2. For $\alpha = 0.3172$ and $l_0 = 1.1199$, write a function that computes a vector of predictions (i.e., $\hat{y}_t$ for all $t$) using exponential smoothing. Use the <code>xt</code> vector from the code block above (using a seed value of 1) and compare your results with the vector generated below. Hint: you might find it helpful to use the <code>sapply</code> function for the summation (but don't let this restrict your creativity).
 
 ```{r echo=TRUE}
 fitted_vals = forecast::ets(xt, model = "ANN")$fitted
@@ -331,12 +331,12 @@ Let's investigate the relationship between home prices and mortgage rates. To st
 # https://fred.stlouisfed.org/
 pr = getSymbols('MORTGAGE30US',src='FRED', warnings = F) # 30-Year Fixed Rate Mortgage Average
 home = getSymbols('CSUSHPINSA', src = 'FRED') # S&P/Case-Shiller U.S. National Home Price Index
-
+gdp = getSymbols('A939RX0Q048SBEA', src = 'FRED')
 
 # clean up dataset
 mort = tidy(MORTGAGE30US) %>% # tidy is from the broom pkg - coerces xts object to a data frame
   mutate(date = ymd(index)) %>% # coerce the index to be a date
-  filter(year(date) >= 2000, year(date) <= 2004) %>% # date range
+  filter(year(date) >= 2010, year(date) <= 2023) %>% # date range
   mutate(mo_year = ymd ( str_c (year(date), "-", month(date), "-", 01 )) ) %>% # make a new date so we can group by month/year 
   group_by(mo_year) %>% 
   summarise(val = mean(value)) %>% 
@@ -345,7 +345,18 @@ mort = tidy(MORTGAGE30US) %>% # tidy is from the broom pkg - coerces xts object 
 
 home_pr = tidy(CSUSHPINSA) %>% 
   mutate(date = ymd(index)) %>% 
-  filter(year(date) >= 2000, year(date) <= 2004)
+  filter(year(date) >= 2010, year(date) <= 2021)
+
+gd = tidy(A939RX0Q048SBEA)
+plot(gd$index, gd$value)
+
+comb = inner_join(gd, home_pr, by = c("index"))
+with(comb, plot(value.x, value.y))
+
+m0 = lm(value.y ~ value.x, data = comb)
+ggplot(comb, aes(x = value.x, y = value.y, color = as.factor(year(index)))) + geom_point()
+ggplot(comb, aes(x = index, y = residuals(m0))) + geom_point()
+
 
 combined_dat = data.frame(mort = mort$val, pr = home_pr$value, date = home_pr$date)
 

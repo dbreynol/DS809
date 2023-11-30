@@ -1,0 +1,27 @@
+# Week 1
+
+## Time Series Data
+
+What is time series data
+
+## Time Series EDA
+
+Kayak demo
+
+assignment - nycflights
+
+## Multiple Time Series
+
+demo - case shiller home prices vs. gdp per capita
+
+assignment - kayak
+
+## Autocorrelation
+
+def
+
+functions in R
+
+assignment - write a function
+
+
