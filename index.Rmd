@@ -16,6 +16,7 @@ description: "(Partial) course materials for Artifex, Spring 2023."
 knitr::opts_chunk$set(echo = F)
 library(tidyverse)
 library(knitr)
+library(broom) # tidy
 library(forecast) # ma
 library(qcc) # CUSUM
 ```

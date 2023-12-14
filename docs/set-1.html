@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Set 1 | Artifex - Fall 2023</title>
+  <meta name="description" content="(Partial) course materials for Artifex, Spring 2023." />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Set 1 | Artifex - Fall 2023" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="(Partial) course materials for Artifex, Spring 2023." />
+  <meta name="github-repo" content="openscapes/series" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Set 1 | Artifex - Fall 2023" />
+  
+  <meta name="twitter:description" content="(Partial) course materials for Artifex, Spring 2023." />
+  
+
+<meta name="author" content="David Reynolds" />
+
+
+<meta name="date" content="2023-12-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="kayak-data-analysis.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="lib/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="lib/css/style.css" type="text/css" />
+<link rel="stylesheet" href="lib/css/lesson.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Artifex Fall 2023</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Topics in Time Series</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#autocorrelation"><i class="fa fa-check"></i><b>1.1</b> Autocorrelation</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#assignment-3"><i class="fa fa-check"></i><b>1.2</b> Assignment 3</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#change-points"><i class="fa fa-check"></i><b>1.3</b> Change Points</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="index.html"><a href="index.html#cusum"><i class="fa fa-check"></i><b>1.3.1</b> CUSUM</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#assignment-4"><i class="fa fa-check"></i><b>1.4</b> Assignment 4</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#moving-average"><i class="fa fa-check"></i><b>1.5</b> Moving Average</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#exponential-smoothing"><i class="fa fa-check"></i><b>1.6</b> Exponential Smoothing</a></li>
+<li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#assignment-5"><i class="fa fa-check"></i><b>1.7</b> Assignment 5</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html"><i class="fa fa-check"></i><b>2</b> Linear Regression Revisited</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html#estimation"><i class="fa fa-check"></i><b>2.1</b> Estimation</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html#example"><i class="fa fa-check"></i><b>2.2</b> Example</a></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html#assignment-2"><i class="fa fa-check"></i><b>2.3</b> Assignment 2</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="kayak-data-analysis.html"><a href="kayak-data-analysis.html"><i class="fa fa-check"></i><b>3</b> Kayak Data Analysis</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="kayak-data-analysis.html"><a href="kayak-data-analysis.html#prompt"><i class="fa fa-check"></i><b>3.1</b> Prompt</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="set-1.html"><a href="set-1.html"><i class="fa fa-check"></i><b>4</b> Set 1</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="set-1.html"><a href="set-1.html#time-series-data"><i class="fa fa-check"></i><b>4.1</b> Time Series Data</a></li>
+<li class="chapter" data-level="4.2" data-path="set-1.html"><a href="set-1.html#time-series-eda"><i class="fa fa-check"></i><b>4.2</b> Time Series EDA</a></li>
+<li class="chapter" data-level="4.3" data-path="set-1.html"><a href="set-1.html#multiple-time-series"><i class="fa fa-check"></i><b>4.3</b> Multiple Time Series</a></li>
+<li class="chapter" data-level="4.4" data-path="set-1.html"><a href="set-1.html#autocorrelation-1"><i class="fa fa-check"></i><b>4.4</b> Autocorrelation</a></li>
+<li class="chapter" data-level="4.5" data-path="set-1.html"><a href="set-1.html#lab-1"><i class="fa fa-check"></i><b>4.5</b> Lab 1</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Artifex - Fall 2023</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="set-1" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Set 1<a href="set-1.html#set-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>idea- make a lab question about smoothing</p>
+<div id="time-series-data" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Time Series Data<a href="set-1.html#time-series-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><p>A time series is an ordered sequence of observations, where the ordering is through time.</p></li>
+<li><p>Time series data creates unique problems for statistical modeling and inference.</p>
+<ul>
+<li>Traditional inference assumes that observations (data) are independent and identically distributed. Adjacent data points in time series data are not necessarily independent (uncorrelated).</li>
+<li>Most time series models aim to exploit such dependence. For instance, yesterday’s demand of a product may tell us something about today’s
+demand of a product.</li>
+</ul></li>
+<li><p>There are several different ways to represent time series data in R.</p></li>
+<li><p>We will use the <code>tidyverse</code> family of packages extensively in this class. This package includes the <code>lubridate</code> package, which includes functions to work with date-times.</p></li>
+<li><p>Two of the most common ways to represent time series data are using data frames in which one of the variables is a time object (such as POSIXct or Date) or using a time series object. These two representations are shown below with simulated trading data for a single 8-hour trading day.</p></li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="set-1.html#cb8-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb8-2"><a href="set-1.html#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="set-1.html#cb8-3" tabindex="-1"></a><span class="co"># option 1: represent time series data within a data frame</span></span>
+<span id="cb8-4"><a href="set-1.html#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="set-1.html#cb8-5" tabindex="-1"></a>hr <span class="ot">=</span> <span class="fu">seq</span>(<span class="fu">mdy_hm</span>(<span class="st">&quot;12-11-2023 09:30&quot;</span>), <span class="fu">mdy_hm</span>(<span class="st">&quot;12-11-2023 16:30&quot;</span>), <span class="st">&#39;hour&#39;</span>) <span class="co"># 8 hours</span></span>
+<span id="cb8-6"><a href="set-1.html#cb8-6" tabindex="-1"></a>pr <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">8</span>) <span class="co"># generate fake trading data</span></span>
+<span id="cb8-7"><a href="set-1.html#cb8-7" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="set-1.html#cb8-8" tabindex="-1"></a>trading_dat <span class="ot">=</span> <span class="fu">data.frame</span>(hr, pr)</span>
+<span id="cb8-9"><a href="set-1.html#cb8-9" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="set-1.html#cb8-10" tabindex="-1"></a><span class="co"># option 2: represent time series data using a time series object</span></span>
+<span id="cb8-11"><a href="set-1.html#cb8-11" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="set-1.html#cb8-12" tabindex="-1"></a>trading_ts <span class="ot">=</span> <span class="fu">ts</span>(<span class="at">data =</span> trading_dat<span class="sc">$</span>pr, <span class="at">start =</span> <span class="dv">1</span>, <span class="at">frequency =</span> <span class="dv">8</span>)</span></code></pre></div>
+</div>
+<div id="time-series-eda" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Time Series EDA<a href="set-1.html#time-series-eda" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The first thing to do in any data analysis is exploratory data analysis (EDA). Graphs enable many features of the data to be visualized, including patterns, unusual observations, changes over time, and relationships between variables. The features that are seen in plots of the data can then be incorporated into the forecasting methods to be used.</p>
+<p>R has several systems for making graphs. We will primarily use ggplot2, which is among the set of tidyverse packages and is one of the most versatile systems for plotting. We will use a data set from Kayak to motivate our analysis.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="set-1.html#cb9-1" tabindex="-1"></a>conversions <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv&quot;</span>)</span>
+<span id="cb9-2"><a href="set-1.html#cb9-2" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(conversions))</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">datestamp</th>
+<th align="left">country_code</th>
+<th align="left">marketing_channel</th>
+<th align="right">conversions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2014-11-01</td>
+<td align="left">be</td>
+<td align="left">Display Ads</td>
+<td align="right">1174</td>
+</tr>
+<tr class="even">
+<td align="left">2014-11-01</td>
+<td align="left">be</td>
+<td align="left">KAYAK Deals Email</td>
+<td align="right">57</td>
+</tr>
+<tr class="odd">
+<td align="left">2014-11-01</td>
+<td align="left">be</td>
+<td align="left">Search Engine Ads</td>
+<td align="right">1122</td>
+</tr>
+<tr class="even">
+<td align="left">2014-11-01</td>
+<td align="left">be</td>
+<td align="left">Search Engine Results</td>
+<td align="right">976</td>
+</tr>
+<tr class="odd">
+<td align="left">2014-11-01</td>
+<td align="left">fi</td>
+<td align="left">Display Ads</td>
+<td align="right">12</td>
+</tr>
+<tr class="even">
+<td align="left">2014-11-01</td>
+<td align="left">fi</td>
+<td align="left">Search Engine Results</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+<p>This dataset contains information on the total number of daily conversions by country and marketing channel. Let us focus our analysis on the US and fist visualize the number of conversions by day.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>This plot contains a lot of useful information. To gain insight into how conversions depend on marketing channel, we can use facets. Facets are subplots that display a time series for each marketing channel.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>Display ads and search engine ads are the dominant marketing channels. Both have a regular pattern that is likely a function of the day of week, with a higher number of conversions during the weekdays as compared with weekends. We can explore this feature by aggregating over each weekday and visualizing how the distribution of conversions changes by day.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>Clearly, there are significant changes in the mean across the week. This is a form of seasonality. It may be useful to see what the data look like when this weekday effect is removed. To do so, we could visualize the residuals from the following linear regression model:</p>
+<p><span class="math display">\[\begin{align}
+\hat{\text{conversions}} = \hat{\beta}_0 + \sum_{j=2}^7 \bigg( \hat{\beta}_j \times 1(\text{weekday = j}) \bigg),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(j\)</span> indexes the day of week. The residuals from this model consist of each observation minus the mean for that particular weekday.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>This allows us to more clearly see the trend across the date range, removing the effect of the weekly pattern.</p>
+</div>
+<div id="multiple-time-series" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Multiple Time Series<a href="set-1.html#multiple-time-series" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Often we will want to develop insight into the relationship between more several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>It looks like these two time series track pretty closely to one another. We could fit a linear regression to this data in order to estimate the expected change in the Case Shiller Index for a unit ($1) change in GDP/ capital</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-556.2290146</td>
+<td align="right">33.8244315</td>
+<td align="right">-16.44459</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">gdp</td>
+<td align="right">0.0126208</td>
+<td align="right">0.0005663</td>
+<td align="right">22.28669</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>We could also examine the residuals to gain insight into what is missing from this model.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>The model severely underestimates the house index starting during the pandemic. There is a clear pattern to these residuals. Is this a problem?</p>
+</div>
+<div id="autocorrelation-1" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> Autocorrelation<a href="set-1.html#autocorrelation-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A central concept in time series analysis is autocorrelation. This is the correlation between <span class="math inline">\(y_t\)</span> and its lagged value. For a lag of <span class="math inline">\(h\)</span>, this is the correlation between <span class="math inline">\(y_t\)</span> and <span class="math inline">\(y_{t-h}\)</span>. Let’s first review correlation. For two vectors of data, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, the correlation between the two is,</p>
+<p><span class="math display">\[\begin{align}
+\text{cor}(x,y) &amp;= \frac{\text{cov}(x,y)}{\sigma_x \sigma_y} \\
+                &amp;= \frac{ \sum_i (x_i - \bar{x})(y_i - \bar{y})}{ \sqrt{ \sum_i (x_i - \bar{x})^2 \sum_i (y_i - \bar{y})^2 }}
+\end{align}\]</span></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="set-1.html#cb10-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb10-2"><a href="set-1.html#cb10-2" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">5</span></span>
+<span id="cb10-3"><a href="set-1.html#cb10-3" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb10-4"><a href="set-1.html#cb10-4" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb10-5"><a href="set-1.html#cb10-5" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="set-1.html#cb10-6" tabindex="-1"></a><span class="fu">sum</span>( (x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">*</span> (y <span class="sc">-</span> <span class="fu">mean</span>(y))) <span class="sc">/</span> ( (n<span class="dv">-1</span>) <span class="sc">*</span> <span class="fu">sd</span>(x) <span class="sc">*</span> <span class="fu">sd</span>(y) )</span>
+<span id="cb10-7"><a href="set-1.html#cb10-7" tabindex="-1"></a><span class="fu">cor</span>(x, y)</span></code></pre></div>
+<p>The autocorrelation applies this concept to a single time series. Autocorrelation is the correlation of a time series with a delayed copy of itself as a function of delay. The autocorrelation for a time series <span class="math inline">\(y\)</span> at lag <span class="math inline">\(k\)</span> is:</p>
+<p><span class="math display">\[\begin{equation}
+r_k = \frac{ \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y}) }{\sum_{t=1}^T (y_t - \bar{y})^2 }
+\end{equation}\]</span></p>
+<p>Here is a simple example of computing a lag 1 autocorrelation.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="set-1.html#cb11-1" tabindex="-1"></a>a <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
+<span id="cb11-2"><a href="set-1.html#cb11-2" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="set-1.html#cb11-3" tabindex="-1"></a>a1 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)</span>
+<span id="cb11-4"><a href="set-1.html#cb11-4" tabindex="-1"></a>a2 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
+<span id="cb11-5"><a href="set-1.html#cb11-5" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="set-1.html#cb11-6" tabindex="-1"></a><span class="co"># lag 1 autocorrelation</span></span>
+<span id="cb11-7"><a href="set-1.html#cb11-7" tabindex="-1"></a><span class="fu">sum</span>( (a1 <span class="sc">-</span> <span class="fu">mean</span>(a)) <span class="sc">*</span> (a2 <span class="sc">-</span> <span class="fu">mean</span>(a))) <span class="sc">/</span> (<span class="fu">sum</span>( (a <span class="sc">-</span> <span class="fu">mean</span>(a))<span class="sc">^</span><span class="dv">2</span> ) )  <span class="co"># by hand</span></span>
+<span id="cb11-8"><a href="set-1.html#cb11-8" tabindex="-1"></a>(<span class="fu">acf</span>(a))</span></code></pre></div>
+<p>functions in R</p>
+<p>assignment - write a function</p>
+</div>
+<div id="lab-1" class="section level2 hasAnchor" number="4.5">
+<h2><span class="header-section-number">4.5</span> Lab 1<a href="set-1.html#lab-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li><p>Starting from the code chunk in <a href="set-1.html#time-series-data">Time Series Data</a>, extend the simulated training data to a full week (December 11 through December 15, eight hours each day). Using the data frame representation, <code>plot(trading_dat$hr, trading_dat$pr)</code>. Using the time series data, <code>plot(trading_ts)</code>. What are the differences between these two plots?</p></li>
+<li><p>We can further hone in on the trend of the residuals at the end of <a href="set-1.html#time-series-eda">Time Series EDA</a> by computing and plotting a moving average. For a time series <span class="math inline">\(y_t\)</span>, <span class="math inline">\(t = 1, \ldots, T\)</span>, a moving average of order <span class="math inline">\(m\)</span> can be written,
+<span class="math display">\[\begin{align}
+\hat{y_t} = \frac{1}{m} \sum_{j=-k}^{k} y_{t+j},
+\end{align}\]</span>
+where <span class="math inline">\(m=2k+1\)</span>. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order <span class="math inline">\(m=7\)</span> for the residual time series and plot it along with the residuals in a single plot.</p></li>
+<li></li>
+</ol>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="kayak-data-analysis.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/dbreynol/artifex_fall2022/edit/master/set1.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["series.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

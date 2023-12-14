@@ -13,7 +13,7 @@ example
 assignment-2
 kayak-data-analysis
 prompt
-week-1
+set-1
 time-series-data
 time-series-eda
 multiple-time-series
