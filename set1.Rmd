@@ -1,18 +1,157 @@
 # Week 1
 
+idea- make a lab question about smoothing
+
 ## Time Series Data
 
-What is time series data
+* A time series is an ordered sequence of observations. The ordering is usually through time, particularly in terms of some equally spaced time intervals.
+
+* Time series data creates unique problems for statistical modeling and inference.
+  + Traditional inference assumes that observations (data) are independent and identically distributed. Adjacent data points in time series data are not necessarily independent (uncorrelated).
+  + Most time series models aim to exploit such dependence. For instance, yesterday’s demand of a product may tell us something about today’s
+demand of a product.
+
+* There are several different ways to represent time series data in R. 
+
+* We will use the <code>tidyverse</code> family of packages extensively in this class. This package includes the <code>lubridate</code> package, which includes functions to work with date-times.
+
+* Two of the most common ways to represent time series data are using data frames in which one of the variables is a time object (such as POSIXct or Date) or using a time series object. These two representations are shown below with simulated trading data for a single 8-hour trading day.
+
+
+```{r echo=TRUE}
+set.seed(1)
+
+# option 1: represent time series data within a data frame
+
+hr = seq(mdy_hm("12-11-2023 09:30"), mdy_hm("12-11-2023 16:30"), 'hour') # 8 hours
+pr = rnorm(8) # generate fake trading data
+
+trading_dat = data.frame(hr, pr)
+
+# option 2: represent time series data using a time series object
+
+trading_ts = ts(data = trading_dat$pr, start = 1, frequency = 8)
+```
+
+
 
 ## Time Series EDA
 
-Kayak demo
+The first thing to do in any data analysis is exploratory data analysis (EDA). Graphs enable many features of the data to be visualized, including patterns, unusual observations, changes over time, and relationships between variables. The features that are seen in plots of the data must then be incorporated, as much as possible, into the forecasting methods to be used.
+
+R has several systems for making graphs. We will primarily use ggplot2, which is among the set of tidyverse packages and is one of the most versatile systems for plotting. We will use a data set from Kayak to motivate our analysis.
+
+```{r echo=TRUE}
+conversions = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv")
+knitr::kable(head(conversions))
+```
+
+This dataset contains information on the total number of daily conversions by country and marketing channel. Let us focus our analysis on the US and fist visualize the number of conversions by day. 
+
+```{r}
+conversions$datestamp = ymd(conversions$datestamp)
+
+# overall trend
+
+conversions %>% 
+  filter(country_code == "us") %>% 
+  group_by(datestamp, country_code) %>% 
+  summarise(tot_conv = sum(conversions), .groups = "drop") %>% 
+  ggplot(aes(x = datestamp, y = tot_conv)) +
+  geom_line() + 
+  theme_minimal() + 
+  ggtitle(" US Conversions by Day") + 
+  xlab("Date") + 
+  ylab("Total Conversions") + 
+  scale_x_date(NULL, date_breaks = "1 month", date_labels = "%b")
+
+
+```
+
+This plot contains a lot of information. To gain insight into how the conversions depend on marketing channel, we can use facets. Facets are subplots that each display a time series for one of the marketing channels.
+
+
+```{r}
+conversions %>% 
+  filter(country_code == "us") %>% 
+  ggplot(aes(x = datestamp, y = conversions)) + 
+  geom_line() + 
+  facet_wrap(~ marketing_channel) + theme_minimal()
+```
+
+Display ads and search engine ads are the dominant marketing channels. Both have a very regular pattern that is likely a function of the day of week, with a higher number of conversions during the weekdays as compared with weekends. We can further explore this feature by aggregating over the weekday and computing how the distribution of conversions changes by day.
+
+```{r}
+conversions %>% 
+  filter(country_code == "us") %>% 
+  drop_na() %>% 
+  group_by(datestamp) %>% summarise(conversions = sum(conversions)) %>% 
+  mutate(day = wday(datestamp, label = T)) %>% 
+  ggplot(aes(x = as.factor(day), y = conversions)) + 
+  geom_boxplot() + 
+  stat_summary(fun = "mean", geom = "point", color = "red") +
+  theme_minimal() + 
+  ggtitle("Conversion Distribution by Day") + 
+  xlab("Day of Week") + 
+  ylab("Conversions")
+
+```
+
+Clearly there are significant changes in the mean across the week. This is a form of seasonality. It may be useful to see what the data look like when this weekday effect is removed. To do so, we could visualize the residuals from the following linear regression model:
+
+
+
+```{r}
+# EDA via models
+
+mod_df = conversions %>% 
+  filter(country_code == "us") %>% 
+  drop_na() %>% 
+  group_by(datestamp, country_code) %>% 
+  summarise(tot_conv = sum(conversions), .groups = "drop") %>% 
+  mutate(wday = factor(wday(datestamp, label= T), ordered = F))
+
+mod = lm(tot_conv ~ wday, data = mod_df)
+
+mod_df$resids = residuals(mod)
+
+mod_df %>% 
+  ggplot(aes(x = datestamp, y = resids)) + geom_line()
+
+
+mod_df %>% ggplot(aes(x = datestamp, y = resids)) + geom_line(aes(color = wday))
+
+```
 
 assignment - nycflights
 
 ## Multiple Time Series
 
 demo - case shiller home prices vs. gdp per capita
+
+```{r}
+fred = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv")[,-1]
+#fred$date = ymd(fred$date)
+
+fred %>% pivot_longer(-date) %>% 
+  group_by(name) %>% mutate(std = (value - mean(value)) ) %>% 
+  ggplot(aes(x = date, y = std)) + geom_line(aes(color = name))
+
+```
+
+
+```{r}
+m0 = lm(shiller ~ gdp, data = fred)
+
+
+# predictions by date
+
+fred$pred = predict(m0)
+
+
+# prediction intervals
+```
+
 
 assignment - kayak
 
@@ -23,5 +162,10 @@ def
 functions in R
 
 assignment - write a function
+
+## Lab 1
+
+1. Starting from the code chunk in [Time Series Data], extend the simulated training data to a full week (December 11 through December 15, eight hours each day). Using the data frame representation, <code>plot(trading_dat\$hr, trading_dat\$pr)</code>. Using the time series data, <code>plot(trading_ts)</code>. What are the differences between these two plots?
+
 
 

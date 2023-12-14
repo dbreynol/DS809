@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2023-11-30" />
+<meta name="date" content="2023-12-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -167,6 +167,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.2" data-path="week-1.html"><a href="week-1.html#time-series-eda"><i class="fa fa-check"></i><b>4.2</b> Time Series EDA</a></li>
 <li class="chapter" data-level="4.3" data-path="week-1.html"><a href="week-1.html#multiple-time-series"><i class="fa fa-check"></i><b>4.3</b> Multiple Time Series</a></li>
 <li class="chapter" data-level="4.4" data-path="week-1.html"><a href="week-1.html#autocorrelation-1"><i class="fa fa-check"></i><b>4.4</b> Autocorrelation</a></li>
+<li class="chapter" data-level="4.5" data-path="week-1.html"><a href="week-1.html#lab-1"><i class="fa fa-check"></i><b>4.5</b> Lab 1</a></li>
 </ul></li>
 </ul>
 
@@ -187,18 +188,105 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="week-1" class="section level1 hasAnchor" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Week 1<a href="week-1.html#week-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>idea- make a lab question about smoothing</p>
 <div id="time-series-data" class="section level2 hasAnchor" number="4.1">
 <h2><span class="header-section-number">4.1</span> Time Series Data<a href="week-1.html#time-series-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>What is time series data</p>
+<ul>
+<li><p>A time series is an ordered sequence of observations. The ordering is usually through time, particularly in terms of some equally spaced time intervals.</p></li>
+<li><p>Time series data creates unique problems for statistical modeling and inference.</p>
+<ul>
+<li>Traditional inference assumes that observations (data) are independent and identically distributed. Adjacent data points in time series data are not necessarily independent (uncorrelated).</li>
+<li>Most time series models aim to exploit such dependence. For instance, yesterday’s demand of a product may tell us something about today’s
+demand of a product.</li>
+</ul></li>
+<li><p>There are several different ways to represent time series data in R.</p></li>
+<li><p>We will use the <code>tidyverse</code> family of packages extensively in this class. This package includes the <code>lubridate</code> package, which includes functions to work with date-times.</p></li>
+<li><p>Two of the most common ways to represent time series data are using data frames in which one of the variables is a time object (such as POSIXct or Date) or using a time series object. These two representations are shown below with simulated trading data for a single 8-hour trading day.</p></li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="week-1.html#cb8-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb8-2"><a href="week-1.html#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="week-1.html#cb8-3" tabindex="-1"></a><span class="co"># option 1: represent time series data within a data frame</span></span>
+<span id="cb8-4"><a href="week-1.html#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="week-1.html#cb8-5" tabindex="-1"></a>hr <span class="ot">=</span> <span class="fu">seq</span>(<span class="fu">mdy_hm</span>(<span class="st">&quot;12-11-2023 09:30&quot;</span>), <span class="fu">mdy_hm</span>(<span class="st">&quot;12-11-2023 16:30&quot;</span>), <span class="st">&#39;hour&#39;</span>) <span class="co"># 8 hours</span></span>
+<span id="cb8-6"><a href="week-1.html#cb8-6" tabindex="-1"></a>pr <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">8</span>) <span class="co"># generate fake trading data</span></span>
+<span id="cb8-7"><a href="week-1.html#cb8-7" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="week-1.html#cb8-8" tabindex="-1"></a>trading_dat <span class="ot">=</span> <span class="fu">data.frame</span>(hr, pr)</span>
+<span id="cb8-9"><a href="week-1.html#cb8-9" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="week-1.html#cb8-10" tabindex="-1"></a><span class="co"># option 2: represent time series data using a time series object</span></span>
+<span id="cb8-11"><a href="week-1.html#cb8-11" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="week-1.html#cb8-12" tabindex="-1"></a>trading_ts <span class="ot">=</span> <span class="fu">ts</span>(<span class="at">data =</span> trading_dat<span class="sc">$</span>pr, <span class="at">start =</span> <span class="dv">1</span>, <span class="at">frequency =</span> <span class="dv">8</span>)</span></code></pre></div>
 </div>
 <div id="time-series-eda" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> Time Series EDA<a href="week-1.html#time-series-eda" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Kayak demo</p>
+<p>The first thing to do in any data analysis is exploratory data analysis (EDA). Graphs enable many features of the data to be visualized, including patterns, unusual observations, changes over time, and relationships between variables. The features that are seen in plots of the data must then be incorporated, as much as possible, into the forecasting methods to be used.</p>
+<p>R has several systems for making graphs. We will primarily use ggplot2, which is among the set of tidyverse packages and is one of the most versatile systems for plotting. We will use a data set from Kayak to motivate our analysis.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="week-1.html#cb9-1" tabindex="-1"></a>conversions <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv&quot;</span>)</span>
+<span id="cb9-2"><a href="week-1.html#cb9-2" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(conversions))</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">datestamp</th>
+<th align="left">country_code</th>
+<th align="left">marketing_channel</th>
+<th align="right">conversions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2014-11-01</td>
+<td align="left">be</td>
+<td align="left">Display Ads</td>
+<td align="right">1174</td>
+</tr>
+<tr class="even">
+<td align="left">2014-11-01</td>
+<td align="left">be</td>
+<td align="left">KAYAK Deals Email</td>
+<td align="right">57</td>
+</tr>
+<tr class="odd">
+<td align="left">2014-11-01</td>
+<td align="left">be</td>
+<td align="left">Search Engine Ads</td>
+<td align="right">1122</td>
+</tr>
+<tr class="even">
+<td align="left">2014-11-01</td>
+<td align="left">be</td>
+<td align="left">Search Engine Results</td>
+<td align="right">976</td>
+</tr>
+<tr class="odd">
+<td align="left">2014-11-01</td>
+<td align="left">fi</td>
+<td align="left">Display Ads</td>
+<td align="right">12</td>
+</tr>
+<tr class="even">
+<td align="left">2014-11-01</td>
+<td align="left">fi</td>
+<td align="left">Search Engine Results</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+<p>This dataset contains information on the total number of daily conversions by country and marketing channel. Let us focus our analysis on the US and fist visualize the number of conversions by day.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>This plot contains a lot of information. To gain insight into how the conversions depend on marketing channel, we can use facets. Facets are subplots that each display a time series for one of the marketing channels.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>Display ads and search engine ads are the dominant marketing channels. Both have a very regular pattern that is likely a function of the day of week, with a higher number of conversions during the weekdays as compared with weekends. We can further explore this feature by aggregating over the weekday and computing how the distribution of conversions changes by day.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>Clearly there are significant changes in the mean across the week. This is a form of seasonality. It may be useful to see what the data look like when this weekday effect is removed. To do so, we could visualize the residuals from the following linear regression model:</p>
+<p><img src="series_files/figure-html/unnamed-chunk-18-1.png" width="672" /><img src="series_files/figure-html/unnamed-chunk-18-2.png" width="672" /></p>
 <p>assignment - nycflights</p>
 </div>
 <div id="multiple-time-series" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> Multiple Time Series<a href="week-1.html#multiple-time-series" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>demo - case shiller home prices vs. gdp per capita</p>
+<pre><code>## `geom_line()`: Each group consists of only one
+## observation.
+## ℹ Do you need to adjust the group aesthetic?</code></pre>
+<p><img src="series_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <p>assignment - kayak</p>
 </div>
 <div id="autocorrelation-1" class="section level2 hasAnchor" number="4.4">
@@ -206,6 +294,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>def</p>
 <p>functions in R</p>
 <p>assignment - write a function</p>
+</div>
+<div id="lab-1" class="section level2 hasAnchor" number="4.5">
+<h2><span class="header-section-number">4.5</span> Lab 1<a href="week-1.html#lab-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li>Starting from the code chunk in <a href="week-1.html#time-series-data">Time Series Data</a>, extend the simulated training data to a full week (December 11 through December 15, eight hours each day). Using the data frame representation, <code>plot(trading_dat$hr, trading_dat$pr)</code>. Using the time series data, <code>plot(trading_ts)</code>. What are the differences between these two plots?</li>
+</ol>
 
 </div>
 </div>
