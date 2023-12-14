@@ -4,7 +4,7 @@ idea- make a lab question about smoothing
 
 ## Time Series Data
 
-* A time series is an ordered sequence of observations. The ordering is usually through time, particularly in terms of some equally spaced time intervals.
+* A time series is an ordered sequence of observations, where the ordering is through time.
 
 * Time series data creates unique problems for statistical modeling and inference.
   + Traditional inference assumes that observations (data) are independent and identically distributed. Adjacent data points in time series data are not necessarily independent (uncorrelated).
@@ -37,7 +37,7 @@ trading_ts = ts(data = trading_dat$pr, start = 1, frequency = 8)
 
 ## Time Series EDA
 
-The first thing to do in any data analysis is exploratory data analysis (EDA). Graphs enable many features of the data to be visualized, including patterns, unusual observations, changes over time, and relationships between variables. The features that are seen in plots of the data must then be incorporated, as much as possible, into the forecasting methods to be used.
+The first thing to do in any data analysis is exploratory data analysis (EDA). Graphs enable many features of the data to be visualized, including patterns, unusual observations, changes over time, and relationships between variables. The features that are seen in plots of the data can then be incorporated into the forecasting methods to be used.
 
 R has several systems for making graphs. We will primarily use ggplot2, which is among the set of tidyverse packages and is one of the most versatile systems for plotting. We will use a data set from Kayak to motivate our analysis.
 
@@ -68,7 +68,7 @@ conversions %>%
 
 ```
 
-This plot contains a lot of information. To gain insight into how the conversions depend on marketing channel, we can use facets. Facets are subplots that each display a time series for one of the marketing channels.
+This plot contains a lot of useful information. To gain insight into how conversions depend on marketing channel, we can use facets. Facets are subplots that display a time series for each marketing channel.
 
 
 ```{r}
@@ -79,7 +79,7 @@ conversions %>%
   facet_wrap(~ marketing_channel) + theme_minimal()
 ```
 
-Display ads and search engine ads are the dominant marketing channels. Both have a very regular pattern that is likely a function of the day of week, with a higher number of conversions during the weekdays as compared with weekends. We can further explore this feature by aggregating over the weekday and computing how the distribution of conversions changes by day.
+Display ads and search engine ads are the dominant marketing channels. Both have a regular pattern that is likely a function of the day of week, with a higher number of conversions during the weekdays as compared with weekends. We can explore this feature by aggregating over each weekday and visualizing how the distribution of conversions changes by day.
 
 ```{r}
 conversions %>% 
@@ -97,9 +97,13 @@ conversions %>%
 
 ```
 
-Clearly there are significant changes in the mean across the week. This is a form of seasonality. It may be useful to see what the data look like when this weekday effect is removed. To do so, we could visualize the residuals from the following linear regression model:
+Clearly, there are significant changes in the mean across the week. This is a form of seasonality. It may be useful to see what the data look like when this weekday effect is removed. To do so, we could visualize the residuals from the following linear regression model:
 
+\begin{align}
+\hat{\text{conversions}} = \hat{\beta}_0 + \sum_{j=2}^7 \bigg( \hat{\beta}_j \times 1(\text{weekday = j}) \bigg),
+\end{align}
 
+where $j$ indexes the day of week. The residuals from this model consist of each observation minus the mean for that particular weekday. 
 
 ```{r}
 # EDA via models
@@ -116,14 +120,17 @@ mod = lm(tot_conv ~ wday, data = mod_df)
 mod_df$resids = residuals(mod)
 
 mod_df %>% 
-  ggplot(aes(x = datestamp, y = resids)) + geom_line()
+  ggplot(aes(x = datestamp, y = resids)) + 
+  geom_line() + 
+  theme_minimal() + 
+  ggtitle("US Conversions - Estimated Conversions based on Weekday")
 
 
-mod_df %>% ggplot(aes(x = datestamp, y = resids)) + geom_line(aes(color = wday))
+#mod_df %>% ggplot(aes(x = datestamp, y = resids)) + geom_line(aes(color = wday))
 
 ```
 
-assignment - nycflights
+This allows us to more clearly see the trend across the date range, removing the effect of the weekly pattern. 
 
 ## Multiple Time Series
 
@@ -167,5 +174,11 @@ assignment - write a function
 
 1. Starting from the code chunk in [Time Series Data], extend the simulated training data to a full week (December 11 through December 15, eight hours each day). Using the data frame representation, <code>plot(trading_dat\$hr, trading_dat\$pr)</code>. Using the time series data, <code>plot(trading_ts)</code>. What are the differences between these two plots?
 
+2. We can further hone in on the trend of the residuals at the end of [Time Series EDA] by computing and plotting a moving average. For a time series $y_t$, $t = 1, \ldots, T$, a moving average of order $m$ can be written,
 
+\begin{align}
+\hat{y_t} = \frac{1}{m} \sum_{j=-k}^{k} y_{t+j},
+\end{align}
+
+where $m=2k+1$. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order $m=7$ for the residual time series and plot it along with the residuals in a single plot. 
 
