@@ -351,10 +351,10 @@ y = X \beta + \epsilon,
 <span id="cb10-7"><a href="set-1.html#cb10-7" tabindex="-1"></a><span class="fu">cor</span>(x, y)</span></code></pre></div>
 <p>Autocorrelation applies this concept to a single time series. Autocorrelation is the correlation of a time series with a delayed copy of itself as a function of delay. The autocorrelation for a time series <span class="math inline">\(y\)</span> at lag <span class="math inline">\(k\)</span> is:</p>
 <p><span class="math display">\[\begin{align}
-r_k &amp;= \frac{\text{Cov}(y_t, y_{t-k})}{\sigma_{y_t} \sigma_{y_{t-k}}} \\
-&amp;= \frac{ \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y}) }{\sum_{t=1}^T (y_t - \bar{y})^2 }
+r_k &amp;= \frac{\text{cov}(y_t, y_{t-k})}{\sigma_{y_t} \sigma_{y_{t-k}}} \\
+&amp;= \frac{ \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y}) }{\sum_{t=1}^T (y_t - \bar{y})^2 }.
 \end{align}\]</span></p>
-<p>Here is a simple example of computing a lag 1 autocorrelation.</p>
+<p>The second line is due to the assumption of constant variance. Here is a simple example of computing the lag 1 autocorrelation.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="set-1.html#cb11-1" tabindex="-1"></a>a <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
 <span id="cb11-2"><a href="set-1.html#cb11-2" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="set-1.html#cb11-3" tabindex="-1"></a>a1 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)</span>
@@ -363,8 +363,6 @@ r_k &amp;= \frac{\text{Cov}(y_t, y_{t-k})}{\sigma_{y_t} \sigma_{y_{t-k}}} \\
 <span id="cb11-6"><a href="set-1.html#cb11-6" tabindex="-1"></a><span class="co"># lag 1 autocorrelation</span></span>
 <span id="cb11-7"><a href="set-1.html#cb11-7" tabindex="-1"></a><span class="fu">sum</span>( (a1 <span class="sc">-</span> <span class="fu">mean</span>(a)) <span class="sc">*</span> (a2 <span class="sc">-</span> <span class="fu">mean</span>(a))) <span class="sc">/</span> (<span class="fu">sum</span>( (a <span class="sc">-</span> <span class="fu">mean</span>(a))<span class="sc">^</span><span class="dv">2</span> ) )  <span class="co"># by hand</span></span>
 <span id="cb11-8"><a href="set-1.html#cb11-8" tabindex="-1"></a>(<span class="fu">acf</span>(a))</span></code></pre></div>
-<p>functions in R</p>
-<p>assignment - write a function</p>
 </div>
 <div id="lab-1" class="section level2 hasAnchor" number="4.5">
 <h2><span class="header-section-number">4.5</span> Lab 1<a href="set-1.html#lab-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -375,7 +373,12 @@ r_k &amp;= \frac{\text{Cov}(y_t, y_{t-k})}{\sigma_{y_t} \sigma_{y_{t-k}}} \\
 \hat{y_t} = \frac{1}{m} \sum_{j=-k}^{k} y_{t+j},
 \end{align}\]</span>
 where <span class="math inline">\(m=2k+1\)</span>. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order <span class="math inline">\(m=7\)</span> for the residual time series and plot it along with the residuals in a single plot.</p></li>
-<li></li>
+<li><p>Join the Kayak visits data (see below) to the conversions data from <a href="set-1.html#time-series-eda">Time Series EDA</a>. Use the <code>inner_join</code> function with the argument, <code>by = c(“datestamp”, “country_code”, “marketing_channel”)</code>. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the reponse variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model.</p></li>
+</ol>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="set-1.html#cb12-1" tabindex="-1"></a>visits <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv&quot;</span>)</span>
+<span id="cb12-2"><a href="set-1.html#cb12-2" tabindex="-1"></a>visits<span class="sc">$</span>datestamp <span class="ot">=</span> <span class="fu">ymd</span>(visits<span class="sc">$</span>datestamp)</span></code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Wrtie a function in R that takes two arguments: a time series (<span class="math inline">\(y\)</span>) formatted as a vector and an integer (<span class="math inline">\(k\)</span>) specifying a lag. The output for this function is the lag <span class="math inline">\(k\)</span> autocorrelation for <span class="math inline">\(y\)</span>, using the formula in <a href="index.html#autocorrelation">Autocorrelation</a>. Compare the output of your function to the output from <code>(acf(y))</code>. An extra challenge is to allow <span class="math inline">\(k\)</span> to be a vector of lags, in which case your function should return a vector of autocorrelation values.</li>
 </ol>
 
 </div>
