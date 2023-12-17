@@ -37,7 +37,7 @@ trading_ts = ts(data = trading_dat$pr, start = 1, frequency = 8)
 
 ## Time Series EDA
 
-The first thing to do in any data analysis is exploratory data analysis (EDA). Graphs enable many features of the data to be visualized, including patterns, unusual observations, changes over time, and relationships between variables. The features that are seen in plots of the data can then be incorporated into the forecasting methods to be used.
+The first thing to do in any data analysis is exploratory data analysis (EDA). Graphs enable many features of the data to be visualized, including patterns, unusual observations, changes over time, and relationships between variables. The features that are seen in plots of the data can then be incorporated into statistical models.
 
 R has several systems for making graphs. We will primarily use ggplot2, which is among the set of tidyverse packages and is one of the most versatile systems for plotting. We will use a data set from Kayak to motivate our analysis.
 
@@ -79,7 +79,7 @@ conversions %>%
   facet_wrap(~ marketing_channel) + theme_minimal()
 ```
 
-Display ads and search engine ads are the dominant marketing channels. Both have a regular pattern that is likely a function of the day of week, with a higher number of conversions during the weekdays as compared with weekends. We can explore this feature by aggregating over each weekday and visualizing how the distribution of conversions changes by day.
+Display ads and search engine ads are the dominant marketing channels. Both have a regular pattern that is likely a function of the day of week, with a higher number of conversions during weekdays as compared with weekends. We can explore this feature by aggregating over each weekday and visualizing how the distribution of conversions changes by day.
 
 ```{r}
 conversions %>% 
@@ -97,7 +97,7 @@ conversions %>%
 
 ```
 
-Clearly, there are significant changes in the mean across the week. This is a form of seasonality. It may be useful to see what the data look like when this weekday effect is removed. To do so, we could visualize the residuals from the following linear regression model:
+Clearly, there are significant changes in the mean level of conversions across the week. This is a form of seasonality. It may be useful to see what the data look like when this weekday effect is removed. To do so, we could visualize the residuals from the following linear regression model:
 
 \begin{align}
 \hat{\text{conversions}} = \hat{\beta}_0 + \sum_{j=2}^7 \bigg( \hat{\beta}_j \times 1(\text{weekday = j}) \bigg),
@@ -123,18 +123,14 @@ mod_df %>%
   ggplot(aes(x = datestamp, y = resids)) + 
   geom_line() + 
   theme_minimal() + 
-  ggtitle("US Conversions - Estimated Conversions based on Weekday")
-
-
-#mod_df %>% ggplot(aes(x = datestamp, y = resids)) + geom_line(aes(color = wday))
-
+  ggtitle("US Conversions excluding Weekly Seasonality")
 ```
 
 This allows us to more clearly see the trend across the date range, removing the effect of the weekly pattern. 
 
 ## Multiple Time Series
 
-Often we will want to develop insight into the relationship between more several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index. 
+Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database). 
 
 ```{r}
 fred = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv")[,-1]
@@ -157,19 +153,27 @@ m0 = lm(shiller ~ gdp, data = fred)
 m0 %>% tidy() %>% kable()
 ```
 
-We could also examine the residuals to gain insight into what is missing from this model.
+Further, we could also examine the residuals to gain insight into what is missing from this model.
 
 ```{r}
 fred$res = residuals(m0)
 ggplot(fred, aes(x = date, y = res)) + geom_line() + theme_minimal() + 
-  ggtitle("Residuals from Shiller ~ GDP/Capita lm ")
+  ggtitle("Residuals from Shiller ~ GDP/Capita linear regression")
 ```
 
 The model severely underestimates the house index starting during the pandemic. There is a clear pattern to these residuals. Is this a problem?
 
 ## Autocorrelation
 
-A central concept in time series analysis is autocorrelation. This is the correlation between $y_t$ and its lagged value. For a lag of $h$, this is the correlation between $y_t$ and $y_{t-h}$. Let's first review correlation. For two vectors of data, $x$ and $y$, the correlation between the two is,
+One of the assumptions of the linear regression model is that the errors are independent and identically distributed. That is, for the model,
+
+\begin{align}
+y = X \beta + \epsilon,
+\end{align}
+
+The error vector, $\epsilon \sim N(0, \sigma^2)$. This implies that there is no correlation structure to the residuals. One way to check that this is true is to check for the absence of autocorrelation in the observed residuals.
+
+Given a time series, $y_t$, where $t=1,\ldots,T$, the correlation between $y_t$ and its lagged value, $y_{t-k}$, is defined as autocorrelation. Let's first review correlation. For two vectors of data, $x$ and $y$, the correlation between the two is,
 
 \begin{align}
 \text{cor}(x,y) &= \frac{\text{cov}(x,y)}{\sigma_x \sigma_y} \\
@@ -186,11 +190,12 @@ sum( (x - mean(x)) * (y - mean(y))) / ( (n-1) * sd(x) * sd(y) )
 cor(x, y)
 ```
 
-The autocorrelation applies this concept to a single time series. Autocorrelation is the correlation of a time series with a delayed copy of itself as a function of delay. The autocorrelation for a time series $y$ at lag $k$ is:
+Autocorrelation applies this concept to a single time series. Autocorrelation is the correlation of a time series with a delayed copy of itself as a function of delay. The autocorrelation for a time series $y$ at lag $k$ is:
 
-\begin{equation}
-r_k = \frac{ \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y}) }{\sum_{t=1}^T (y_t - \bar{y})^2 }
-\end{equation}
+\begin{align}
+r_k &= \frac{\text{Cov}(y_t, y_{t-k})}{\sigma_{y_t} \sigma_{y_{t-k}}} \\
+&= \frac{ \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y}) }{\sum_{t=1}^T (y_t - \bar{y})^2 }
+\end{align}
 
 Here is a simple example of computing a lag 1 autocorrelation.
 

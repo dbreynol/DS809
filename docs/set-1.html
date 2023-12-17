@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2023-12-14" />
+<meta name="date" content="2023-12-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="kayak-data-analysis.html"/>
-
+<link rel="next" href="set-2.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -169,6 +169,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.4" data-path="set-1.html"><a href="set-1.html#autocorrelation-1"><i class="fa fa-check"></i><b>4.4</b> Autocorrelation</a></li>
 <li class="chapter" data-level="4.5" data-path="set-1.html"><a href="set-1.html#lab-1"><i class="fa fa-check"></i><b>4.5</b> Lab 1</a></li>
 </ul></li>
+<li class="chapter" data-level="5" data-path="set-2.html"><a href="set-2.html"><i class="fa fa-check"></i><b>5</b> Set 2</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="set-2.html"><a href="set-2.html#exponential-smoothing-1"><i class="fa fa-check"></i><b>5.1</b> Exponential Smoothing</a></li>
+<li class="chapter" data-level="5.2" data-path="set-2.html"><a href="set-2.html#decomposition"><i class="fa fa-check"></i><b>5.2</b> Decomposition</a></li>
+<li class="chapter" data-level="5.3" data-path="set-2.html"><a href="set-2.html#autoregressive-models"><i class="fa fa-check"></i><b>5.3</b> Autoregressive Models</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="set-2.html"><a href="set-2.html#stationarity"><i class="fa fa-check"></i><b>5.3.1</b> Stationarity</a></li>
+<li class="chapter" data-level="5.3.2" data-path="set-2.html"><a href="set-2.html#acf-function"><i class="fa fa-check"></i><b>5.3.2</b> ACF Function</a></li>
+</ul></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -218,7 +228,7 @@ demand of a product.</li>
 </div>
 <div id="time-series-eda" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> Time Series EDA<a href="set-1.html#time-series-eda" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The first thing to do in any data analysis is exploratory data analysis (EDA). Graphs enable many features of the data to be visualized, including patterns, unusual observations, changes over time, and relationships between variables. The features that are seen in plots of the data can then be incorporated into the forecasting methods to be used.</p>
+<p>The first thing to do in any data analysis is exploratory data analysis (EDA). Graphs enable many features of the data to be visualized, including patterns, unusual observations, changes over time, and relationships between variables. The features that are seen in plots of the data can then be incorporated into statistical models.</p>
 <p>R has several systems for making graphs. We will primarily use ggplot2, which is among the set of tidyverse packages and is one of the most versatile systems for plotting. We will use a data set from Kayak to motivate our analysis.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="set-1.html#cb9-1" tabindex="-1"></a>conversions <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv&quot;</span>)</span>
 <span id="cb9-2"><a href="set-1.html#cb9-2" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(conversions))</span></code></pre></div>
@@ -274,9 +284,9 @@ demand of a product.</li>
 <p><img src="series_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>This plot contains a lot of useful information. To gain insight into how conversions depend on marketing channel, we can use facets. Facets are subplots that display a time series for each marketing channel.</p>
 <p><img src="series_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
-<p>Display ads and search engine ads are the dominant marketing channels. Both have a regular pattern that is likely a function of the day of week, with a higher number of conversions during the weekdays as compared with weekends. We can explore this feature by aggregating over each weekday and visualizing how the distribution of conversions changes by day.</p>
+<p>Display ads and search engine ads are the dominant marketing channels. Both have a regular pattern that is likely a function of the day of week, with a higher number of conversions during weekdays as compared with weekends. We can explore this feature by aggregating over each weekday and visualizing how the distribution of conversions changes by day.</p>
 <p><img src="series_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
-<p>Clearly, there are significant changes in the mean across the week. This is a form of seasonality. It may be useful to see what the data look like when this weekday effect is removed. To do so, we could visualize the residuals from the following linear regression model:</p>
+<p>Clearly, there are significant changes in the mean level of conversions across the week. This is a form of seasonality. It may be useful to see what the data look like when this weekday effect is removed. To do so, we could visualize the residuals from the following linear regression model:</p>
 <p><span class="math display">\[\begin{align}
 \hat{\text{conversions}} = \hat{\beta}_0 + \sum_{j=2}^7 \bigg( \hat{\beta}_j \times 1(\text{weekday = j}) \bigg),
 \end{align}\]</span></p>
@@ -286,7 +296,7 @@ demand of a product.</li>
 </div>
 <div id="multiple-time-series" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> Multiple Time Series<a href="set-1.html#multiple-time-series" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Often we will want to develop insight into the relationship between more several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index.</p>
+<p>Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database).</p>
 <p><img src="series_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <p>It looks like these two time series track pretty closely to one another. We could fit a linear regression to this data in order to estimate the expected change in the Case Shiller Index for a unit ($1) change in GDP/ capital</p>
 <table>
@@ -316,13 +326,18 @@ demand of a product.</li>
 </tr>
 </tbody>
 </table>
-<p>We could also examine the residuals to gain insight into what is missing from this model.</p>
+<p>Further, we could also examine the residuals to gain insight into what is missing from this model.</p>
 <p><img src="series_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 <p>The model severely underestimates the house index starting during the pandemic. There is a clear pattern to these residuals. Is this a problem?</p>
 </div>
 <div id="autocorrelation-1" class="section level2 hasAnchor" number="4.4">
 <h2><span class="header-section-number">4.4</span> Autocorrelation<a href="set-1.html#autocorrelation-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A central concept in time series analysis is autocorrelation. This is the correlation between <span class="math inline">\(y_t\)</span> and its lagged value. For a lag of <span class="math inline">\(h\)</span>, this is the correlation between <span class="math inline">\(y_t\)</span> and <span class="math inline">\(y_{t-h}\)</span>. Let’s first review correlation. For two vectors of data, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, the correlation between the two is,</p>
+<p>One of the assumptions of the linear regression model is that the errors are independent and identically distributed. That is, for the model,</p>
+<p><span class="math display">\[\begin{align}
+y = X \beta + \epsilon,
+\end{align}\]</span></p>
+<p>The error vector, <span class="math inline">\(\epsilon \sim N(0, \sigma^2)\)</span>. This implies that there is no correlation structure to the residuals. One way to check that this is true is to check for the absence of autocorrelation in the observed residuals.</p>
+<p>Given a time series, <span class="math inline">\(y_t\)</span>, where <span class="math inline">\(t=1,\ldots,T\)</span>, the correlation between <span class="math inline">\(y_t\)</span> and its lagged value, <span class="math inline">\(y_{t-k}\)</span>, is defined as autocorrelation. Let’s first review correlation. For two vectors of data, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, the correlation between the two is,</p>
 <p><span class="math display">\[\begin{align}
 \text{cor}(x,y) &amp;= \frac{\text{cov}(x,y)}{\sigma_x \sigma_y} \\
                 &amp;= \frac{ \sum_i (x_i - \bar{x})(y_i - \bar{y})}{ \sqrt{ \sum_i (x_i - \bar{x})^2 \sum_i (y_i - \bar{y})^2 }}
@@ -334,10 +349,11 @@ demand of a product.</li>
 <span id="cb10-5"><a href="set-1.html#cb10-5" tabindex="-1"></a></span>
 <span id="cb10-6"><a href="set-1.html#cb10-6" tabindex="-1"></a><span class="fu">sum</span>( (x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">*</span> (y <span class="sc">-</span> <span class="fu">mean</span>(y))) <span class="sc">/</span> ( (n<span class="dv">-1</span>) <span class="sc">*</span> <span class="fu">sd</span>(x) <span class="sc">*</span> <span class="fu">sd</span>(y) )</span>
 <span id="cb10-7"><a href="set-1.html#cb10-7" tabindex="-1"></a><span class="fu">cor</span>(x, y)</span></code></pre></div>
-<p>The autocorrelation applies this concept to a single time series. Autocorrelation is the correlation of a time series with a delayed copy of itself as a function of delay. The autocorrelation for a time series <span class="math inline">\(y\)</span> at lag <span class="math inline">\(k\)</span> is:</p>
-<p><span class="math display">\[\begin{equation}
-r_k = \frac{ \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y}) }{\sum_{t=1}^T (y_t - \bar{y})^2 }
-\end{equation}\]</span></p>
+<p>Autocorrelation applies this concept to a single time series. Autocorrelation is the correlation of a time series with a delayed copy of itself as a function of delay. The autocorrelation for a time series <span class="math inline">\(y\)</span> at lag <span class="math inline">\(k\)</span> is:</p>
+<p><span class="math display">\[\begin{align}
+r_k &amp;= \frac{\text{Cov}(y_t, y_{t-k})}{\sigma_{y_t} \sigma_{y_{t-k}}} \\
+&amp;= \frac{ \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y}) }{\sum_{t=1}^T (y_t - \bar{y})^2 }
+\end{align}\]</span></p>
 <p>Here is a simple example of computing a lag 1 autocorrelation.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="set-1.html#cb11-1" tabindex="-1"></a>a <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
 <span id="cb11-2"><a href="set-1.html#cb11-2" tabindex="-1"></a></span>
@@ -369,8 +385,8 @@ where <span class="math inline">\(m=2k+1\)</span>. The concept behind this techn
           </div>
         </div>
       </div>
-<a href="kayak-data-analysis.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="kayak-data-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="set-2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

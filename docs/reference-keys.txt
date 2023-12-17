@@ -19,3 +19,9 @@ time-series-eda
 multiple-time-series
 autocorrelation-1
 lab-1
+set-2
+exponential-smoothing-1
+decomposition
+autoregressive-models
+stationarity
+acf-function
