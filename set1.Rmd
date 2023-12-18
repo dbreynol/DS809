@@ -222,6 +222,7 @@ sum( (a1 - mean(a)) * (a2 - mean(a))) / (sum( (a - mean(a))^2 ) )  # by hand
 where $m=2k+1$. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order $m=7$ for the residual time series and plot it along with the residuals in a single plot. 
 
 3. Join the Kayak visits data (see below) to the conversions data from [Time Series EDA]. Use the <code>inner_join</code> function with the argument, <code>by = c("datestamp", "country_code", "marketing_channel")</code>. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the reponse variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model.
+
 ```{r echo=TRUE, eval=FALSE}
 visits = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv")
 visits$datestamp = ymd(visits$datestamp)

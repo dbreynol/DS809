@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2023-12-17" />
+<meta name="date" content="2023-12-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -148,8 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#assignment-4"><i class="fa fa-check"></i><b>1.4</b> Assignment 4</a></li>
 <li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#moving-average"><i class="fa fa-check"></i><b>1.5</b> Moving Average</a></li>
-<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#exponential-smoothing"><i class="fa fa-check"></i><b>1.6</b> Exponential Smoothing</a></li>
-<li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#assignment-5"><i class="fa fa-check"></i><b>1.7</b> Assignment 5</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#assignment-5"><i class="fa fa-check"></i><b>1.6</b> Assignment 5</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="linear-regression-revisited.html"><a href="linear-regression-revisited.html"><i class="fa fa-check"></i><b>2</b> Linear Regression Revisited</a>
 <ul>
@@ -171,13 +170,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="set-2.html"><a href="set-2.html"><i class="fa fa-check"></i><b>5</b> Set 2</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="set-2.html"><a href="set-2.html#exponential-smoothing-1"><i class="fa fa-check"></i><b>5.1</b> Exponential Smoothing</a></li>
+<li class="chapter" data-level="5.1" data-path="set-2.html"><a href="set-2.html#exponential-smoothing"><i class="fa fa-check"></i><b>5.1</b> Exponential Smoothing</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="set-2.html"><a href="set-2.html#optimization"><i class="fa fa-check"></i><b>5.1.1</b> Optimization</a></li>
+</ul></li>
 <li class="chapter" data-level="5.2" data-path="set-2.html"><a href="set-2.html#decomposition"><i class="fa fa-check"></i><b>5.2</b> Decomposition</a></li>
 <li class="chapter" data-level="5.3" data-path="set-2.html"><a href="set-2.html#autoregressive-models"><i class="fa fa-check"></i><b>5.3</b> Autoregressive Models</a>
 <ul>
 <li class="chapter" data-level="5.3.1" data-path="set-2.html"><a href="set-2.html#stationarity"><i class="fa fa-check"></i><b>5.3.1</b> Stationarity</a></li>
 <li class="chapter" data-level="5.3.2" data-path="set-2.html"><a href="set-2.html#acf-function"><i class="fa fa-check"></i><b>5.3.2</b> ACF Function</a></li>
 </ul></li>
+<li class="chapter" data-level="5.4" data-path="set-2.html"><a href="set-2.html#lab-2"><i class="fa fa-check"></i><b>5.4</b> Lab 2</a></li>
 </ul></li>
 </ul>
 
@@ -198,11 +201,44 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="set-2" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">Chapter 5</span> Set 2<a href="set-2.html#set-2" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="exponential-smoothing-1" class="section level2 hasAnchor" number="5.1">
-<h2><span class="header-section-number">5.1</span> Exponential Smoothing<a href="set-2.html#exponential-smoothing-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="exponential-smoothing" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Exponential Smoothing<a href="set-2.html#exponential-smoothing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>An alternate way to smooth a time series is with exponential smoothing. Like the moving average, this method averages over recent observations but differs in that it assigns relatively more weight to observations that are relatively closer. This idea can be expressed as,</p>
+<p><span class="math display">\[\begin{align}
+\hat{y}_{t+1 | t} = \alpha y_t + (1-\alpha) \hat{y}_{t | t-1},
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\hat{y}_{t+1 | t}\)</span> can be interpreted as the smoothed value of <span class="math inline">\(y_{t+1}\)</span> given data up to time <span class="math inline">\(t\)</span>. So, for the first few smoothed values, we have:</p>
+<p><span class="math display">\[\begin{align}
+\hat{y}_{1|0} &amp;= l_0 \\
+\hat{y}_{2|1} &amp;= \alpha y_1 + (1-\alpha) l_0 \\
+\hat{y}_{3|2} &amp;= \alpha y_2 + (1-\alpha) \hat{y}_{2|1} \\
+&amp;= \alpha y_2 + (1-\alpha) \alpha y_1 + (1-\alpha)^2 l_0
+\end{align}\]</span></p>
+<p>Since we don’t have data prior to <span class="math inline">\(y_1\)</span>, we denote <span class="math inline">\(\hat{y}_{1 | 0} = l_0\)</span>. Therefore, this model depends on two parameters, <span class="math inline">\((l_0, \alpha)\)</span>. If we continue with the sequence above, each predicted value <span class="math inline">\(\hat{y_t}\)</span> can be expressed,</p>
+<p><span class="math display">\[\begin{align}
+\hat{y}_{t+1 | t} = (1-\alpha) ^ t l_0  + \sum_{j=0}^{t-1} \alpha (1-\alpha) ^ j y_{t-j}. \\
+\end{align}\]</span></p>
+<p>Let’s take a look at how this method depends on the parameters.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p>For any <span class="math inline">\(\alpha\)</span> between 0 and 1, the weights attached to the observations decrease exponentially as we go back in time, hence the name “exponential smoothing”. If <span class="math inline">\(\alpha\)</span> is small (i.e., close to 0), more weight is given to observations from the more distant past. If <span class="math inline">\(\alpha\)</span> is large (i.e., close to 1), more weight is given to the more recent observations.</p>
+<div id="optimization" class="section level3 hasAnchor" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> Optimization<a href="set-2.html#optimization" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The <span class="math inline">\((\alpha, l_0)\)</span> parameters can be estimated by minimizing the SSE:</p>
+<p><span class="math display">\[\begin{align}
+\text{SSE} = \sum_{i=i}^T \bigg(y_t - \hat{y}_{t | t-1}   \bigg)^2.
+\end{align}\]</span></p>
+<p>This is a non-linear optimization problem that you will solve in Lab 2!</p>
+</div>
 </div>
 <div id="decomposition" class="section level2 hasAnchor" number="5.2">
 <h2><span class="header-section-number">5.2</span> Decomposition<a href="set-2.html#decomposition" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="set-2.html#cb13-1" tabindex="-1"></a><span class="co"># us_employment data frame from the &#39;fpp3&#39; package</span></span>
+<span id="cb13-2"><a href="set-2.html#cb13-2" tabindex="-1"></a>us_employment<span class="sc">$</span>date <span class="ot">=</span> <span class="fu">mdy</span> ( <span class="fu">str_c</span>( <span class="fu">month</span>(us_employment<span class="sc">$</span>Month), <span class="st">&quot;-1-&quot;</span>, <span class="fu">year</span>(us_employment<span class="sc">$</span>Month)) )</span>
+<span id="cb13-3"><a href="set-2.html#cb13-3" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="set-2.html#cb13-4" tabindex="-1"></a>retail <span class="ot">=</span> us_employment <span class="sc">%&gt;%</span> </span>
+<span id="cb13-5"><a href="set-2.html#cb13-5" tabindex="-1"></a>  <span class="fu">filter</span>(Title <span class="sc">==</span> <span class="st">&quot;Retail Trade&quot;</span>, <span class="fu">year</span>(date) <span class="sc">&gt;</span> <span class="dv">2002</span>)</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p><img src="series_files/figure-html/unnamed-chunk-29-1.png" width="672" /><img src="series_files/figure-html/unnamed-chunk-29-2.png" width="672" /></p>
 </div>
 <div id="autoregressive-models" class="section level2 hasAnchor" number="5.3">
 <h2><span class="header-section-number">5.3</span> Autoregressive Models<a href="set-2.html#autoregressive-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -211,8 +247,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="acf-function" class="section level3 hasAnchor" number="5.3.2">
 <h3><span class="header-section-number">5.3.2</span> ACF Function<a href="set-2.html#acf-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-
 </div>
+</div>
+<div id="lab-2" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> Lab 2<a href="set-2.html#lab-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li>Change the <code>es</code> function in <a href="set-2.html#exponential-smoothing">Exponential Smoothing</a> to return the SSE, rather than <code>yt</code>, the smoothed time series.Now, use the <code>optim</code> function to find the values of <span class="math inline">\((\alpha, l_0)\)</span> that minimize SSE. Plot the exponentially smoothed time series using the optimized <span class="math inline">\((\alpha, l_0)\)</span>.</li>
+</ol>
+
 </div>
 </div>
             </section>

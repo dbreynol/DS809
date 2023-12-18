@@ -5,7 +5,6 @@ change-points
 cusum
 assignment-4
 moving-average
-exponential-smoothing
 assignment-5
 linear-regression-revisited
 estimation
@@ -20,8 +19,10 @@ multiple-time-series
 autocorrelation-1
 lab-1
 set-2
-exponential-smoothing-1
+exponential-smoothing
+optimization
 decomposition
 autoregressive-models
 stationarity
 acf-function
+lab-2

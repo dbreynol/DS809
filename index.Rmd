@@ -16,6 +16,7 @@ description: "(Partial) course materials for Artifex, Spring 2023."
 knitr::opts_chunk$set(echo = F)
 library(tidyverse)
 library(knitr)
+library(fpp3) # employment dataset
 library(broom) # tidy
 library(forecast) # ma
 library(qcc) # CUSUM
@@ -228,19 +229,7 @@ ggplot(df, aes(x = t, y = value, color = name)) +
 
 ```
 
-## Exponential Smoothing
 
-When you have data that does not have a clear trend, you may want a forecasting method that averages over the past data values but that assigns relatively more weight to observations that are relatively closer. One way to achieve this is with simple exponential smoothing. This idea can be expressed as,
-
-\begin{align}
-\hat{y}_{t+1 | t} = \alpha y_t + (1-\alpha) \hat{y}_{t | t-1}.
-\end{align}
-
-Since we don't have data prior to $y_1$, let us denote $\hat{y}_{1 | 0} = l_0$. Therefore, this model depends on two parameters, $(l_0, \alpha)$. More generally, each predicted value $\hat{y_t}$ can be expressed,
-
-\begin{align}
-\hat{y}_{t+1 | t} = (1-\alpha) ^ t l_0  + \sum_{j=0}^{t-1} \alpha (1-\alpha) ^ j y_{t-j}. \\
-\end{align}
 
 ## Assignment 5
 

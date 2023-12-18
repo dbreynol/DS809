@@ -2,10 +2,116 @@
 
 ## Exponential Smoothing
 
+An alternate way to smooth a time series is with exponential smoothing. Like the moving average, this method averages over recent observations but differs in that it assigns relatively more weight to observations that are relatively closer. This idea can be expressed as,
+
+\begin{align}
+\hat{y}_{t+1 | t} = \alpha y_t + (1-\alpha) \hat{y}_{t | t-1},
+\end{align}
+
+where $\hat{y}_{t+1 | t}$ can be interpreted as the smoothed value of $y_{t+1}$ given data up to time $t$. So, for the first few smoothed values, we have:
+
+\begin{align}
+\hat{y}_{1|0} &= l_0 \\
+\hat{y}_{2|1} &= \alpha y_1 + (1-\alpha) l_0 \\
+\hat{y}_{3|2} &= \alpha y_2 + (1-\alpha) \hat{y}_{2|1} \\
+&= \alpha y_2 + (1-\alpha) \alpha y_1 + (1-\alpha)^2 l_0
+\end{align}
+
+Since we don't have data prior to $y_1$, we denote $\hat{y}_{1 | 0} = l_0$. Therefore, this model depends on two parameters, $(l_0, \alpha)$. If we continue with the sequence above, each predicted value $\hat{y_t}$ can be expressed,
+
+\begin{align}
+\hat{y}_{t+1 | t} = (1-\alpha) ^ t l_0  + \sum_{j=0}^{t-1} \alpha (1-\alpha) ^ j y_{t-j}. \\
+\end{align}
+
+Let's take a look at how this method depends on the parameters.
+
+```{r}
+set.seed(1)
+
+alb = global_economy %>% filter(Country == "Albania", Year > 1990) 
+y = alb$Exports
+
+es = function(par, ts) { # parameter vector: first parameter is alpha/ second is l0
+  yt = c(par[2])
+  for(j in 2:length(ts)) {
+    yt[j] = par[1] * ts[j-1] + (1-par[1]) * yt[j-1]
+  }
+  return(yt)
+}
+
+#plot_df = data.frame(ys = c(y, es(y, .4, 0), es(y, .1, 1)), alpha = c(rep(0,n), rep(.4,n), rep(.1,n)))
+plot(x = 1991:2017, y, type = "l", xlab = "year", ylab = "exports", main = "Albanian Exports (black); alpha = .9 (red); alpha = .5 (blue)")
+lines(x = 1991:2017, y = es(c(.9, y[1]), y), col = "red")
+lines(x = 1991:2017, y = es(c(.5, y[1]), y), col = "blue")
+```
+
+For any $\alpha$ between 0 and 1, the weights attached to the observations decrease exponentially as we go back in time, hence the name “exponential smoothing”. If $\alpha$ is small (i.e., close to 0), more weight is given to observations from the more distant past. If $\alpha$ is large (i.e., close to 1), more weight is given to the more recent observations.
+
+### Optimization
+
+The $(\alpha, l_0)$ parameters can be estimated by minimizing the SSE:
+
+\begin{align}
+\text{SSE} = \sum_{i=i}^T \bigg(y_t - \hat{y}_{t | t-1}   \bigg)^2.
+\end{align}
+
+This is a non-linear optimization problem that you will solve in Lab 2!
+
+```{r eval=FALSE}
+
+es_ss = function(par) {
+  yt = es(y, par[1], par[2])
+  return( sum( (yt - y)^2))
+}
+
+optim(par = c(0,0), es_ss, lower = c(0,0), upper = c(1,10), method = "L-BFGS-B")$par
+
+# how does this compare with ets
+ets(y, model = "ANN")
+```
+
+
 ## Decomposition
+
+
+
+```{r echo=TRUE}
+# us_employment data frame from the 'fpp3' package
+us_employment$date = mdy ( str_c( month(us_employment$Month), "-1-", year(us_employment$Month)) )
+
+retail = us_employment %>% 
+  filter(Title == "Retail Trade", year(date) > 2002)
+```
+
+
+```{r}
+ggplot(retail, aes(x = date, y = Employed)) + 
+  geom_line() + 
+  ggtitle("Total US Retail Employees") + 
+  theme_minimal()
+```
+
+
+```{r}
+m_season = lm(Employed ~ factor(month(date)), data = retail)
+retail$season = predict(m_season)
+retail$tr = retail$Employed - retail$season
+
+ggplot(retail, aes(x=date, y = season)) + geom_line()
+ggplot(retail, aes(x=date, y = tr)) + geom_line()
+
+
+```
+
 
 ## Autoregressive Models
 
 ### Stationarity
 
 ### ACF Function
+
+## Lab 2
+
+1. Change the <code>es</code> function in [Exponential Smoothing] to return the SSE, rather than <code>yt</code>, the smoothed time series.Now, use the <code>optim</code> function to find the values of $(\alpha, l_0)$ that minimize SSE. Plot the exponentially smoothed time series using the optimized $(\alpha, l_0)$.
+
+
