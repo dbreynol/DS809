@@ -1,6 +1,4 @@
-# Set 1
-
-idea- make a lab question about smoothing
+# Exploratory Analysis of Time Series Data
 
 ## Time Series Data
 
@@ -171,14 +169,20 @@ One of the assumptions of the linear regression model is that the errors are ind
 y = X \beta + \epsilon,
 \end{align}
 
-The error vector, $\epsilon \sim N(0, \sigma^2)$. This implies that there is no correlation structure to the residuals. One way to check that this is true is to check for the absence of autocorrelation in the observed residuals.
+The error vector, $\epsilon \sim N(0, \sigma^2)$. This implies that there is no correlation structure to the residuals. One way to check that this is true is to check for the absence of correlation in the observed residuals. To review this concept, we'll start with a definition for covariance. For two vectors of data, $x$ and $y$, the covariance between the two is,
 
-Given a time series, $y_t$, where $t=1,\ldots,T$, the correlation between $y_t$ and its lagged value, $y_{t-k}$, is defined as autocorrelation. Let's first review correlation. For two vectors of data, $x$ and $y$, the correlation between the two is,
+\begin{align}
+\text{cov}(x,y) &= \frac{ \sum_i (x_i - \bar{x})(y_i - \bar{y})}{n-1}
+\end{align}
+
+Correlation is a dimensionless measure of the linear association between two variables. It is defined as the covariance scaled by the standard deviations. That is,
 
 \begin{align}
 \text{cor}(x,y) &= \frac{\text{cov}(x,y)}{\sigma_x \sigma_y} \\
                 &= \frac{ \sum_i (x_i - \bar{x})(y_i - \bar{y})}{ \sqrt{ \sum_i (x_i - \bar{x})^2 \sum_i (y_i - \bar{y})^2 }}
 \end{align}
+
+Let's compute this quantity on some simulated data.
 
 ```{r echo=TRUE, eval=FALSE}
 set.seed(1)
@@ -190,14 +194,22 @@ sum( (x - mean(x)) * (y - mean(y))) / ( (n-1) * sd(x) * sd(y) )
 cor(x, y)
 ```
 
-Autocorrelation applies this concept to a single time series. Autocorrelation is the correlation of a time series with a delayed copy of itself as a function of delay. The autocorrelation for a time series $y$ at lag $k$ is:
+For time series data, there is a closely related concept called autocorrelation. Given a time series, $y_t$, where $t=1,\ldots,T$, autocorrelation is the correlation between $y_t$ and its lagged value, $y_{t-k}$. That is, autocorrelation is the correlation of a time series with a delayed copy of itself, as a function of delay. Just as correlation is a function of covariance, autocorrelation is a function of autocovariance. The 
+The (sample) autocovariance, $\hat{\gamma}$ for a time series $y$ at lag $k$ is:
 
 \begin{align}
-r_k &= \frac{\text{cov}(y_t, y_{t-k})}{\sigma_{y_t} \sigma_{y_{t-k}}} \\
-&= \frac{ \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y}) }{\sum_{t=1}^T (y_t - \bar{y})^2 }.
+\hat{\gamma}_k &= \text{cov}(y_t, y_{t-k}) \\
+&=  \frac{1}{T-k-1} \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y})
 \end{align}
 
-The second line is due to the assumption of constant variance. Here is a simple example of computing the lag 1 autocorrelation.
+The (sample) autocorrelation function for lag $k$, $\hat{\rho}_k$, is simply the lag $k$ autocovariance, $\hat{\gamma_k}$ , scaled by the standard deviations.
+
+\begin{align}
+\hat{\rho}_k &= \frac{ \hat{\gamma_k} }{\sigma_{y_t} \sigma_{y_{t-k}}} \\
+&= \frac{ \hat{\gamma_k} }{\hat{\gamma_0}}.
+\end{align}
+
+The second line follows from the linear regression assumption of constant variance. Here is a simple example of computing the lag 1 autocorrelation.
 
 ```{r echo=TRUE, eval=FALSE}
 a = c(1,2,3,4,5)
@@ -229,3 +241,46 @@ visits$datestamp = ymd(visits$datestamp)
 ```
 
 4. Wrtie a function in R that takes two arguments: a time series ($y$) formatted as a vector and an integer ($k$) specifying a lag. The output for this function is the lag $k$ autocorrelation for $y$, using the formula in [Autocorrelation]. Compare the output of your function to the output from <code>(acf(y))</code>. An extra challenge is to allow $k$ to be a vector of lags, in which case your function should return a vector of autocorrelation values.
+
+5. The partial autocorrelation function, $\phi_k$, measures the correlation between a time series $y_t$ and a lagged copy $y_{t-k}$, with the linear dependence of $\{ y_{t-1}, y_{t-2}, \ldots,y_{t-k-1} \}$ removed. When $k=1$, $\hat{\phi}_k = \hat{\rho}_k$. When $k>1$,
+\begin{align}
+\hat{\phi}_k = \text{cor}(y_1 - \hat{y_1}|\{ y_2, \ldots, y_{k-1} \} , y_k - \hat{y_k}|\{ y_2, \ldots, y_{k-1} \} ),
+\end{align}
+where $\hat{y_1}|\{ y_2, \ldots, y_{k-1} \}$ is the predicted $y_1$ using the linear regression where $\{ y_2, \ldots, y_{k-1} \}$ are explanatory variables.
+Compute the lag 1 and 2 partial autocorrelations for the following simulated time series. Show your code and validate your answers using the <code>pacf</code> function. The <code>window</code> function may be useful to extract subsets of the time series vector.
+
+
+```{r echo=T, eval=FALSE}
+set.seed(1)
+ysim = arima.sim(n=1000, list(ar=c(.5)))
+(pacf(ysim))
+```
+
+```{r echo=FALSE, eval=FALSE}
+# lag 1
+y1 = as.numeric( window(ysim,1,99))
+y2 = as.numeric( window(ysim,2,100) )
+(sum( (y1-mean(ysim)) * ( y2 - mean(ysim) )) )/ sum( (ysim - mean(ysim))^2)
+
+# lag 2
+y3 = as.numeric( window(ysim, 3, 1000))
+y11 = as.numeric( window(ysim, 1, 998))
+y22 = as.numeric( window(ysim, 2, 999))
+y1t = y11 - predict( lm(y11 ~ y22))
+y3t = y3 - predict( lm(y3 ~ y22))
+
+y1hat = predict( lm(y11 ~ y22))
+y3hat = predict( lm(y3 ~ y22))
+
+(sum( (y1t-mean(y1t)) * ( y3t - mean(y3t) )) )/ sqrt ( sum(  (y1t - mean(y1t) )^2) * sum( (y3t - mean(y3t) )^2 ) )
+(pacf(ysim))
+((cov(y1t, y3t)))/ sqrt(var(y1t) * var(y3t))
+# https://online.stat.psu.edu/stat510/lesson/2/2.2
+
+( cor(y1t, y3t) )
+cov(y1hat, y3hat) / sqrt( var(y1hat) * var(y3hat) )
+```
+
+
+
+

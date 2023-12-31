@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Kayak Data Analysis | Artifex - Fall 2023</title>
+  <title>Set 3 Kayak Data Analysis | Artifex - Fall 2023</title>
   <meta name="description" content="(Partial) course materials for Artifex, Spring 2023." />
   <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Kayak Data Analysis | Artifex - Fall 2023" />
+  <meta property="og:title" content="Set 3 Kayak Data Analysis | Artifex - Fall 2023" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="(Partial) course materials for Artifex, Spring 2023." />
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Kayak Data Analysis | Artifex - Fall 2023" />
+  <meta name="twitter:title" content="Set 3 Kayak Data Analysis | Artifex - Fall 2023" />
   
   <meta name="twitter:description" content="(Partial) course materials for Artifex, Spring 2023." />
   
@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2023-12-18" />
+<meta name="date" content="2023-12-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -175,12 +175,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.1.1" data-path="set-2.html"><a href="set-2.html#optimization"><i class="fa fa-check"></i><b>5.1.1</b> Optimization</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="set-2.html"><a href="set-2.html#decomposition"><i class="fa fa-check"></i><b>5.2</b> Decomposition</a></li>
-<li class="chapter" data-level="5.3" data-path="set-2.html"><a href="set-2.html#autoregressive-models"><i class="fa fa-check"></i><b>5.3</b> Autoregressive Models</a>
+<li class="chapter" data-level="5.3" data-path="set-2.html"><a href="set-2.html#statistical-models"><i class="fa fa-check"></i><b>5.3</b> Statistical Models</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="set-2.html"><a href="set-2.html#stationarity"><i class="fa fa-check"></i><b>5.3.1</b> Stationarity</a></li>
-<li class="chapter" data-level="5.3.2" data-path="set-2.html"><a href="set-2.html#acf-function"><i class="fa fa-check"></i><b>5.3.2</b> ACF Function</a></li>
+<li class="chapter" data-level="5.3.1" data-path="set-2.html"><a href="set-2.html#random-walk"><i class="fa fa-check"></i><b>5.3.1</b> Random Walk</a></li>
+<li class="chapter" data-level="5.3.2" data-path="set-2.html"><a href="set-2.html#white-noise"><i class="fa fa-check"></i><b>5.3.2</b> White noise</a></li>
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="set-2.html"><a href="set-2.html#lab-2"><i class="fa fa-check"></i><b>5.4</b> Lab 2</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="set-3.html"><a href="set-3.html"><i class="fa fa-check"></i><b>6</b> Set 3</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="set-3.html"><a href="set-3.html#stationarity"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
 </ul></li>
 </ul>
 
@@ -200,7 +204,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="kayak-data-analysis" class="section level1 hasAnchor" number="3">
-<h1><span class="header-section-number">Chapter 3</span> Kayak Data Analysis<a href="kayak-data-analysis.html#kayak-data-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<h1><span class="header-section-number">Set 3</span> Kayak Data Analysis<a href="kayak-data-analysis.html#kayak-data-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>We are going to do some analysis on a dataset sent from Kayak. The prompts and data are from their data science recruiting process. To access the data, use the following code:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="kayak-data-analysis.html#cb7-1" tabindex="-1"></a>visits <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv&quot;</span>)</span>
 <span id="cb7-2"><a href="kayak-data-analysis.html#cb7-2" tabindex="-1"></a>conversions <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv&quot;</span>)</span>

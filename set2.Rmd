@@ -2,7 +2,7 @@
 
 ## Exponential Smoothing
 
-An alternate way to smooth a time series is with exponential smoothing. Like the moving average, this method averages over recent observations but differs in that it assigns relatively more weight to observations that are relatively closer. This idea can be expressed as,
+An alternate way to smooth a time series, generally appropriate for a time series with no clear seasonality, is with exponential smoothing. Like the moving average, this method averages over recent observations but differs in that it assigns relatively more weight to observations that are relatively closer. This idea can be expressed as,
 
 \begin{align}
 \hat{y}_{t+1 | t} = \alpha y_t + (1-\alpha) \hat{y}_{t | t-1},
@@ -45,7 +45,7 @@ lines(x = 1991:2017, y = es(c(.9, y[1]), y), col = "red")
 lines(x = 1991:2017, y = es(c(.5, y[1]), y), col = "blue")
 ```
 
-For any $\alpha$ between 0 and 1, the weights attached to the observations decrease exponentially as we go back in time, hence the name “exponential smoothing”. If $\alpha$ is small (i.e., close to 0), more weight is given to observations from the more distant past. If $\alpha$ is large (i.e., close to 1), more weight is given to the more recent observations.
+In the plot above, of Albanian exports between 1991 and 2017, we display two smoothed time series (one for $\alpha = 0.5$ and one where $\alpha = 0.9$). For any $\alpha$ between 0 and 1, the weights attached to the observations decrease exponentially as we go back in time, hence the name “exponential smoothing”. If $\alpha$ is small (i.e., close to 0), more weight is given to observations from the more distant past. If $\alpha$ is large (i.e., close to 1), more weight is given to the more recent observations.
 
 ### Optimization
 
@@ -73,6 +73,11 @@ ets(y, model = "ANN")
 
 ## Decomposition
 
+Time series data can exhibit a variety of patterns, and it is often helpful to split a time series into several components, each representing an underlying pattern category. In this section, we will aim to decompose a time series into three parts: a trend component ($T$), a seasonality component ($S$), and a random component ($R$). That is, for each observation $Y_t$, we want to break it down into three parts:
+
+$Y_T = T_t + S_t + R_t$.
+
+To illustrate, we will use a dataset on monthly retail employment in the US. Let's first take a look at this data.
 
 
 ```{r echo=TRUE}
@@ -89,29 +94,125 @@ ggplot(retail, aes(x = date, y = Employed)) +
   geom_line() + 
   ggtitle("Total US Retail Employees") + 
   theme_minimal()
+
 ```
+
+To decompose this time series, we will follow this basic algorithm:
+
+1. First we will use a moving average of order $m=12$ to get the trend, $T$.
+2. Then, we will estimate the seasonal effects, $S$,by fitting a linear regression model to the de-trendended series ($y-T$) in which the month is the explanatory variable.
+3. The remainder is the random component, $y-T-S$.
+
+
 
 
 ```{r}
-m_season = lm(Employed ~ factor(month(date)), data = retail)
-retail$season = predict(m_season)
-retail$tr = retail$Employed - retail$season
+retail$trend = ma(retail$Employed, order = 12)
+retail = drop_na(retail)
+retail$detrend = retail$Employed - retail$trend
+retail$season = predict(lm(detrend ~ factor(month(date)), retail))
+retail$noise = retail$Employed - retail$trend - retail$season
 
-ggplot(retail, aes(x=date, y = season)) + geom_line()
-ggplot(retail, aes(x=date, y = tr)) + geom_line()
-
-
+retail_plot = data.frame(retail) %>% select(date, Employed, trend, season, noise) %>% 
+  pivot_longer(-date)
+  
+ggplot(retail_plot, aes(date, value)) + 
+  geom_line() + 
+  facet_wrap(~name, scales = "free") + theme_minimal()
 ```
 
+The trend captures the majority of the change that is observed in this time series, while the relative scale of the monthly seasonality and the random variation is small.
 
-## Autoregressive Models
+## Statistical Models
 
-### Stationarity
+Thus far, we have explored time series data to better understand their properties. These exploration methods can also be used to generate forecasts for future values. However, they are not able to quantify the uncertainty inherent in those forecasts, nor do they model the dependency structure inherent in the time series data. We will begin with a very simple model that does both of these things.
 
-### ACF Function
+### Random Walk
+
+Let us consider a simple model to describe time series data,
+
+$y_t = y_{t-1}+e_t$,
+
+where $e_t \sim N(0, \sigma^2)$ and all elements of the error vector are mutually independent.
+
+Let's derive some important properties of this model:
+
+1. What is the mean, $E(y_t)$?
+2. What is the variance, $Var(y_t)$?
+3. What is the covariance between successive observations, $\text{cov}(y_t, y_{t-1})$?
+4. What is the correlation between successive observations, $\text{cor}(y_t, y_{t-1})$?
+5. Which properties depend on time?
+
+```{r echo=FALSE, eval=FALSE}
+# simulate from each model type in class
+t = 100
+acf_rw = function(k) {sqrt( (t-k)/ t )}
+curve(acf_rw, from = 1, to = 9)
+```
+
+### White noise
+
+Now let us define a new time series, $z_t = y_t - y_{t-1}$.
+
+Define the same properties as 1-5 above. These two simple models are important in finance. If a time series follows a random walk, then its first difference is white noise. Let's see if this is the case with GOOG. 
+
+```{r echo=TRUE}
+goog = getSymbols('GOOG', from='2020-12-22', to='2023-12-22',auto.assign = FALSE)
+googdf = data.frame(ymd(index(goog)), goog$GOOG.Close)
+names(googdf) = c("date", "price")
+
+ggplot(googdf, aes(x = date, y = price)) + 
+  geom_line() + 
+  theme_minimal() + 
+  ggtitle("GOOG Closing Price")
+```
+
+```{r}
+googdf$z = c(NA, diff(googdf$price))
+
+ggplot( drop_na(googdf), aes(x = date, y = z)) + 
+  geom_line() + 
+  theme_minimal() + 
+  ggtitle("GOOG Closing Price - First Difference")
+```
+
+It seems plausible that this is a white noise series. How can we build further evidence of this. One way would be to examine the autocorrelation function. What are we looking for?
+
+```{r}
+acf(googdf$z[-1], main = "ACF of differenced series")
+```
+
+This is helpful but visual evidence alone is fairly weak. We could alternatively use a hypothesis test (Box-Pierce test) in which:
+
+\begin{align}
+H_0 &: \rho_1 = \rho_2 = \ldots = \rho_k = 0 \\
+H_A &: \text{at least one autocorrelation is different from 0}
+\end{align}
+
+The test statistic for this test:
+
+\begin{align}
+Q = n(n+2) \sum_{i=1}^k \frac{\hat{\rho}_i^2}{(n-k)}
+\end{align}
+
+follows a chi-squared distribution with $k$ degrees of freedom under the null hypothesis.
+
+## Stationarity 
+
+Stationarity is a convenient assumption that allows us to describe the statistical properties of a time series. A time series is said to be stationary if there is:
+
+1. No systematic change in the mean or the variance
+2. No systematic trend
+3. No periodic variations or seasonality
+
 
 ## Lab 2
 
-1. Change the <code>es</code> function in [Exponential Smoothing] to return the SSE, rather than <code>yt</code>, the smoothed time series.Now, use the <code>optim</code> function to find the values of $(\alpha, l_0)$ that minimize SSE. Plot the exponentially smoothed time series using the optimized $(\alpha, l_0)$.
+1. Change the <code>es</code> function we developed in [Exponential Smoothing] to return the SSE, rather than <code>yt</code>, the smoothed time series. Now, use the <code>optim</code> function to find the values of $(\alpha, l_0)$ that minimize SSE. Plot the exponentially smoothed time series using the optimized values for $(\alpha, l_0)$.
 
+2. Choose a different type of employee from the <code>us_employment</code> dataset and, first, plot the time series. Now, decompose the time series into trend, seasonal, and random components. Follow the algorithm in [Decomposition]. Plot these and comment on your observations.
+
+3. Theoretical versus simulated autocorrelation.
+
+4. Ljung-Box Q-Statistic
 

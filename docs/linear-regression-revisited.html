@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Linear Regression Revisited | Artifex - Fall 2023</title>
+  <title>Set 2 Linear Regression Revisited | Artifex - Fall 2023</title>
   <meta name="description" content="(Partial) course materials for Artifex, Spring 2023." />
   <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Linear Regression Revisited | Artifex - Fall 2023" />
+  <meta property="og:title" content="Set 2 Linear Regression Revisited | Artifex - Fall 2023" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="(Partial) course materials for Artifex, Spring 2023." />
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Linear Regression Revisited | Artifex - Fall 2023" />
+  <meta name="twitter:title" content="Set 2 Linear Regression Revisited | Artifex - Fall 2023" />
   
   <meta name="twitter:description" content="(Partial) course materials for Artifex, Spring 2023." />
   
@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2023-12-18" />
+<meta name="date" content="2023-12-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -175,12 +175,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.1.1" data-path="set-2.html"><a href="set-2.html#optimization"><i class="fa fa-check"></i><b>5.1.1</b> Optimization</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="set-2.html"><a href="set-2.html#decomposition"><i class="fa fa-check"></i><b>5.2</b> Decomposition</a></li>
-<li class="chapter" data-level="5.3" data-path="set-2.html"><a href="set-2.html#autoregressive-models"><i class="fa fa-check"></i><b>5.3</b> Autoregressive Models</a>
+<li class="chapter" data-level="5.3" data-path="set-2.html"><a href="set-2.html#statistical-models"><i class="fa fa-check"></i><b>5.3</b> Statistical Models</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="set-2.html"><a href="set-2.html#stationarity"><i class="fa fa-check"></i><b>5.3.1</b> Stationarity</a></li>
-<li class="chapter" data-level="5.3.2" data-path="set-2.html"><a href="set-2.html#acf-function"><i class="fa fa-check"></i><b>5.3.2</b> ACF Function</a></li>
+<li class="chapter" data-level="5.3.1" data-path="set-2.html"><a href="set-2.html#random-walk"><i class="fa fa-check"></i><b>5.3.1</b> Random Walk</a></li>
+<li class="chapter" data-level="5.3.2" data-path="set-2.html"><a href="set-2.html#white-noise"><i class="fa fa-check"></i><b>5.3.2</b> White noise</a></li>
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="set-2.html"><a href="set-2.html#lab-2"><i class="fa fa-check"></i><b>5.4</b> Lab 2</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="set-3.html"><a href="set-3.html"><i class="fa fa-check"></i><b>6</b> Set 3</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="set-3.html"><a href="set-3.html#stationarity"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
 </ul></li>
 </ul>
 
@@ -200,7 +204,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="linear-regression-revisited" class="section level1 hasAnchor" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Linear Regression Revisited<a href="linear-regression-revisited.html#linear-regression-revisited" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<h1><span class="header-section-number">Set 2</span> Linear Regression Revisited<a href="linear-regression-revisited.html#linear-regression-revisited" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Let’s consider a scenario in which we have information on a response variable, <span class="math inline">\(y\)</span>, and <span class="math inline">\(p\)</span> predictor variables organized in a design matrix <span class="math inline">\(X\)</span>. We want to model the conditional mean, <span class="math inline">\(E(Y | X)\)</span> using a linear combination of predictor variables. So, our model is:</p>
 <p><span class="math display">\[\begin{align}
 y = X \beta + \epsilon
