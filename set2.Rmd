@@ -1,4 +1,4 @@
-# Set 2
+# Smoothing, Decomposition, Noise
 
 ## Exponential Smoothing
 
@@ -189,7 +189,7 @@ H_0 &: \rho_1 = \rho_2 = \ldots = \rho_k = 0 \\
 H_A &: \text{at least one autocorrelation is different from 0}
 \end{align}
 
-The test statistic for this test:
+The test statistic (the Ljung-Box Q-Statistic) for this test:
 
 \begin{align}
 Q = n(n+2) \sum_{i=1}^k \frac{\hat{\rho}_i^2}{(n-k)}
@@ -212,7 +212,10 @@ Stationarity is a convenient assumption that allows us to describe the statistic
 
 2. Choose a different type of employee from the <code>us_employment</code> dataset and, first, plot the time series. Now, decompose the time series into trend, seasonal, and random components. Follow the algorithm in [Decomposition]. Plot these and comment on your observations.
 
-3. Theoretical versus simulated autocorrelation.
+3. Simulate a [Random Walk] with 100 time points ($y_t$, $T= 1,\ldots,100$). Repeat this process 50 times. Choose your own $\sigma^2$ and use the same value for each of the 50 iterations. Plot all 50 time series on the same plot. On the title, report the $\sigma^2$ value you used. Second, make a histogram of each of the end points (i.e., the 100th observation of each of the 50 time series). How does this histogram correspond with the theoretical properties of $Y_{100}$ (i.e., the mean, variance, and shape of the distribution)?
 
-4. Ljung-Box Q-Statistic
+
+4. Write a function that takes a time series vector as input and returns the Ljung-Box Q-Statistic for $k=2$, along with the p-value for the hypothesis test in [White Noise].
+
+5. Using the <code>quantmod</code> package, choose your favorite stock and see if the differenced version of its closing prices over the past year can be described as white noise. Include plots and the result of the Box test.
 

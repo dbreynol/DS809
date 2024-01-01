@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Set 2 Set 2 | DS809</title>
+  <title>Set 2 Smoothing, Decomposition, Noise | DS809</title>
   <meta name="description" content="Course materials for DS809, Spring 2024." />
   <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Set 2 Set 2 | DS809" />
+  <meta property="og:title" content="Set 2 Smoothing, Decomposition, Noise | DS809" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Course materials for DS809, Spring 2024." />
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Set 2 Set 2 | DS809" />
+  <meta name="twitter:title" content="Set 2 Smoothing, Decomposition, Noise | DS809" />
   
   <meta name="twitter:description" content="Course materials for DS809, Spring 2024." />
   
@@ -146,20 +146,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.4" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocorrelation"><i class="fa fa-check"></i><b>1.4</b> Autocorrelation</a></li>
 <li class="chapter" data-level="1.5" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#lab-1"><i class="fa fa-check"></i><b>1.5</b> Lab 1</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="set-2.html"><a href="set-2.html"><i class="fa fa-check"></i><b>2</b> Set 2</a>
+<li class="chapter" data-level="2" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html"><i class="fa fa-check"></i><b>2</b> Smoothing, Decomposition, Noise</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="set-2.html"><a href="set-2.html#exponential-smoothing"><i class="fa fa-check"></i><b>2.1</b> Exponential Smoothing</a>
+<li class="chapter" data-level="2.1" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#exponential-smoothing"><i class="fa fa-check"></i><b>2.1</b> Exponential Smoothing</a>
 <ul>
-<li class="chapter" data-level="2.1.1" data-path="set-2.html"><a href="set-2.html#optimization"><i class="fa fa-check"></i><b>2.1.1</b> Optimization</a></li>
+<li class="chapter" data-level="2.1.1" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#optimization"><i class="fa fa-check"></i><b>2.1.1</b> Optimization</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="set-2.html"><a href="set-2.html#decomposition"><i class="fa fa-check"></i><b>2.2</b> Decomposition</a></li>
-<li class="chapter" data-level="2.3" data-path="set-2.html"><a href="set-2.html#statistical-models"><i class="fa fa-check"></i><b>2.3</b> Statistical Models</a>
+<li class="chapter" data-level="2.2" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#decomposition"><i class="fa fa-check"></i><b>2.2</b> Decomposition</a></li>
+<li class="chapter" data-level="2.3" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#statistical-models"><i class="fa fa-check"></i><b>2.3</b> Statistical Models</a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="set-2.html"><a href="set-2.html#random-walk"><i class="fa fa-check"></i><b>2.3.1</b> Random Walk</a></li>
-<li class="chapter" data-level="2.3.2" data-path="set-2.html"><a href="set-2.html#white-noise"><i class="fa fa-check"></i><b>2.3.2</b> White noise</a></li>
+<li class="chapter" data-level="2.3.1" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#random-walk"><i class="fa fa-check"></i><b>2.3.1</b> Random Walk</a></li>
+<li class="chapter" data-level="2.3.2" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#white-noise"><i class="fa fa-check"></i><b>2.3.2</b> White noise</a></li>
 </ul></li>
-<li class="chapter" data-level="2.4" data-path="set-2.html"><a href="set-2.html#stationarity"><i class="fa fa-check"></i><b>2.4</b> Stationarity</a></li>
-<li class="chapter" data-level="2.5" data-path="set-2.html"><a href="set-2.html#lab-2"><i class="fa fa-check"></i><b>2.5</b> Lab 2</a></li>
+<li class="chapter" data-level="2.4" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#stationarity"><i class="fa fa-check"></i><b>2.4</b> Stationarity</a></li>
+<li class="chapter" data-level="2.5" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#lab-2"><i class="fa fa-check"></i><b>2.5</b> Lab 2</a></li>
 </ul></li>
 </ul>
 
@@ -178,10 +178,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="set-2" class="section level1 hasAnchor" number="2">
-<h1><span class="header-section-number">Set 2</span> Set 2<a href="set-2.html#set-2" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="smoothing-decomposition-noise" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Set 2</span> Smoothing, Decomposition, Noise<a href="smoothing-decomposition-noise.html#smoothing-decomposition-noise" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="exponential-smoothing" class="section level2 hasAnchor" number="2.1">
-<h2><span class="header-section-number">2.1</span> Exponential Smoothing<a href="set-2.html#exponential-smoothing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">2.1</span> Exponential Smoothing<a href="smoothing-decomposition-noise.html#exponential-smoothing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>An alternate way to smooth a time series, generally appropriate for a time series with no clear seasonality, is with exponential smoothing. Like the moving average, this method averages over recent observations but differs in that it assigns relatively more weight to observations that are relatively closer. This idea can be expressed as,</p>
 <p><span class="math display">\[\begin{align}
 \hat{y}_{t+1 | t} = \alpha y_t + (1-\alpha) \hat{y}_{t | t-1},
@@ -201,7 +201,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="series_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>In the plot above, of Albanian exports between 1991 and 2017, we display two smoothed time series (one for <span class="math inline">\(\alpha = 0.5\)</span> and one where <span class="math inline">\(\alpha = 0.9\)</span>). For any <span class="math inline">\(\alpha\)</span> between 0 and 1, the weights attached to the observations decrease exponentially as we go back in time, hence the name “exponential smoothing”. If <span class="math inline">\(\alpha\)</span> is small (i.e., close to 0), more weight is given to observations from the more distant past. If <span class="math inline">\(\alpha\)</span> is large (i.e., close to 1), more weight is given to the more recent observations.</p>
 <div id="optimization" class="section level3 hasAnchor" number="2.1.1">
-<h3><span class="header-section-number">2.1.1</span> Optimization<a href="set-2.html#optimization" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<h3><span class="header-section-number">2.1.1</span> Optimization<a href="smoothing-decomposition-noise.html#optimization" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The <span class="math inline">\((\alpha, l_0)\)</span> parameters can be estimated by minimizing the SSE:</p>
 <p><span class="math display">\[\begin{align}
 \text{SSE} = \sum_{i=i}^T \bigg(y_t - \hat{y}_{t | t-1}   \bigg)^2.
@@ -210,15 +210,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <div id="decomposition" class="section level2 hasAnchor" number="2.2">
-<h2><span class="header-section-number">2.2</span> Decomposition<a href="set-2.html#decomposition" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">2.2</span> Decomposition<a href="smoothing-decomposition-noise.html#decomposition" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Time series data can exhibit a variety of patterns, and it is often helpful to split a time series into several components, each representing an underlying pattern category. In this section, we will aim to decompose a time series into three parts: a trend component (<span class="math inline">\(T\)</span>), a seasonality component (<span class="math inline">\(S\)</span>), and a random component (<span class="math inline">\(R\)</span>). That is, for each observation <span class="math inline">\(Y_t\)</span>, we want to break it down into three parts:</p>
 <p><span class="math inline">\(Y_T = T_t + S_t + R_t\)</span>.</p>
 <p>To illustrate, we will use a dataset on monthly retail employment in the US. Let’s first take a look at this data.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="set-2.html#cb7-1" tabindex="-1"></a><span class="co"># us_employment data frame from the &#39;fpp3&#39; package</span></span>
-<span id="cb7-2"><a href="set-2.html#cb7-2" tabindex="-1"></a>us_employment<span class="sc">$</span>date <span class="ot">=</span> <span class="fu">mdy</span> ( <span class="fu">str_c</span>( <span class="fu">month</span>(us_employment<span class="sc">$</span>Month), <span class="st">&quot;-1-&quot;</span>, <span class="fu">year</span>(us_employment<span class="sc">$</span>Month)) )</span>
-<span id="cb7-3"><a href="set-2.html#cb7-3" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="set-2.html#cb7-4" tabindex="-1"></a>retail <span class="ot">=</span> us_employment <span class="sc">%&gt;%</span> </span>
-<span id="cb7-5"><a href="set-2.html#cb7-5" tabindex="-1"></a>  <span class="fu">filter</span>(Title <span class="sc">==</span> <span class="st">&quot;Retail Trade&quot;</span>, <span class="fu">year</span>(date) <span class="sc">&gt;</span> <span class="dv">2002</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="smoothing-decomposition-noise.html#cb7-1" tabindex="-1"></a><span class="co"># us_employment data frame from the &#39;fpp3&#39; package</span></span>
+<span id="cb7-2"><a href="smoothing-decomposition-noise.html#cb7-2" tabindex="-1"></a>us_employment<span class="sc">$</span>date <span class="ot">=</span> <span class="fu">mdy</span> ( <span class="fu">str_c</span>( <span class="fu">month</span>(us_employment<span class="sc">$</span>Month), <span class="st">&quot;-1-&quot;</span>, <span class="fu">year</span>(us_employment<span class="sc">$</span>Month)) )</span>
+<span id="cb7-3"><a href="smoothing-decomposition-noise.html#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="smoothing-decomposition-noise.html#cb7-4" tabindex="-1"></a>retail <span class="ot">=</span> us_employment <span class="sc">%&gt;%</span> </span>
+<span id="cb7-5"><a href="smoothing-decomposition-noise.html#cb7-5" tabindex="-1"></a>  <span class="fu">filter</span>(Title <span class="sc">==</span> <span class="st">&quot;Retail Trade&quot;</span>, <span class="fu">year</span>(date) <span class="sc">&gt;</span> <span class="dv">2002</span>)</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>To decompose this time series, we will follow this basic algorithm:</p>
 <ol style="list-style-type: decimal">
@@ -230,10 +230,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The trend captures the majority of the change that is observed in this time series, while the relative scale of the monthly seasonality and the random variation is small.</p>
 </div>
 <div id="statistical-models" class="section level2 hasAnchor" number="2.3">
-<h2><span class="header-section-number">2.3</span> Statistical Models<a href="set-2.html#statistical-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">2.3</span> Statistical Models<a href="smoothing-decomposition-noise.html#statistical-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Thus far, we have explored time series data to better understand their properties. These exploration methods can also be used to generate forecasts for future values. However, they are not able to quantify the uncertainty inherent in those forecasts, nor do they model the dependency structure inherent in the time series data. We will begin with a very simple model that does both of these things.</p>
 <div id="random-walk" class="section level3 hasAnchor" number="2.3.1">
-<h3><span class="header-section-number">2.3.1</span> Random Walk<a href="set-2.html#random-walk" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<h3><span class="header-section-number">2.3.1</span> Random Walk<a href="smoothing-decomposition-noise.html#random-walk" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Let us consider a simple model to describe time series data,</p>
 <p><span class="math inline">\(y_t = y_{t-1}+e_t\)</span>,</p>
 <p>where <span class="math inline">\(e_t \sim N(0, \sigma^2)\)</span> and all elements of the error vector are mutually independent.</p>
@@ -247,17 +247,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 </div>
 <div id="white-noise" class="section level3 hasAnchor" number="2.3.2">
-<h3><span class="header-section-number">2.3.2</span> White noise<a href="set-2.html#white-noise" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<h3><span class="header-section-number">2.3.2</span> White noise<a href="smoothing-decomposition-noise.html#white-noise" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Now let us define a new time series, <span class="math inline">\(z_t = y_t - y_{t-1}\)</span>.</p>
 <p>Define the same properties as 1-5 above. These two simple models are important in finance. If a time series follows a random walk, then its first difference is white noise. Let’s see if this is the case with GOOG.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="set-2.html#cb8-1" tabindex="-1"></a>goog <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;GOOG&#39;</span>, <span class="at">from=</span><span class="st">&#39;2020-12-22&#39;</span>, <span class="at">to=</span><span class="st">&#39;2023-12-22&#39;</span>,<span class="at">auto.assign =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb8-2"><a href="set-2.html#cb8-2" tabindex="-1"></a>googdf <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">ymd</span>(<span class="fu">index</span>(goog)), goog<span class="sc">$</span>GOOG.Close)</span>
-<span id="cb8-3"><a href="set-2.html#cb8-3" tabindex="-1"></a><span class="fu">names</span>(googdf) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;date&quot;</span>, <span class="st">&quot;price&quot;</span>)</span>
-<span id="cb8-4"><a href="set-2.html#cb8-4" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="set-2.html#cb8-5" tabindex="-1"></a><span class="fu">ggplot</span>(googdf, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> price)) <span class="sc">+</span> </span>
-<span id="cb8-6"><a href="set-2.html#cb8-6" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
-<span id="cb8-7"><a href="set-2.html#cb8-7" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
-<span id="cb8-8"><a href="set-2.html#cb8-8" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;GOOG Closing Price&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="smoothing-decomposition-noise.html#cb8-1" tabindex="-1"></a>goog <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;GOOG&#39;</span>, <span class="at">from=</span><span class="st">&#39;2020-12-22&#39;</span>, <span class="at">to=</span><span class="st">&#39;2023-12-22&#39;</span>,<span class="at">auto.assign =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-2"><a href="smoothing-decomposition-noise.html#cb8-2" tabindex="-1"></a>googdf <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">ymd</span>(<span class="fu">index</span>(goog)), goog<span class="sc">$</span>GOOG.Close)</span>
+<span id="cb8-3"><a href="smoothing-decomposition-noise.html#cb8-3" tabindex="-1"></a><span class="fu">names</span>(googdf) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;date&quot;</span>, <span class="st">&quot;price&quot;</span>)</span>
+<span id="cb8-4"><a href="smoothing-decomposition-noise.html#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="smoothing-decomposition-noise.html#cb8-5" tabindex="-1"></a><span class="fu">ggplot</span>(googdf, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> price)) <span class="sc">+</span> </span>
+<span id="cb8-6"><a href="smoothing-decomposition-noise.html#cb8-6" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb8-7"><a href="smoothing-decomposition-noise.html#cb8-7" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb8-8"><a href="smoothing-decomposition-noise.html#cb8-8" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;GOOG Closing Price&quot;</span>)</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 <p><img src="series_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <p>It seems plausible that this is a white noise series. How can we build further evidence of this. One way would be to examine the autocorrelation function. What are we looking for?</p>
@@ -275,7 +275,7 @@ Q = n(n+2) \sum_{i=1}^k \frac{\hat{\rho}_i^2}{(n-k)}
 </div>
 </div>
 <div id="stationarity" class="section level2 hasAnchor" number="2.4">
-<h2><span class="header-section-number">2.4</span> Stationarity<a href="set-2.html#stationarity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">2.4</span> Stationarity<a href="smoothing-decomposition-noise.html#stationarity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Stationarity is a convenient assumption that allows us to describe the statistical properties of a time series. A time series is said to be stationary if there is:</p>
 <ol style="list-style-type: decimal">
 <li>No systematic change in the mean or the variance</li>
@@ -284,12 +284,12 @@ Q = n(n+2) \sum_{i=1}^k \frac{\hat{\rho}_i^2}{(n-k)}
 </ol>
 </div>
 <div id="lab-2" class="section level2 hasAnchor" number="2.5">
-<h2><span class="header-section-number">2.5</span> Lab 2<a href="set-2.html#lab-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">2.5</span> Lab 2<a href="smoothing-decomposition-noise.html#lab-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li><p>Change the <code>es</code> function we developed in <a href="set-2.html#exponential-smoothing">Exponential Smoothing</a> to return the SSE, rather than <code>yt</code>, the smoothed time series. Now, use the <code>optim</code> function to find the values of <span class="math inline">\((\alpha, l_0)\)</span> that minimize SSE. Plot the exponentially smoothed time series using the optimized values for <span class="math inline">\((\alpha, l_0)\)</span>.</p></li>
-<li><p>Choose a different type of employee from the <code>us_employment</code> dataset and, first, plot the time series. Now, decompose the time series into trend, seasonal, and random components. Follow the algorithm in <a href="set-2.html#decomposition">Decomposition</a>. Plot these and comment on your observations.</p></li>
-<li><p>Simulate a <a href="set-2.html#random-walk">Random Walk</a> with 100 time points (<span class="math inline">\(y_t\)</span>, <span class="math inline">\(T= 1,\ldots,100\)</span>). Repeat this process 50 times. Choose your own <span class="math inline">\(\sigma^2\)</span> and use the same value for each of the 50 iterations. Plot all 50 time series on the same plot. On the title, report the <span class="math inline">\(\sigma^2\)</span> value you used. Second, make a histogram of each of the end points (i.e., the 100th observation of each of the 50 time series). How does this histogram correspond with the theoretical properties of <span class="math inline">\(Y_{100}\)</span> (i.e., the mean, variance, and shape of the distribution)?</p></li>
-<li><p>Write a function that takes a time series vector as input and returns the Ljung-Box Q-Statistic for <span class="math inline">\(k=2\)</span>, along with the p-value for the hypothesis test in <a href="set-2.html#white-noise">White Noise</a>.</p></li>
+<li><p>Change the <code>es</code> function we developed in <a href="smoothing-decomposition-noise.html#exponential-smoothing">Exponential Smoothing</a> to return the SSE, rather than <code>yt</code>, the smoothed time series. Now, use the <code>optim</code> function to find the values of <span class="math inline">\((\alpha, l_0)\)</span> that minimize SSE. Plot the exponentially smoothed time series using the optimized values for <span class="math inline">\((\alpha, l_0)\)</span>.</p></li>
+<li><p>Choose a different type of employee from the <code>us_employment</code> dataset and, first, plot the time series. Now, decompose the time series into trend, seasonal, and random components. Follow the algorithm in <a href="smoothing-decomposition-noise.html#decomposition">Decomposition</a>. Plot these and comment on your observations.</p></li>
+<li><p>Simulate a <a href="smoothing-decomposition-noise.html#random-walk">Random Walk</a> with 100 time points (<span class="math inline">\(y_t\)</span>, <span class="math inline">\(T= 1,\ldots,100\)</span>). Repeat this process 50 times. Choose your own <span class="math inline">\(\sigma^2\)</span> and use the same value for each of the 50 iterations. Plot all 50 time series on the same plot. On the title, report the <span class="math inline">\(\sigma^2\)</span> value you used. Second, make a histogram of each of the end points (i.e., the 100th observation of each of the 50 time series). How does this histogram correspond with the theoretical properties of <span class="math inline">\(Y_{100}\)</span> (i.e., the mean, variance, and shape of the distribution)?</p></li>
+<li><p>Write a function that takes a time series vector as input and returns the Ljung-Box Q-Statistic for <span class="math inline">\(k=2\)</span>, along with the p-value for the hypothesis test in <a href="smoothing-decomposition-noise.html#white-noise">White Noise</a>.</p></li>
 <li><p>Using the <code>quantmod</code> package, choose your favorite stock and see if the differenced version of its closing prices over the past year can be described as white noise. Include plots and the result of the Box test.</p></li>
 </ol>
 

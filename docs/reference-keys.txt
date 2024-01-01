@@ -4,7 +4,7 @@ time-series-eda
 multiple-time-series
 autocorrelation
 lab-1
-set-2
+smoothing-decomposition-noise
 exponential-smoothing
 optimization
 decomposition

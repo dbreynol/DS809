@@ -1,5 +1,5 @@
 --- 
-title: "Artifex - Fall 2023"
+title: "DS809"
 author: "David Reynolds"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
@@ -9,7 +9,7 @@ bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: openscapes/series
-description: "(Partial) course materials for Artifex, Spring 2023."
+description: "Course materials for DS809, Spring 2024."
 ---
 
 ```{r setup, include=FALSE}
