@@ -7,10 +7,10 @@ bookdown::gitbook:
   config:
     toc:
       before: |
-        <li><a href="./">Artifex Fall 2023</a></li>
+        <li><a href="./">UNH DS809</a></li>
 #      after: |
 #        <li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
-    edit: https://github.com/dbreynol/artifex_fall2022/edit/master/%s
+    edit: https://github.com/dbreynol/DS809/edit/master/%s
     download: ["pdf"]
 #bookdown::pdf_book:
 #  includes:

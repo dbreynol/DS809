@@ -13,3 +13,7 @@ random-walk
 white-noise
 stationarity
 lab-2
+arima-models
+ar-models
+ar1-model
+ar-stationarity

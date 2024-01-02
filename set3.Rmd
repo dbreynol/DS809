@@ -1,3 +1,49 @@
-# Set 3
+# ARIMA Models
 
-## Autoregressive Models
+## AR Models
+
+An _autoregressive_ model of order _p_, or AR(_p_), is defined as
+
+$$
+x_t = \phi_0 + \phi_1 x_{t-1} + \phi_2 x_{t-2} + \dots + \phi_p x_{t-p} + w_t
+$$
+
+where we assume
+
+1. $w_t$ is white noise. That is, $w_t \sim N(0,\sigma^2_w)$.
+
+2. $\phi_p \neq 0$ for an order-_p_ process
+
+### AR(1) Model
+
+Let's start by figuring out some properties of the simplest AR model, the AR(1) model:
+
+$$
+x_t = \phi_0 + \phi_1 x_{t-1} + w_t
+$$
+
+We start by assuming that $x_t$ is a stationary time series. Under this assumption, we can show:
+
+\begin{align}
+E(x_t) &= \frac{\phi_0}{1-\phi_1} \\
+Var(x_t) &= \frac{\sigma^2_w}{1-\phi_1^2} \\
+\rho(h) &= \phi_1^h
+\end{align}
+
+For this to work, $|\phi_1| < 1$. Now let's simulate some data from an AR1 model and compare theoretical and observed quantities.
+
+```{r echo=TRUE}
+set.seed(1)
+phi_1 = 0.5
+sigsq_w = 1
+x = arima.sim(n = 10000, model = list(ar=c(phi_1)), sd = sigsq_w)
+```
+
+```{r}
+
+
+theory = c(0, 1.333333, 1)
+
+```
+
+### AR Stationarity

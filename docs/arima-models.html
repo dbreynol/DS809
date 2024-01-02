@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Set 3 Set 3 | DS809</title>
+  <title>Set 3 ARIMA Models | DS809</title>
   <meta name="description" content="Course materials for DS809, Spring 2024." />
   <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Set 3 Set 3 | DS809" />
+  <meta property="og:title" content="Set 3 ARIMA Models | DS809" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Course materials for DS809, Spring 2024." />
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Set 3 Set 3 | DS809" />
+  <meta name="twitter:title" content="Set 3 ARIMA Models | DS809" />
   
   <meta name="twitter:description" content="Course materials for DS809, Spring 2024." />
   
@@ -161,9 +161,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#stationarity"><i class="fa fa-check"></i><b>2.4</b> Stationarity</a></li>
 <li class="chapter" data-level="2.5" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#lab-2"><i class="fa fa-check"></i><b>2.5</b> Lab 2</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="set-3.html"><a href="set-3.html"><i class="fa fa-check"></i><b>3</b> Set 3</a>
+<li class="chapter" data-level="3" data-path="arima-models.html"><a href="arima-models.html"><i class="fa fa-check"></i><b>3</b> ARIMA Models</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="set-3.html"><a href="set-3.html#autoregressive-ar-models"><i class="fa fa-check"></i><b>3.1</b> Autoregressive (AR) Models</a></li>
+<li class="chapter" data-level="3.1" data-path="arima-models.html"><a href="arima-models.html#ar-models"><i class="fa fa-check"></i><b>3.1</b> AR Models</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="arima-models.html"><a href="arima-models.html#ar1-model"><i class="fa fa-check"></i><b>3.1.1</b> AR(1) Model</a></li>
+<li class="chapter" data-level="3.1.2" data-path="arima-models.html"><a href="arima-models.html#ar-stationarity"><i class="fa fa-check"></i><b>3.1.2</b> AR Stationarity</a></li>
+</ul></li>
 </ul></li>
 </ul>
 
@@ -182,20 +186,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="set-3" class="section level1 hasAnchor" number="3">
-<h1><span class="header-section-number">Set 3</span> Set 3<a href="set-3.html#set-3" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="autoregressive-ar-models" class="section level2 hasAnchor" number="3.1">
-<h2><span class="header-section-number">3.1</span> Autoregressive (AR) Models<a href="set-3.html#autoregressive-ar-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="arima-models" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Set 3</span> ARIMA Models<a href="arima-models.html#arima-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="ar-models" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> AR Models<a href="arima-models.html#ar-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>An <em>autoregressive</em> model of order <em>p</em>, or AR(<em>p</em>), is defined as</p>
 <p><span class="math display">\[
-x_t = \phi_1 x_{t-1} + \phi_2 x_{t-2} + \dots + \phi_p x_{t-p} + w_t
+x_t = \phi_0 + \phi_1 x_{t-1} + \phi_2 x_{t-2} + \dots + \phi_p x_{t-p} + w_t
 \]</span></p>
 <p>where we assume</p>
 <ol style="list-style-type: decimal">
-<li><p><span class="math inline">\(w_t\)</span> is white noise</p></li>
+<li><p><span class="math inline">\(w_t\)</span> is white noise. That is, <span class="math inline">\(w_t \sim N(0,\sigma^2_w)\)</span>.</p></li>
 <li><p><span class="math inline">\(\phi_p \neq 0\)</span> for an order-<em>p</em> process</p></li>
 </ol>
+<div id="ar1-model" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> AR(1) Model<a href="arima-models.html#ar1-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let’s start by figuring out some properties of the simplest AR model, the AR(1) model:</p>
+<p><span class="math display">\[
+x_t = \phi_0 + \phi_1 x_{t-1} + w_t
+\]</span></p>
+<p>We start by assuming that <span class="math inline">\(x_t\)</span> is a stationary time series. Under this assumption, we can show:</p>
+<p><span class="math display">\[\begin{align}
+E(x_t) &amp;= \frac{\phi_0}{1-\phi_1} \\
+Var(x_t) &amp;= \frac{\sigma^2_w}{1-\phi_1^2} \\
+\rho(h) &amp;= \phi_1^h
+\end{align}\]</span></p>
+<p>For this to work, <span class="math inline">\(|\phi_1| &lt; 1\)</span>. Now let’s simulate some data from an AR1 model and compare theoretical and observed quantities.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="arima-models.html#cb9-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb9-2"><a href="arima-models.html#cb9-2" tabindex="-1"></a>phi_1 <span class="ot">=</span> <span class="fl">0.5</span></span>
+<span id="cb9-3"><a href="arima-models.html#cb9-3" tabindex="-1"></a>sigsq_w <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb9-4"><a href="arima-models.html#cb9-4" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">10000</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar=</span><span class="fu">c</span>(phi_1)), <span class="at">sd =</span> sigsq_w)</span></code></pre></div>
+</div>
+<div id="ar-stationarity" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> AR Stationarity<a href="arima-models.html#ar-stationarity" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 
+</div>
 </div>
 </div>
             </section>
