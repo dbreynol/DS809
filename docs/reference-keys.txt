@@ -17,3 +17,14 @@ arima-models
 ar-models
 ar1-model
 ar-stationarity
+ma-models
+ma1-model
+arma-models
+acf-for-armapq-models
+pacf-for-armapq-models
+arima-models-1
+model-selection-fitting
+model-checking
+forecasting
+regression-with-arma-errors
+lab-3

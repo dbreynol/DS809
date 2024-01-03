@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-01-02" />
+<meta name="date" content="2024-01-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -168,6 +168,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.1.1" data-path="arima-models.html"><a href="arima-models.html#ar1-model"><i class="fa fa-check"></i><b>3.1.1</b> AR(1) Model</a></li>
 <li class="chapter" data-level="3.1.2" data-path="arima-models.html"><a href="arima-models.html#ar-stationarity"><i class="fa fa-check"></i><b>3.1.2</b> AR Stationarity</a></li>
 </ul></li>
+<li class="chapter" data-level="3.2" data-path="arima-models.html"><a href="arima-models.html#ma-models"><i class="fa fa-check"></i><b>3.2</b> MA Models</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="arima-models.html"><a href="arima-models.html#ma1-model"><i class="fa fa-check"></i><b>3.2.1</b> MA(1) Model</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="arima-models.html"><a href="arima-models.html#arma-models"><i class="fa fa-check"></i><b>3.3</b> ARMA Models</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="arima-models.html"><a href="arima-models.html#acf-for-armapq-models"><i class="fa fa-check"></i><b>3.3.1</b> ACF for ARMA(<em>p</em>,<em>q</em>) models</a></li>
+<li class="chapter" data-level="3.3.2" data-path="arima-models.html"><a href="arima-models.html#pacf-for-armapq-models"><i class="fa fa-check"></i><b>3.3.2</b> PACF for ARMA(<em>p</em>,<em>q</em>) models</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="arima-models.html"><a href="arima-models.html#arima-models-1"><i class="fa fa-check"></i><b>3.4</b> ARIMA Models</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="arima-models.html"><a href="arima-models.html#model-selection-fitting"><i class="fa fa-check"></i><b>3.4.1</b> Model Selection/ Fitting</a></li>
+<li class="chapter" data-level="3.4.2" data-path="arima-models.html"><a href="arima-models.html#model-checking"><i class="fa fa-check"></i><b>3.4.2</b> Model Checking</a></li>
+<li class="chapter" data-level="3.4.3" data-path="arima-models.html"><a href="arima-models.html#forecasting"><i class="fa fa-check"></i><b>3.4.3</b> Forecasting</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="arima-models.html"><a href="arima-models.html#regression-with-arma-errors"><i class="fa fa-check"></i><b>3.5</b> Regression with ARMA errors</a></li>
+<li class="chapter" data-level="3.6" data-path="arima-models.html"><a href="arima-models.html#lab-3"><i class="fa fa-check"></i><b>3.6</b> Lab 3</a></li>
 </ul></li>
 </ul>
 
@@ -216,11 +233,160 @@ Var(x_t) &amp;= \frac{\sigma^2_w}{1-\phi_1^2} \\
 <span id="cb9-2"><a href="arima-models.html#cb9-2" tabindex="-1"></a>phi_1 <span class="ot">=</span> <span class="fl">0.5</span></span>
 <span id="cb9-3"><a href="arima-models.html#cb9-3" tabindex="-1"></a>sigsq_w <span class="ot">=</span> <span class="dv">1</span></span>
 <span id="cb9-4"><a href="arima-models.html#cb9-4" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">10000</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar=</span><span class="fu">c</span>(phi_1)), <span class="at">sd =</span> sigsq_w)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">quantity</th>
+<th align="right">theory</th>
+<th align="right">empirical</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">mean</td>
+<td align="right">0.000000</td>
+<td align="right">-0.0142169</td>
+</tr>
+<tr class="even">
+<td align="left">variance</td>
+<td align="right">1.333333</td>
+<td align="right">1.3889404</td>
+</tr>
+<tr class="odd">
+<td align="left">ACF, k=2</td>
+<td align="right">0.250000</td>
+<td align="right">0.2611053</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="ar-stationarity" class="section level3 hasAnchor" number="3.1.2">
 <h3><span class="header-section-number">3.1.2</span> AR Stationarity<a href="arima-models.html#ar-stationarity" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-
+<p>In the case of the AR(1) model, it was apparent that the condition we needed to ensure a stationary model was the condition that <span class="math inline">\(|\phi_1| &lt; 1\)</span>. For the general AR(p) model, though, the condition is more complicated. Before defining the condition, we define the backshift operator, <span class="math inline">\(\mathbf{B}\)</span>:</p>
+<p><span class="math display">\[\mathbf{B}x_t = x_{t-1}\]</span>.</p>
+<p>Using this operator, we can re-write the AR(p) model as,</p>
+<p><span class="math display">\[
+  x_t = \phi_1 x_{t-1} + \phi_2 x_{t-2} + \dots + \phi_p x_{t-p} + w_t \\
+  \Downarrow \\
+\begin{align}
+  x_t - \phi_1 x_{t-1} - \phi_2 x_{t-2} - \dots - \phi_p x_{t-p} &amp;= w_t \\
+  (1 - \phi_1 \mathbf{B} - \phi_2 \mathbf{B}^2 - \dots - \phi_p \mathbf{B}^p) x_t &amp;= w_t \\
+  \phi_p (\mathbf{B}^p) x_t &amp;= w_t \\
+\end{align}
+\]</span></p>
+<p>We will refer to <span class="math inline">\(\phi_p (\mathbf{B}^p)\)</span> as the characteristic equation. To be stationary, all roots of the characteristic equation must exceed 1 in absolute value. To make this more concrete, let’s go through some examples.</p>
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\(x_t = 0.5 x_{t-1} + w_t\)</span></li>
+<li><span class="math inline">\(x_t = -0.2 x_{t-1} + 0.4 x_{t-2} + w_t\)</span></li>
+<li><span class="math inline">\(x_t = x_{t-1} + w_t\)</span></li>
+</ol>
 </div>
+</div>
+<div id="ma-models" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> MA Models<a href="arima-models.html#ma-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A moving average model of order <em>q</em>, or MA(<em>q</em>), is defined as</p>
+<p><span class="math display">\[
+x_t =  \theta_0 + w_t  + \theta_1 w_{t-1} + \theta_2 w_{t-2} + \dots + \theta_q w_{t-q}
+\]</span>
+where <span class="math inline">\(w_t\)</span> is white noise</p>
+<p>Each of the <span class="math inline">\(x_t\)</span> is a sum of the most recent error terms</p>
+<p>Thus, <em>all</em> MA processes are stationary because they are finite sums of stationary WN processes.</p>
+<p><img src="series_files/figure-html/ex_acf_MA-1.png" width="672" /></p>
+<div id="ma1-model" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> MA(1) Model<a href="arima-models.html#ma1-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let’s start by figuring out some properties of the simplest MA model, the MA(1) model:</p>
+<p><span class="math display">\[
+x_t = \theta_0 + \theta_1 w_{t-1} + w_t
+\]</span></p>
+<p>We start by assuming that <span class="math inline">\(x_t\)</span> is a stationary time series. Under this assumption, we can show:</p>
+<p><span class="math display">\[\begin{align}
+E(x_t) &amp;= \theta_0 \\
+Var(x_t) &amp;= \sigma^2_w(1+\theta_1^2) \\
+\rho(h) &amp;= \frac{\theta_1}{1+\theta_1^2} \text{ for } h=1 \text{ and 0 otherwise. }
+\end{align}\]</span></p>
+<p>Now let’s simulate some data from an AR1 model and compare theoretical and observed quantities.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="arima-models.html#cb10-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb10-2"><a href="arima-models.html#cb10-2" tabindex="-1"></a>theta_1 <span class="ot">=</span> <span class="fl">0.5</span></span>
+<span id="cb10-3"><a href="arima-models.html#cb10-3" tabindex="-1"></a>sigsq_w <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb10-4"><a href="arima-models.html#cb10-4" tabindex="-1"></a>z <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">10000</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ma=</span><span class="fu">c</span>(theta_1)), <span class="at">sd =</span> sigsq_w)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">quantity</th>
+<th align="right">theory</th>
+<th align="right">empirical</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">mean</td>
+<td align="right">0.00</td>
+<td align="right">-0.0098233</td>
+</tr>
+<tr class="even">
+<td align="left">variance</td>
+<td align="right">1.25</td>
+<td align="right">1.2937915</td>
+</tr>
+<tr class="odd">
+<td align="left">ACF, k=2</td>
+<td align="right">0.40</td>
+<td align="right">0.4124200</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="arma-models" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> ARMA Models<a href="arima-models.html#arma-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>An autoregressive moving average, or ARMA(<em>p</em>,<em>q</em>), model is written as</p>
+<p><span class="math display">\[
+x_t = \phi_1 x_{t-1} + \dots + \phi_p x_{t-p} + w_t + \theta_1 w_{t-1} + \dots + \theta_q w_{t-q}
+\]</span></p>
+<p><img src="series_files/figure-html/ex_ARMA-1.png" width="672" /></p>
+<div id="acf-for-armapq-models" class="section level3 hasAnchor" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> ACF for ARMA(<em>p</em>,<em>q</em>) models<a href="arima-models.html#acf-for-armapq-models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="series_files/figure-html/ex_acf_ARMA-1.png" width="672" /></p>
+</div>
+<div id="pacf-for-armapq-models" class="section level3 hasAnchor" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> PACF for ARMA(<em>p</em>,<em>q</em>) models<a href="arima-models.html#pacf-for-armapq-models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="series_files/figure-html/ex_pacf_ARMA-1.png" width="672" /></p>
+</div>
+</div>
+<div id="arima-models-1" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> ARIMA Models<a href="arima-models.html#arima-models-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Our data is not always stationary. If the data do not appear stationary, differencing can help. This leads to the class of <em>autoregressive integrated moving average</em> (ARIMA) models. ARIMA models are indexed with orders (<em>p</em>,<em>d</em>,<em>q</em>) where <em>d</em> indicates the order of differencing.</p>
+<p><span class="math inline">\(\{x_t\}\)</span> follows an ARIMA(<em>p</em>,<em>d</em>,<em>q</em>) process if <span class="math inline">\((1-\mathbf{B})^d x_t\)</span> is an ARMA(<em>p</em>,<em>q</em>) process.</p>
+<p>For example, if we look at Japan exports over the time period from 1960 to 2016, we see a clear evolution in the mean of the time series, indicating that the time series is not stationary.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p>As we saw in week one, if we instead look at the year over year changes in exports, we see something that more closely resembles a stationary time series.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<div id="model-selection-fitting" class="section level3 hasAnchor" number="3.4.1">
+<h3><span class="header-section-number">3.4.1</span> Model Selection/ Fitting<a href="arima-models.html#model-selection-fitting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The general sequence of steps involved in fitting an ARIMA model to a given time series are:</p>
+<ol style="list-style-type: decimal">
+<li>Evaluate whether the time series is stationary</li>
+<li>If not, make it stationary - select the differencing level (d)</li>
+<li>Select the AR level (p) and the MA level (q) that optimize the AIC</li>
+</ol>
+<p>These steps are automated with the function <code>forecast::auto.arima</code> function.</p>
+</div>
+<div id="model-checking" class="section level3 hasAnchor" number="3.4.2">
+<h3><span class="header-section-number">3.4.2</span> Model Checking<a href="arima-models.html#model-checking" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="forecasting" class="section level3 hasAnchor" number="3.4.3">
+<h3><span class="header-section-number">3.4.3</span> Forecasting<a href="arima-models.html#forecasting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+</div>
+<div id="regression-with-arma-errors" class="section level2 hasAnchor" number="3.5">
+<h2><span class="header-section-number">3.5</span> Regression with ARMA errors<a href="arima-models.html#regression-with-arma-errors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="lab-3" class="section level2 hasAnchor" number="3.6">
+<h2><span class="header-section-number">3.6</span> Lab 3<a href="arima-models.html#lab-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li>ACF and PACF for MA/ AR/</li>
+</ol>
+
 </div>
 </div>
             </section>

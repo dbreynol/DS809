@@ -40,10 +40,220 @@ x = arima.sim(n = 10000, model = list(ar=c(phi_1)), sd = sigsq_w)
 ```
 
 ```{r}
-
-
-theory = c(0, 1.333333, 1)
-
+quantity = c("mean", "variance", "ACF, k=2")
+theory = c(0, sigsq_w/ (1-phi_1^2), phi_1^2)
+empirical = c(mean(x), var(x), acf(x, plot = F)$acf[3] )
+df = data.frame(quantity, theory, empirical)
+knitr::kable(df)
 ```
 
 ### AR Stationarity
+
+In the case of the AR(1) model, it was apparent that the condition we needed to ensure a stationary model was the condition that $|\phi_1| < 1$. For the general AR(p) model, though, the condition is more complicated. Before defining the condition, we define the backshift operator, $\mathbf{B}$:
+
+$$\mathbf{B}x_t = x_{t-1}$$.
+
+Using this operator, we can re-write the AR(p) model as,
+
+$$
+  x_t = \phi_1 x_{t-1} + \phi_2 x_{t-2} + \dots + \phi_p x_{t-p} + w_t \\
+  \Downarrow \\
+\begin{align}
+  x_t - \phi_1 x_{t-1} - \phi_2 x_{t-2} - \dots - \phi_p x_{t-p} &= w_t \\
+  (1 - \phi_1 \mathbf{B} - \phi_2 \mathbf{B}^2 - \dots - \phi_p \mathbf{B}^p) x_t &= w_t \\
+  \phi_p (\mathbf{B}^p) x_t &= w_t \\
+\end{align}
+$$
+
+We will refer to $\phi_p (\mathbf{B}^p)$ as the characteristic equation. To be stationary, all roots of the characteristic equation must exceed 1 in absolute value. To make this more concrete, let's go through some examples.
+
+1. $x_t = 0.5 x_{t-1} + w_t$
+2. $x_t = -0.2 x_{t-1} + 0.4 x_{t-2} +  w_t$
+3. $x_t = x_{t-1} + w_t$
+
+
+## MA Models
+
+
+
+A moving average model of order _q_, or MA(_q_), is defined as
+
+$$
+x_t =  \theta_0 + w_t  + \theta_1 w_{t-1} + \theta_2 w_{t-2} + \dots + \theta_q w_{t-q} 
+$$
+where $w_t$ is white noise
+
+Each of the $x_t$ is a sum of the most recent error terms
+
+Thus, _all_ MA processes are stationary because they are finite sums of stationary WN processes.
+
+```{r ex_acf_MA}
+## compare MA(1) & MA(2) with similar structure
+MA1 <- arima.sim(n=50, list(ma=c(0.7)))
+MA2 <- arima.sim(n=50, list(ma=c(-1, 0.7)))
+
+par(mfrow = c(1,2), mai = c(1,1,0.3,0.1), omi = c(0,0,0,0))
+## loop over orders of p
+plot.ts(MA1, las = 1,
+        ylab = expression(italic(x[t])))
+mtext(side = 3,
+      expression(MA(1):~italic(x[t])==~italic(w[t])+0.7~italic(w[t-1])),
+      line = 0.5, adj = 0)
+plot.ts(MA2, las = 1,
+        ylab = expression(italic(x[t])))
+mtext(side = 3,
+      expression(MA(2):~italic(x[t])==~italic(w[t])-~italic(w[t-1])+0.7~italic(w[t-2])),
+      line = 0.5, adj = 0)
+
+```
+
+### MA(1) Model
+
+Let's start by figuring out some properties of the simplest MA model, the MA(1) model:
+
+$$
+x_t = \theta_0 + \theta_1 w_{t-1} + w_t
+$$
+
+We start by assuming that $x_t$ is a stationary time series. Under this assumption, we can show:
+
+\begin{align}
+E(x_t) &= \theta_0 \\
+Var(x_t) &= \sigma^2_w(1+\theta_1^2) \\
+\rho(h) &= \frac{\theta_1}{1+\theta_1^2} \text{ for } h=1 \text{ and 0 otherwise. }
+\end{align}
+
+Now let's simulate some data from an AR1 model and compare theoretical and observed quantities.
+
+```{r echo=TRUE}
+set.seed(1)
+theta_1 = 0.5
+sigsq_w = 1
+z = arima.sim(n = 10000, model = list(ma=c(theta_1)), sd = sigsq_w)
+```
+
+```{r}
+quantity = c("mean", "variance", "ACF, k=2")
+theory = c(0, sigsq_w * (1+theta_1^2), theta_1 / (1+theta_1^2))
+empirical = c(mean(z), var(z), acf(z, plot = F)$acf[2] )
+df = data.frame(quantity, theory, empirical)
+knitr::kable(df)
+```
+
+
+## ARMA Models
+
+An autoregressive moving average, or ARMA(_p_,_q_), model is written as
+
+$$
+x_t = \phi_1 x_{t-1} + \dots + \phi_p x_{t-p} + w_t + \theta_1 w_{t-1} + \dots + \theta_q w_{t-q} 
+$$
+
+```{r ex_ARMA}
+arma_mods <- vector("list", 4L)
+
+## ARMA(3,1): phi[1] = 0.7, phi[2] = 0.2, phi[3] = -0.1, theta[1]= 0.5
+arma_mods[[1]] <- arima.sim(list(ar=c(0.7, 0.2, -0.1), ma=c(0.5)), n=5000)
+## ARMA(2,2): phi[1] = -0.7, phi[2] = 0.2, theta[1] = 0.7, theta[2]= 0.2
+arma_mods[[2]] <- arima.sim(list(ar=c(-0.7, 0.2), ma=c(0.7, 0.2)), n=5000)
+## ARMA(1,3): phi[1] = 0.7, theta[1] = 0.7, theta[2]= 0.2, theta[3] = 0.5
+arma_mods[[3]] <- arima.sim(list(ar=c(0.7), ma=c(0.7, 0.2, 0.5)), n=5000)
+## ARMA(2,2): phi[1] = 0.7, phi[2] = 0.2, theta[1] = 0.7, theta[2]= 0.2
+arma_mods[[4]] <- arima.sim(list(ar=c(0.7, 0.2), ma=c(0.7, 0.2)), n=5000)
+
+titles <- list(
+  expression("ARMA(3,1): "*phi[1]*" = 0.7, "*phi[2]*" = 0.2, "*phi[3]*" = -0.1, "*theta[1]*" = 0.5"),
+  expression("ARMA(2,2): "*phi[1]*" = -0.7, "*phi[2]*" = 0.2, "*theta[1]*" = 0.7, "*theta[2]*" = 0.2"),
+  expression("ARMA(1,3): "*phi[1]*" = 0.7, "*theta[1]*" = 0.7, "*theta[2]*" = 0.2, "*theta[3]*" = 0.5"),
+  expression("ARMA(2,2): "*phi[1]*" = 0.7, "*phi[2]*" = 0.2, "*theta[1]*" = 0.7, "*theta[2]*" = 0.2")
+)
+
+par(mfrow = c(2,2), mai = c(0.7,0.7,0.3,0.1), omi = c(0,0,0,0))
+## loop over orders of p
+for(i in 1:4) {
+  plot.ts(arma_mods[[i]][1:50], las = 1,
+          main = "", ylab = expression(italic(x[t])))
+  mtext(side = 3, titles[[i]],
+        line = 0.5, adj = 0, cex = 0.8)
+  
+}
+```
+
+### ACF for ARMA(_p_,_q_) models
+
+```{r ex_acf_ARMA}
+par(mfrow = c(2,2), mai = c(0.7,0.7,0.3,0.1), omi = c(0,0,0,0))
+## loop over orders of p
+for(i in 1:4) {
+  acf(arma_mods[[i]][1:1000], las = 1,
+          main = "")
+  mtext(side = 3, titles[[i]],
+        line = 0.5, adj = 0, cex = 0.8)
+  
+}
+```
+
+
+### PACF for ARMA(_p_,_q_) models
+
+```{r ex_pacf_ARMA}
+par(mfrow = c(2,2), mai = c(0.7,0.7,0.3,0.1), omi = c(0,0,0,0))
+## loop over orders of p
+for(i in 1:4) {
+  pacf(arma_mods[[i]][1:1000], las = 1,
+          main = "")
+  mtext(side = 3, titles[[i]],
+        line = 0.5, adj = 0, cex = 0.8)
+  
+}
+```
+
+
+## ARIMA Models
+
+Our data is not always stationary. If the data do not appear stationary, differencing can help. This leads to the class of _autoregressive integrated moving average_ (ARIMA) models. ARIMA models are indexed with orders (_p_,_d_,_q_) where _d_ indicates the order of differencing.
+
+$\{x_t\}$ follows an ARIMA(_p_,_d_,_q_) process if $(1-\mathbf{B})^d x_t$ is an ARMA(_p_,_q_) process.
+
+For example, if we look at Japan exports over the time period from 1960 to 2016, we see a clear evolution in the mean of the time series, indicating that the time series is not stationary.
+
+```{r}
+je = global_economy %>% 
+  filter(Country == "Japan", Year< 2017) %>% 
+  mutate(d = c(NA, diff(Exports)))
+
+ggplot(je, aes(Year, Exports)) + geom_line() + ggtitle("Aggregate Japanese Exports")
+```
+
+As we saw in week one, if we instead look at the year over year changes in exports, we see something that more closely resembles a stationary time series.
+
+```{r}
+ggplot(drop_na(je), aes(Year, d)) + geom_line() + ggtitle("Lag 1 Differences in Japanese Exports")
+```
+
+
+### Model Selection/ Fitting
+
+The general sequence of steps involved in fitting an ARIMA model to a given time series are:
+
+1. Evaluate whether the time series is stationary
+2. If not, make it stationary - select the differencing level (d)
+3. Select the AR level (p) and the MA level (q) that optimize the AIC
+
+These steps are automated with the function <code>forecast::auto.arima</code> function.
+
+
+
+### Model Checking
+
+### Forecasting
+
+```{r}
+m0 = auto.arima(je$Exports)
+```
+
+## Regression with ARMA errors
+
+## Lab 3
+
+1. ACF and PACF for MA/ AR/
