@@ -25,6 +25,7 @@ pacf-for-armapq-models
 arima-models-1
 model-selection-fitting
 model-checking
+check-the-residuals
+residuals-function-in-r
 forecasting
-regression-with-arma-errors
 lab-3

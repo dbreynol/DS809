@@ -217,11 +217,13 @@ $\{x_t\}$ follows an ARIMA(_p_,_d_,_q_) process if $(1-\mathbf{B})^d x_t$ is an 
 
 For example, if we look at Japan exports over the time period from 1960 to 2016, we see a clear evolution in the mean of the time series, indicating that the time series is not stationary.
 
-```{r}
+```{r echo=TRUE}
 je = global_economy %>% 
   filter(Country == "Japan", Year< 2017) %>% 
   mutate(d = c(NA, diff(Exports)))
+```
 
+```{r}
 ggplot(je, aes(Year, Exports)) + geom_line() + ggtitle("Aggregate Japanese Exports")
 ```
 
@@ -240,19 +242,77 @@ The general sequence of steps involved in fitting an ARIMA model to a given time
 2. If not, make it stationary - select the differencing level (d)
 3. Select the AR level (p) and the MA level (q) that optimize the AIC
 
-These steps are automated with the function <code>forecast::auto.arima</code> function.
+Steps two and three are automated with the function <code>forecast::auto.arima</code> function. For instance,
 
-
+```{r echo=TRUE}
+m0 = auto.arima(je$Exports)
+summary(m0)
+```
 
 ### Model Checking
 
-### Forecasting
+#### Check the residuals
+
+Residuals = difference between the expected (fitted) value of $x_t$ and the data
+
+There is no observation error in an ARMA model. The expected value is the $x_t$ expected from data up to $t-1$.
+
+For example, the residual for an AR(2) model is $y_t - \hat{x}_t$.
+
+$x_t = \phi_1 x_{t-1} + \phi_2 x_{t-2} + w_t$
+
+$\hat{x}_t = \phi_1 x_{t-1} + \phi_2 x_{t-2}$
+
+
+#### `residuals()` function in R
+
+The `residuals()` function will return the residuals for fitted models.
 
 ```{r}
-m0 = auto.arima(je$Exports)
+residuals(m0)
+```
+To check the fit of our model, we want to check that the residuals are white noise.
+
+### Forecasting
+
+The basic idea of forecasting with an ARIMA model is to estimate the parameters and forecast forward.
+
+For example, let's say we want to forecast with a ARIMA(2,1,0) model with drift:
+$$z_t = \mu + \beta_1 z_{t-1} + \beta_2 z_{t-2} + e_t$$
+where $z_t = x_t - x_{t-1}$, the first difference.
+
+`Arima()` would write this model:
+$$(z_t-m) = \beta_1 (z_{t-1}-m) + \beta_2 (z_{t-2}-m) + e_t$$
+The relationship between $\mu$ and $m$ is $\mu = m(1 - \beta_1 - \beta_2)$.
+
+
+Let's estimate the $\beta$'s for this model from Japan export.
+
+```{r}
+fit <- forecast::Arima(je$Exports, order=c(2,1,0), include.constant=TRUE)
+coef(fit)
 ```
 
-## Regression with ARMA errors
+```{r}
+mu <- coef(fit)[3]*(1-coef(fit)[1]-coef(fit)[2])
+mu
+```
+
+So we can forecast with this model:
+
+$$z_t = 0.1335991 -0.05580519 z_{t-1} - 0.18850080 z_{t-2} + e_t$$
+
+```{r eval=FALSE}
+zt_1 = 16.119153 - 17.588928
+zt_2 = 17.588928 - 17.540302
+```
+
+Or use the `forecast` function.
+
+```{r echo=TRUE}
+fr = forecast(fit, h = 5)
+plot(fr) 
+```
 
 ## Lab 3
 

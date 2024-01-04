@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-01-03" />
+<meta name="date" content="2024-01-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -183,8 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.4.2" data-path="arima-models.html"><a href="arima-models.html#model-checking"><i class="fa fa-check"></i><b>3.4.2</b> Model Checking</a></li>
 <li class="chapter" data-level="3.4.3" data-path="arima-models.html"><a href="arima-models.html#forecasting"><i class="fa fa-check"></i><b>3.4.3</b> Forecasting</a></li>
 </ul></li>
-<li class="chapter" data-level="3.5" data-path="arima-models.html"><a href="arima-models.html#regression-with-arma-errors"><i class="fa fa-check"></i><b>3.5</b> Regression with ARMA errors</a></li>
-<li class="chapter" data-level="3.6" data-path="arima-models.html"><a href="arima-models.html#lab-3"><i class="fa fa-check"></i><b>3.6</b> Lab 3</a></li>
+<li class="chapter" data-level="3.5" data-path="arima-models.html"><a href="arima-models.html#lab-3"><i class="fa fa-check"></i><b>3.5</b> Lab 3</a></li>
 </ul></li>
 </ul>
 
@@ -358,9 +357,12 @@ x_t = \phi_1 x_{t-1} + \dots + \phi_p x_{t-p} + w_t + \theta_1 w_{t-1} + \dots +
 <p>Our data is not always stationary. If the data do not appear stationary, differencing can help. This leads to the class of <em>autoregressive integrated moving average</em> (ARIMA) models. ARIMA models are indexed with orders (<em>p</em>,<em>d</em>,<em>q</em>) where <em>d</em> indicates the order of differencing.</p>
 <p><span class="math inline">\(\{x_t\}\)</span> follows an ARIMA(<em>p</em>,<em>d</em>,<em>q</em>) process if <span class="math inline">\((1-\mathbf{B})^d x_t\)</span> is an ARMA(<em>p</em>,<em>q</em>) process.</p>
 <p>For example, if we look at Japan exports over the time period from 1960 to 2016, we see a clear evolution in the mean of the time series, indicating that the time series is not stationary.</p>
-<p><img src="series_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
-<p>As we saw in week one, if we instead look at the year over year changes in exports, we see something that more closely resembles a stationary time series.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="arima-models.html#cb11-1" tabindex="-1"></a>je <span class="ot">=</span> global_economy <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="arima-models.html#cb11-2" tabindex="-1"></a>  <span class="fu">filter</span>(Country <span class="sc">==</span> <span class="st">&quot;Japan&quot;</span>, Year<span class="sc">&lt;</span> <span class="dv">2017</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-3"><a href="arima-models.html#cb11-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">d =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="fu">diff</span>(Exports)))</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p>As we saw in week one, if we instead look at the year over year changes in exports, we see something that more closely resembles a stationary time series.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
 <div id="model-selection-fitting" class="section level3 hasAnchor" number="3.4.1">
 <h3><span class="header-section-number">3.4.1</span> Model Selection/ Fitting<a href="arima-models.html#model-selection-fitting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The general sequence of steps involved in fitting an ARIMA model to a given time series are:</p>
@@ -369,20 +371,75 @@ x_t = \phi_1 x_{t-1} + \dots + \phi_p x_{t-p} + w_t + \theta_1 w_{t-1} + \dots +
 <li>If not, make it stationary - select the differencing level (d)</li>
 <li>Select the AR level (p) and the MA level (q) that optimize the AIC</li>
 </ol>
-<p>These steps are automated with the function <code>forecast::auto.arima</code> function.</p>
+<p>Steps two and three are automated with the function <code>forecast::auto.arima</code> function. For instance,</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="arima-models.html#cb12-1" tabindex="-1"></a>m0 <span class="ot">=</span> <span class="fu">auto.arima</span>(je<span class="sc">$</span>Exports)</span>
+<span id="cb12-2"><a href="arima-models.html#cb12-2" tabindex="-1"></a><span class="fu">summary</span>(m0)</span></code></pre></div>
+<pre><code>## Series: je$Exports 
+## ARIMA(0,1,0) 
+## 
+## sigma^2 = 1.628:  log likelihood = -93.1
+## AIC=188.21   AICc=188.28   BIC=190.24
+## 
+## Training set error measures:
+##                     ME     RMSE      MAE       MPE     MAPE      MASE
+## Training set 0.0948585 1.264655 0.883942 0.2186117 7.269751 0.9826653
+##                     ACF1
+## Training set -0.04317139</code></pre>
 </div>
 <div id="model-checking" class="section level3 hasAnchor" number="3.4.2">
 <h3><span class="header-section-number">3.4.2</span> Model Checking<a href="arima-models.html#model-checking" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="check-the-residuals" class="section level4 hasAnchor" number="3.4.2.1">
+<h4><span class="header-section-number">3.4.2.1</span> Check the residuals<a href="arima-models.html#check-the-residuals" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Residuals = difference between the expected (fitted) value of <span class="math inline">\(x_t\)</span> and the data</p>
+<p>There is no observation error in an ARMA model. The expected value is the <span class="math inline">\(x_t\)</span> expected from data up to <span class="math inline">\(t-1\)</span>.</p>
+<p>For example, the residual for an AR(2) model is <span class="math inline">\(y_t - \hat{x}_t\)</span>.</p>
+<p><span class="math inline">\(x_t = \phi_1 x_{t-1} + \phi_2 x_{t-2} + w_t\)</span></p>
+<p><span class="math inline">\(\hat{x}_t = \phi_1 x_{t-1} + \phi_2 x_{t-2}\)</span></p>
+</div>
+<div id="residuals-function-in-r" class="section level4 hasAnchor" number="3.4.2.2">
+<h4><span class="header-section-number">3.4.2.2</span> <code>residuals()</code> function in R<a href="arima-models.html#residuals-function-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The <code>residuals()</code> function will return the residuals for fitted models.</p>
+<pre><code>## Time Series:
+## Start = 1 
+## End = 57 
+## Frequency = 1 
+##  [1]  0.01072294 -1.44501952  0.15303390 -0.39309669  0.45625211  1.02356255
+##  [7]  0.06053730 -0.92437932  0.45807416  0.44426518 -0.19594755  0.86880508
+## [13] -1.08192227 -0.52480724  3.41625812 -0.76990990  0.72818035 -0.44252813
+## [19] -1.89419993  0.42955074  2.03742971  0.99396401 -0.20034080 -0.62338421
+## [25]  1.09590411 -0.50007152 -2.98081554 -0.97493052 -0.36290393  0.53728879
+## [31]  0.10797014 -0.43368768 -0.09399316 -0.61422391 -0.07420507 -0.03185334
+## [37]  0.50727239  1.06978245 -0.02437143 -0.57272023  0.67272500 -0.39538586
+## [43]  0.78912188  0.62107244  1.33273884  1.04040881  1.86046117  1.62041428
+## [49] -0.06927885 -4.90312357  2.51584283 -0.11176077 -0.38024365  1.37064557
+## [55]  1.62490343  0.04862657 -1.46977556</code></pre>
+<p>To check the fit of our model, we want to check that the residuals are white noise.</p>
+</div>
 </div>
 <div id="forecasting" class="section level3 hasAnchor" number="3.4.3">
 <h3><span class="header-section-number">3.4.3</span> Forecasting<a href="arima-models.html#forecasting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The basic idea of forecasting with an ARIMA model is to estimate the parameters and forecast forward.</p>
+<p>For example, let’s say we want to forecast with a ARIMA(2,1,0) model with drift:
+<span class="math display">\[z_t = \mu + \beta_1 z_{t-1} + \beta_2 z_{t-2} + e_t\]</span>
+where <span class="math inline">\(z_t = x_t - x_{t-1}\)</span>, the first difference.</p>
+<p><code>Arima()</code> would write this model:
+<span class="math display">\[(z_t-m) = \beta_1 (z_{t-1}-m) + \beta_2 (z_{t-2}-m) + e_t\]</span>
+The relationship between <span class="math inline">\(\mu\)</span> and <span class="math inline">\(m\)</span> is <span class="math inline">\(\mu = m(1 - \beta_1 - \beta_2)\)</span>.</p>
+<p>Let’s estimate the <span class="math inline">\(\beta\)</span>’s for this model from Japan export.</p>
+<pre><code>##         ar1         ar2       drift 
+## -0.05580519 -0.18850080  0.10736838</code></pre>
+<pre><code>##     drift 
+## 0.1335991</code></pre>
+<p>So we can forecast with this model:</p>
+<p><span class="math display">\[z_t = 0.1335991 -0.05580519 z_{t-1} - 0.18850080 z_{t-2} + e_t\]</span></p>
+<p>Or use the <code>forecast</code> function.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="arima-models.html#cb17-1" tabindex="-1"></a>fr <span class="ot">=</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> <span class="dv">5</span>)</span>
+<span id="cb17-2"><a href="arima-models.html#cb17-2" tabindex="-1"></a><span class="fu">plot</span>(fr) </span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
 </div>
 </div>
-<div id="regression-with-arma-errors" class="section level2 hasAnchor" number="3.5">
-<h2><span class="header-section-number">3.5</span> Regression with ARMA errors<a href="arima-models.html#regression-with-arma-errors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-</div>
-<div id="lab-3" class="section level2 hasAnchor" number="3.6">
-<h2><span class="header-section-number">3.6</span> Lab 3<a href="arima-models.html#lab-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="lab-3" class="section level2 hasAnchor" number="3.5">
+<h2><span class="header-section-number">3.5</span> Lab 3<a href="arima-models.html#lab-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
 <li>ACF and PACF for MA/ AR/</li>
 </ol>
