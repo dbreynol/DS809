@@ -24,5 +24,6 @@ library(qcc) # CUSUM
 
 ```
 
+# Course Info
 
 
