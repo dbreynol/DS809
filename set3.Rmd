@@ -373,6 +373,28 @@ plot(fr)
 
 
 
+2. Consider `fpp3::aus_airpassengers`, the total number of passengers (in millions) from Australian air carriers for the period 1970-2011.
+
+- Use `forecast::auto.arima()` to find an appropriate ARIMA model. What model was selected? Write the model in terms of the backshift operator.
+- Check that the residuals look like white noise. 
+- Plot forecasts for the next 10 periods.
+- Plot forecasts from an ARIMA(0,1,0) model with drift and compare these to the automatically selected model.
+
+3. Choose a series from `fpp3::us_employment`, the total employment in different industries in the United States.
+
+- Decompose the data (seasnality/ trend/ error) and describe the trend and seasonality.
+- Are the data stationary? If not, find an appropriate differencing which yields stationary data.
+Identify a couple of ARIMA models that might be useful in describing the time series. Which of your models is the best according to their AICc values?
+- Estimate the parameters of your best model and do diagnostic testing on the residuals. Do the residuals resemble white noise? If not, try to find another ARIMA model which fits better.
+- Forecast the next 3 years of data. Get the latest figures from https://fred.stlouisfed.org/categories/11 to check the accuracy of your forecasts.
+Eventually, the prediction intervals are so wide that the forecasts are not particularly useful. How many years of forecasts do you think are sufficiently accurate to be usable?
+
+```{r echo=TRUE, eval=FALSE}
+# https://fred.stlouisfed.org/
+pr = getSymbols('MORTGAGE30US',src='FRED', warnings = F) # 30-Year Fixed Rate Mortgage Average
+home = getSymbols('CSUSHPINSA', src = 'FRED') # S&P/Case-Shiller U.S. National Home Price Index
+gdp = getSymbols('A939RX0Q048SBEA', src = 'FRED')
+```
 
 
 

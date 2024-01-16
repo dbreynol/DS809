@@ -505,6 +505,30 @@ y_t &amp;= \phi y_{t-1} + w_t \\
 </tr>
 </tbody>
 </table>
+<ol start="2" style="list-style-type: decimal">
+<li>Consider <code>fpp3::aus_airpassengers</code>, the total number of passengers (in millions) from Australian air carriers for the period 1970-2011.</li>
+</ol>
+<ul>
+<li>Use <code>forecast::auto.arima()</code> to find an appropriate ARIMA model. What model was selected? Write the model in terms of the backshift operator.</li>
+<li>Check that the residuals look like white noise.</li>
+<li>Plot forecasts for the next 10 periods.</li>
+<li>Plot forecasts from an ARIMA(0,1,0) model with drift and compare these to the automatically selected model.</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Choose a series from <code>fpp3::us_employment</code>, the total employment in different industries in the United States.</li>
+</ol>
+<ul>
+<li>Decompose the data (seasnality/ trend/ error) and describe the trend and seasonality.</li>
+<li>Are the data stationary? If not, find an appropriate differencing which yields stationary data.
+Identify a couple of ARIMA models that might be useful in describing the time series. Which of your models is the best according to their AICc values?</li>
+<li>Estimate the parameters of your best model and do diagnostic testing on the residuals. Do the residuals resemble white noise? If not, try to find another ARIMA model which fits better.</li>
+<li>Forecast the next 3 years of data. Get the latest figures from <a href="https://fred.stlouisfed.org/categories/11" class="uri">https://fred.stlouisfed.org/categories/11</a> to check the accuracy of your forecasts.
+Eventually, the prediction intervals are so wide that the forecasts are not particularly useful. How many years of forecasts do you think are sufficiently accurate to be usable?</li>
+</ul>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="arima-models.html#cb22-1" tabindex="-1"></a><span class="co"># https://fred.stlouisfed.org/</span></span>
+<span id="cb22-2"><a href="arima-models.html#cb22-2" tabindex="-1"></a>pr <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;MORTGAGE30US&#39;</span>,<span class="at">src=</span><span class="st">&#39;FRED&#39;</span>, <span class="at">warnings =</span> F) <span class="co"># 30-Year Fixed Rate Mortgage Average</span></span>
+<span id="cb22-3"><a href="arima-models.html#cb22-3" tabindex="-1"></a>home <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;CSUSHPINSA&#39;</span>, <span class="at">src =</span> <span class="st">&#39;FRED&#39;</span>) <span class="co"># S&amp;P/Case-Shiller U.S. National Home Price Index</span></span>
+<span id="cb22-4"><a href="arima-models.html#cb22-4" tabindex="-1"></a>gdp <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;A939RX0Q048SBEA&#39;</span>, <span class="at">src =</span> <span class="st">&#39;FRED&#39;</span>)</span></code></pre></div>
 
 </div>
 </div>
