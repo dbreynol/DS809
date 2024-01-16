@@ -275,6 +275,8 @@ To check the fit of our model, we want to check that the residuals are white noi
 
 ### Forecasting
 
+#### Point Estimates
+
 The basic idea of forecasting with an ARIMA model is to estimate the parameters and forecast forward.
 
 For example, let's say we want to forecast with a ARIMA(2,1,0) model with drift:
@@ -282,6 +284,7 @@ $$z_t = \mu + \beta_1 z_{t-1} + \beta_2 z_{t-2} + e_t$$
 where $z_t = x_t - x_{t-1}$, the first difference.
 
 `Arima()` would write this model:
+
 $$(z_t-m) = \beta_1 (z_{t-1}-m) + \beta_2 (z_{t-2}-m) + e_t$$
 The relationship between $\mu$ and $m$ is $\mu = m(1 - \beta_1 - \beta_2)$.
 
@@ -301,22 +304,66 @@ mu
 So we can forecast with this model:
 
 $$z_t = 0.1335991 -0.05580519 z_{t-1} - 0.18850080 z_{t-2} + e_t$$
+To obtain the $T+1$ forecast value:
 
-```{r eval=FALSE}
+```{r echo = T}
 zt_1 = 16.119153 - 17.588928
 zt_2 = 17.588928 - 17.540302
+
+16.119153 + (0.1335991 - 0.05580519 * zt_1 - 0.18850080 * zt_2)
+
 ```
 
-Or use the `forecast` function.
+
+#### Standard Errors
+
+To obtain the standard errors of the model forecast, it is helpful to reformulate the ARIMA model as an infinite order MA model. Any ARIMA model can be written as an infinite order MA model:
+
+\begin{align}
+x_t - \mu &= w_t + \psi_1 w_{t-1} + \psi_2 w_{t-1} + \ldots + \psi_k w_{t-k} + \ldots \\
+&= \sum_{j=0}^\infty \psi_j w_{t-j} \text{ where } \psi_0=1
+\end{align}
+
+For example, the AR(1) model:
+
+\begin{align}
+y_t &= \phi y_{t-1} + w_t \\
+&= \phi ( \phi y_{t-1} + w_{t-1} ) + w_t \\
+&= \phi^2 y_{t-1} + \phi w_{t-1}  + w_t \\
+&= \sum_{j=0}^{\infty} \phi^j w_{t-j}
+\end{align}
+
+The standard deviation of the forecast error at time $T+h$ is,
+
+\begin{align}
+\sqrt{ \hat{\sigma}^2_w sum_{j=0}^{h-1} \psi_j^2 }
+\end{align}
+
+With the assumption of normally distributed errors, a 95\% prediction interval for $x_{T+h}$ is,
+
+\begin{align}
+\hat{x}_{T+h} \pm 1.96 \sqrt{ \hat{\sigma}^2_w sum_{j=0}^{h-1} \psi_j^2 }
+\end{align}
+
+For example, the one step ahead forecast for the Japan Export model has a 95\% prediction interval:
+
+
+```{r echo=TRUE}
+c(16.32561 - qnorm(.975) * sqrt(1.645), 16.32561 + qnorm(.975) * sqrt(1.645))
+```
+
+
+You can also use the `forecast` function to obtain point estimates and prediction intervals. For example,
 
 ```{r echo=TRUE}
 fr = forecast(fit, h = 5)
 plot(fr) 
 ```
 
+
 ## Lab 3
 
-1. ACF and PACF for MA/ AR/
+1. Fill in the question marks in the table below. Additionally, for each box in the table, provide empirical evidence of the table entry using simulated data. For example, simulate data (using `arima.sim`) that follows a AR(_p_) process to show that the ACF tails off slowly.
 
 | Model   | ACF               | PACF                    |
 |:-------:|:-----------------:|:-----------------------:|

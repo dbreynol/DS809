@@ -29,4 +29,6 @@ model-checking
 check-the-residuals
 residuals-function-in-r
 forecasting
+point-estimates
+standard-errors
 lab-3

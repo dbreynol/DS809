@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-01-15" />
+<meta name="date" content="2024-01-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -419,12 +419,14 @@ x_t = \phi_1 x_{t-1} + \dots + \phi_p x_{t-p} + w_t + \theta_1 w_{t-1} + \dots +
 </div>
 <div id="forecasting" class="section level3 hasAnchor" number="4.4.3">
 <h3><span class="header-section-number">4.4.3</span> Forecasting<a href="arima-models.html#forecasting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="point-estimates" class="section level4 hasAnchor" number="4.4.3.1">
+<h4><span class="header-section-number">4.4.3.1</span> Point Estimates<a href="arima-models.html#point-estimates" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>The basic idea of forecasting with an ARIMA model is to estimate the parameters and forecast forward.</p>
 <p>For example, let’s say we want to forecast with a ARIMA(2,1,0) model with drift:
 <span class="math display">\[z_t = \mu + \beta_1 z_{t-1} + \beta_2 z_{t-2} + e_t\]</span>
 where <span class="math inline">\(z_t = x_t - x_{t-1}\)</span>, the first difference.</p>
-<p><code>Arima()</code> would write this model:
-<span class="math display">\[(z_t-m) = \beta_1 (z_{t-1}-m) + \beta_2 (z_{t-2}-m) + e_t\]</span>
+<p><code>Arima()</code> would write this model:</p>
+<p><span class="math display">\[(z_t-m) = \beta_1 (z_{t-1}-m) + \beta_2 (z_{t-2}-m) + e_t\]</span>
 The relationship between <span class="math inline">\(\mu\)</span> and <span class="math inline">\(m\)</span> is <span class="math inline">\(\mu = m(1 - \beta_1 - \beta_2)\)</span>.</p>
 <p>Let’s estimate the <span class="math inline">\(\beta\)</span>’s for this model from Japan export.</p>
 <pre><code>##         ar1         ar2       drift 
@@ -432,17 +434,50 @@ The relationship between <span class="math inline">\(\mu\)</span> and <span clas
 <pre><code>##     drift 
 ## 0.1335991</code></pre>
 <p>So we can forecast with this model:</p>
-<p><span class="math display">\[z_t = 0.1335991 -0.05580519 z_{t-1} - 0.18850080 z_{t-2} + e_t\]</span></p>
-<p>Or use the <code>forecast</code> function.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="arima-models.html#cb17-1" tabindex="-1"></a>fr <span class="ot">=</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> <span class="dv">5</span>)</span>
-<span id="cb17-2"><a href="arima-models.html#cb17-2" tabindex="-1"></a><span class="fu">plot</span>(fr) </span></code></pre></div>
-<p><img src="series_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<p><span class="math display">\[z_t = 0.1335991 -0.05580519 z_{t-1} - 0.18850080 z_{t-2} + e_t\]</span>
+To obtain the <span class="math inline">\(T+1\)</span> forecast value:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="arima-models.html#cb17-1" tabindex="-1"></a>zt_1 <span class="ot">=</span> <span class="fl">16.119153</span> <span class="sc">-</span> <span class="fl">17.588928</span></span>
+<span id="cb17-2"><a href="arima-models.html#cb17-2" tabindex="-1"></a>zt_2 <span class="ot">=</span> <span class="fl">17.588928</span> <span class="sc">-</span> <span class="fl">17.540302</span></span>
+<span id="cb17-3"><a href="arima-models.html#cb17-3" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="arima-models.html#cb17-4" tabindex="-1"></a><span class="fl">16.119153</span> <span class="sc">+</span> (<span class="fl">0.1335991</span> <span class="sc">-</span> <span class="fl">0.05580519</span> <span class="sc">*</span> zt_1 <span class="sc">-</span> <span class="fl">0.18850080</span> <span class="sc">*</span> zt_2)</span></code></pre></div>
+<pre><code>## [1] 16.32561</code></pre>
+</div>
+<div id="standard-errors" class="section level4 hasAnchor" number="4.4.3.2">
+<h4><span class="header-section-number">4.4.3.2</span> Standard Errors<a href="arima-models.html#standard-errors" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To obtain the standard errors of the model forecast, it is helpful to reformulate the ARIMA model as an infinite order MA model. Any ARIMA model can be written as an infinite order MA model:</p>
+<p><span class="math display">\[\begin{align}
+x_t - \mu &amp;= w_t + \psi_1 w_{t-1} + \psi_2 w_{t-1} + \ldots + \psi_k w_{t-k} + \ldots \\
+&amp;= \sum_{j=0}^\infty \psi_j w_{t-j} \text{ where } \psi_0=1
+\end{align}\]</span></p>
+<p>For example, the AR(1) model:</p>
+<p><span class="math display">\[\begin{align}
+y_t &amp;= \phi y_{t-1} + w_t \\
+&amp;= \phi ( \phi y_{t-1} + w_{t-1} ) + w_t \\
+&amp;= \phi^2 y_{t-1} + \phi w_{t-1}  + w_t \\
+&amp;= \sum_{j=0}^{\infty} \phi^j w_{t-j}
+\end{align}\]</span></p>
+<p>The standard deviation of the forecast error at time <span class="math inline">\(T+h\)</span> is,</p>
+<p><span class="math display">\[\begin{align}
+\sqrt{ \hat{\sigma}^2_w sum_{j=0}^{h-1} \psi_j^2 }
+\end{align}\]</span></p>
+<p>With the assumption of normally distributed errors, a 95% prediction interval for <span class="math inline">\(x_{T+h}\)</span> is,</p>
+<p><span class="math display">\[\begin{align}
+\hat{x}_{T+h} \pm 1.96 \sqrt{ \hat{\sigma}^2_w sum_{j=0}^{h-1} \psi_j^2 }
+\end{align}\]</span></p>
+<p>For example, the one step ahead forecast for the Japan Export model has a 95% prediction interval:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="arima-models.html#cb19-1" tabindex="-1"></a><span class="fu">c</span>(<span class="fl">16.32561</span> <span class="sc">-</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fl">1.645</span>), <span class="fl">16.32561</span> <span class="sc">+</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fl">1.645</span>))</span></code></pre></div>
+<pre><code>## [1] 13.81181 18.83941</code></pre>
+<p>You can also use the <code>forecast</code> function to obtain point estimates and prediction intervals. For example,</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="arima-models.html#cb21-1" tabindex="-1"></a>fr <span class="ot">=</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> <span class="dv">5</span>)</span>
+<span id="cb21-2"><a href="arima-models.html#cb21-2" tabindex="-1"></a><span class="fu">plot</span>(fr) </span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+</div>
 </div>
 </div>
 <div id="lab-3" class="section level2 hasAnchor" number="4.5">
 <h2><span class="header-section-number">4.5</span> Lab 3<a href="arima-models.html#lab-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li>ACF and PACF for MA/ AR/</li>
+<li>Fill in the question marks in the table below. Additionally, for each box in the table, provide empirical evidence of the table entry using simulated data. For example, simulate data (using <code>arima.sim</code>) that follows a AR(<em>p</em>) process to show that the ACF tails off slowly.</li>
 </ol>
 <table>
 <thead>
