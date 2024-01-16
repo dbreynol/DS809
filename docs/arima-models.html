@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-01-04" />
+<meta name="date" content="2024-01-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -304,7 +304,7 @@ E(x_t) &amp;= \theta_0 \\
 Var(x_t) &amp;= \sigma^2_w(1+\theta_1^2) \\
 \rho(h) &amp;= \frac{\theta_1}{1+\theta_1^2} \text{ for } h=1 \text{ and 0 otherwise. }
 \end{align}\]</span></p>
-<p>Now let’s simulate some data from an AR1 model and compare theoretical and observed quantities.</p>
+<p>Now let’s simulate some data from an MA1 model and compare theoretical and observed quantities.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="arima-models.html#cb10-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
 <span id="cb10-2"><a href="arima-models.html#cb10-2" tabindex="-1"></a>theta_1 <span class="ot">=</span> <span class="fl">0.5</span></span>
 <span id="cb10-3"><a href="arima-models.html#cb10-3" tabindex="-1"></a>sigsq_w <span class="ot">=</span> <span class="dv">1</span></span>
@@ -444,6 +444,32 @@ The relationship between <span class="math inline">\(\mu\)</span> and <span clas
 <ol style="list-style-type: decimal">
 <li>ACF and PACF for MA/ AR/</li>
 </ol>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Model</th>
+<th align="center">ACF</th>
+<th align="center">PACF</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">AR(<em>p</em>)</td>
+<td align="center">Tails off slowly</td>
+<td align="center">Cuts off after lag <em>?</em></td>
+</tr>
+<tr class="even">
+<td align="center">MA(<em>q</em>)</td>
+<td align="center">Cuts off after lag <em>?</em></td>
+<td align="center">Tails off slowly</td>
+</tr>
+<tr class="odd">
+<td align="center">ARMA(<em>p</em>,<em>q</em>)</td>
+<td align="center">Tails off slowly</td>
+<td align="center">Tails off slowly</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>

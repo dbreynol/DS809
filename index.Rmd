@@ -21,7 +21,7 @@ library(quantmod) # white noise google
 library(broom) # tidy
 library(forecast) # ma
 library(qcc) # CUSUM
-
+#library(tseries) # adf.test
 ```
 
 # Course Info

@@ -123,7 +123,7 @@ Var(x_t) &= \sigma^2_w(1+\theta_1^2) \\
 \rho(h) &= \frac{\theta_1}{1+\theta_1^2} \text{ for } h=1 \text{ and 0 otherwise. }
 \end{align}
 
-Now let's simulate some data from an AR1 model and compare theoretical and observed quantities.
+Now let's simulate some data from an MA1 model and compare theoretical and observed quantities.
 
 ```{r echo=TRUE}
 set.seed(1)
@@ -317,3 +317,30 @@ plot(fr)
 ## Lab 3
 
 1. ACF and PACF for MA/ AR/
+
+| Model   | ACF               | PACF                    |
+|:-------:|:-----------------:|:-----------------------:|
+| AR(_p_) | Tails off slowly  | Cuts off after lag _?_  |
+| MA(_q_) | Cuts off after lag _?_  | Tails off slowly  |
+| ARMA(_p_,_q_) | Tails off slowly  | Tails off slowly  |
+
+
+
+
+
+
+```{r eval=FALSE}
+plot(log(h02))
+y2 = log(h02)
+y3 = diff(y2,12)
+plot(y3)
+#adf.test(y3)
+test0 = ur.df(y2)
+summary(test0)
+
+yt = c(0)
+for(i in 2:100) {yt[i] = yt[i-1] + rnorm(1)}
+summary ( ur.df(yt) )
+```
+
+

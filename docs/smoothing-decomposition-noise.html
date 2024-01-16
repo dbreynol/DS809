@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-01-04" />
+<meta name="date" content="2024-01-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -303,9 +303,9 @@ Q = n(n+2) \sum_{i=1}^k \frac{\hat{\rho}_i^2}{(n-k)}
 <h2><span class="header-section-number">3.4</span> Stationarity<a href="smoothing-decomposition-noise.html#stationarity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Stationarity is a convenient assumption that allows us to describe the statistical properties of a time series. A time series is said to be stationary if there is:</p>
 <ol style="list-style-type: decimal">
-<li>No systematic change in the mean or the variance</li>
-<li>No systematic trend</li>
-<li>No periodic variations or seasonality</li>
+<li>Constant mean. <span class="math inline">\(E(X_t) = \mu\)</span>.</li>
+<li>Constant variance. <span class="math inline">\(Var(X_t) = \sigma^2\)</span>.</li>
+<li>Constant Autocorrelation. <span class="math inline">\(Cor(X_t, X_{t-h}) = \rho_h\)</span>.</li>
 </ol>
 </div>
 <div id="lab-2" class="section level2 hasAnchor" number="3.5">

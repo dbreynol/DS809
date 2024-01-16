@@ -201,9 +201,9 @@ follows a chi-squared distribution with $k$ degrees of freedom under the null hy
 
 Stationarity is a convenient assumption that allows us to describe the statistical properties of a time series. A time series is said to be stationary if there is:
 
-1. No systematic change in the mean or the variance
-2. No systematic trend
-3. No periodic variations or seasonality
+1. Constant mean. $E(X_t) = \mu$.
+2. Constant variance. $Var(X_t) = \sigma^2$.
+3. Constant Autocorrelation. $Cor(X_t, X_{t-h}) = \rho_h$.
 
 
 ## Lab 2
