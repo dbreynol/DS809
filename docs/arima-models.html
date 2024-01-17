@@ -477,7 +477,7 @@ y_t &amp;= \phi y_{t-1} + w_t \\
 <div id="lab-3" class="section level2 hasAnchor" number="4.5">
 <h2><span class="header-section-number">4.5</span> Lab 3<a href="arima-models.html#lab-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li>Fill in the question marks in the table below. Additionally, for each box in the table, provide empirical evidence of the table entry using simulated data. For example, simulate data (using <code>arima.sim</code>) that follows a AR(<em>p</em>) process to show that the ACF tails off slowly.</li>
+<li>Fill in the question marks in the table below. Additionally, for each box in the table, provide empirical evidence of the table entry using simulated data. For example, simulate data (you can use <code>arima.sim</code> or write your own code) that follows a AR(<em>p</em>) process to show that the ACF tails off slowly.</li>
 </ol>
 <table>
 <thead>
@@ -515,20 +515,16 @@ y_t &amp;= \phi y_{t-1} + w_t \\
 <li>Plot forecasts from an ARIMA(0,1,0) model with drift and compare these to the automatically selected model.</li>
 </ul>
 <ol start="3" style="list-style-type: decimal">
-<li>Choose a series from <code>fpp3::us_employment</code>, the total employment in different industries in the United States.</li>
+<li>Choose an employment type from <code>fpp3::us_employment</code>, the total employment in different industries in the United States.</li>
 </ol>
 <ul>
-<li>Decompose the data (seasnality/ trend/ error) and describe the trend and seasonality.</li>
-<li>Are the data stationary? If not, find an appropriate differencing which yields stationary data.
-Identify a couple of ARIMA models that might be useful in describing the time series. Which of your models is the best according to their AICc values?</li>
+<li>Decompose the data (seasonality/ trend/ error) and describe the trend and seasonality.</li>
+<li>Are the data stationary? If not, find an appropriate differencing which yields stationary data.</li>
+<li>Examine ACF and PACF plots of the differenced data (if this was necessary to attain stationarity) to identify a couple of ARIMA models that might be useful in describing the time series. Which of your models is the best according to their AIC values?</li>
 <li>Estimate the parameters of your best model and do diagnostic testing on the residuals. Do the residuals resemble white noise? If not, try to find another ARIMA model which fits better.</li>
-<li>Forecast the next 3 years of data. Get the latest figures from <a href="https://fred.stlouisfed.org/categories/11" class="uri">https://fred.stlouisfed.org/categories/11</a> to check the accuracy of your forecasts.
-Eventually, the prediction intervals are so wide that the forecasts are not particularly useful. How many years of forecasts do you think are sufficiently accurate to be usable?</li>
+<li>Forecast the next 3 years of data. Get the latest figures from <a href="https://fred.stlouisfed.org/categories/11" class="uri">https://fred.stlouisfed.org/categories/11</a> to check the accuracy of your forecasts.</li>
+<li>Eventually, the prediction intervals are so wide that the forecasts are not particularly useful. How many years of forecasts do you think are sufficiently accurate to be usable?</li>
 </ul>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="arima-models.html#cb22-1" tabindex="-1"></a><span class="co"># https://fred.stlouisfed.org/</span></span>
-<span id="cb22-2"><a href="arima-models.html#cb22-2" tabindex="-1"></a>pr <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;MORTGAGE30US&#39;</span>,<span class="at">src=</span><span class="st">&#39;FRED&#39;</span>, <span class="at">warnings =</span> F) <span class="co"># 30-Year Fixed Rate Mortgage Average</span></span>
-<span id="cb22-3"><a href="arima-models.html#cb22-3" tabindex="-1"></a>home <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;CSUSHPINSA&#39;</span>, <span class="at">src =</span> <span class="st">&#39;FRED&#39;</span>) <span class="co"># S&amp;P/Case-Shiller U.S. National Home Price Index</span></span>
-<span id="cb22-4"><a href="arima-models.html#cb22-4" tabindex="-1"></a>gdp <span class="ot">=</span> <span class="fu">getSymbols</span>(<span class="st">&#39;A939RX0Q048SBEA&#39;</span>, <span class="at">src =</span> <span class="st">&#39;FRED&#39;</span>)</span></code></pre></div>
 
 </div>
 </div>

@@ -26,4 +26,5 @@ library(qcc) # CUSUM
 
 # Course Info
 
+The course is designed to introduce techniques needed in the estimation/analysis of temporal data (time series) in various business disciplines. The first half of the course focuses on traditional stationary time series models. Some examples of business application areas include demand forecasting, financial asset return modeling, stochastic volatility modeling of financial indexes and securities, mortgage default risk assessment, call center arrival modeling, online webpage click-rate modeling, and market share modeling. The second half of the course focuses on state space modelling approaches to time series data and Bayesian techniques for time series data. 
 
