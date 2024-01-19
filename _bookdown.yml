@@ -4,6 +4,6 @@ language:
     chapter_name: "Set "
 rmd_files: [
   "index.Rmd",
-  "set1.Rmd", "set2.Rmd","set3.Rmd"]
+  "set1.Rmd"]
 delete_merged_file: true 
 output_dir: "docs"

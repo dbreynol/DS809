@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-01-16" />
+<meta name="date" content="2024-01-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -458,11 +458,11 @@ y_t &amp;= \phi y_{t-1} + w_t \\
 \end{align}\]</span></p>
 <p>The standard deviation of the forecast error at time <span class="math inline">\(T+h\)</span> is,</p>
 <p><span class="math display">\[\begin{align}
-\sqrt{ \hat{\sigma}^2_w sum_{j=0}^{h-1} \psi_j^2 }
+\sqrt{ \hat{\sigma}^2_w \sum_{j=0}^{h-1} \psi_j^2 }
 \end{align}\]</span></p>
 <p>With the assumption of normally distributed errors, a 95% prediction interval for <span class="math inline">\(x_{T+h}\)</span> is,</p>
 <p><span class="math display">\[\begin{align}
-\hat{x}_{T+h} \pm 1.96 \sqrt{ \hat{\sigma}^2_w sum_{j=0}^{h-1} \psi_j^2 }
+\hat{x}_{T+h} \pm 1.96 \sqrt{ \hat{\sigma}^2_w \sum_{j=0}^{h-1} \psi_j^2 }
 \end{align}\]</span></p>
 <p>For example, the one step ahead forecast for the Japan Export model has a 95% prediction interval:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="arima-models.html#cb19-1" tabindex="-1"></a><span class="fu">c</span>(<span class="fl">16.32561</span> <span class="sc">-</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fl">1.645</span>), <span class="fl">16.32561</span> <span class="sc">+</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fl">1.645</span>))</span></code></pre></div>
@@ -524,6 +524,19 @@ y_t &amp;= \phi y_{t-1} + w_t \\
 <li>Estimate the parameters of your best model and do diagnostic testing on the residuals. Do the residuals resemble white noise? If not, try to find another ARIMA model which fits better.</li>
 <li>Forecast the next 3 years of data. Get the latest figures from <a href="https://fred.stlouisfed.org/categories/11" class="uri">https://fred.stlouisfed.org/categories/11</a> to check the accuracy of your forecasts.</li>
 <li>Eventually, the prediction intervals are so wide that the forecasts are not particularly useful. How many years of forecasts do you think are sufficiently accurate to be usable?</li>
+</ul>
+<ol start="4" style="list-style-type: decimal">
+<li>Another way that a time series may violate stationarity is with seasonality. For example, the Leisure and Hospitality sector of the economy spikes in the summer and dips in the winter months. We will look at employment (in thousands) in this sector since 2010:</li>
+</ol>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="arima-models.html#cb22-1" tabindex="-1"></a>leisure <span class="ot">=</span> fpp3<span class="sc">::</span>us_employment <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="arima-models.html#cb22-2" tabindex="-1"></a>  <span class="fu">filter</span>(Title <span class="sc">==</span> <span class="st">&quot;Leisure and Hospitality&quot;</span>, <span class="fu">year</span>(Month) <span class="sc">&gt;=</span> <span class="dv">2010</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-3"><a href="arima-models.html#cb22-3" tabindex="-1"></a>  <span class="fu">select</span>(Month, Employed)</span></code></pre></div>
+<ul>
+<li><p>Make a plot of this time series and comment on the trend and the seasonality.</p></li>
+<li><p>We can use our differencing tool to try to make this data stationary. Since this data has a strong seasonal component, we can take a seasonal difference, using <code>employed2 = diff(leisure$Employed, 12)</code>, which creates a transformed time series, <code>employed2</code>. Make a plot of this time series along with an ACF plot. Is this transformed time series stationary?</p></li>
+<li><p>Take the first difference of <code>employed2</code>. Let’s call this new time series <code>employed3</code>. Plot this time series. Does <code>employed3</code> appear to be stationary?</p></li>
+<li><p>Coerce <code>employed3</code> to a time series object using, <code>ts(employed3, frequency = 12, start = c(2010,1), end = c(2019,9))</code>. Now, use <code>auto.arima</code> to fit a time series model to this time series object. What model was selected?</p></li>
+<li><p>Use <code>forecast</code> to make a plot of the next twelve months of data. Does the model capture the trend and seasonality?</p></li>
 </ul>
 
 </div>
