@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-01-19" />
+<meta name="date" content="2024-01-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -320,15 +320,14 @@ y = X \beta + \epsilon,
 <span id="cb3-5"><a href="exploratory-analysis-of-time-series-data.html#cb3-5" tabindex="-1"></a></span>
 <span id="cb3-6"><a href="exploratory-analysis-of-time-series-data.html#cb3-6" tabindex="-1"></a><span class="fu">sum</span>( (x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">*</span> (y <span class="sc">-</span> <span class="fu">mean</span>(y))) <span class="sc">/</span> ( (n<span class="dv">-1</span>) <span class="sc">*</span> <span class="fu">sd</span>(x) <span class="sc">*</span> <span class="fu">sd</span>(y) )</span>
 <span id="cb3-7"><a href="exploratory-analysis-of-time-series-data.html#cb3-7" tabindex="-1"></a><span class="fu">cor</span>(x, y)</span></code></pre></div>
-<p>For time series data, there is a closely related concept called autocorrelation. Given a time series, <span class="math inline">\(y_t\)</span>, where <span class="math inline">\(t=1,\ldots,T\)</span>, autocorrelation is the correlation between <span class="math inline">\(y_t\)</span> and its lagged value, <span class="math inline">\(y_{t-k}\)</span>. That is, autocorrelation is the correlation of a time series with a delayed copy of itself, as a function of delay. Just as correlation is a function of covariance, autocorrelation is a function of autocovariance. The
-The (sample) autocovariance, <span class="math inline">\(\hat{\gamma}\)</span> for a time series <span class="math inline">\(y\)</span> at lag <span class="math inline">\(k\)</span> is:</p>
+<p>For time series data, there is a closely related concept called autocorrelation. Given a time series, <span class="math inline">\(y_t\)</span>, where <span class="math inline">\(t=1,\ldots,T\)</span>, autocorrelation is the correlation between <span class="math inline">\(y_t\)</span> and its lagged value, <span class="math inline">\(y_{t-k}\)</span>. That is, autocorrelation is the correlation of a time series with a delayed copy of itself, as a function of delay. Just as correlation is a function of covariance, autocorrelation is a function of autocovariance. The (sample) autocovariance, <span class="math inline">\(\hat{\gamma}\)</span> for a time series <span class="math inline">\(y\)</span> at lag <span class="math inline">\(k\)</span> is:</p>
 <p><span class="math display">\[\begin{align}
 \hat{\gamma}_k &amp;= \text{cov}(y_t, y_{t-k}) \\
-&amp;=  \frac{1}{T-k-1} \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y})
+&amp;=  \frac{1}{T} \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y})
 \end{align}\]</span></p>
 <p>The (sample) autocorrelation function for lag <span class="math inline">\(k\)</span>, <span class="math inline">\(\hat{\rho}_k\)</span>, is simply the lag <span class="math inline">\(k\)</span> autocovariance, <span class="math inline">\(\hat{\gamma_k}\)</span> , scaled by the standard deviations.</p>
 <p><span class="math display">\[\begin{align}
-\hat{\rho}_k &amp;= \frac{ \hat{\gamma_k} }{\sigma_{y_t} \sigma_{y_{t-k}}} \\
+\hat{\rho}_k &amp;= \frac{ \hat{\gamma_k} }{\hat{\sigma}_{y_t} \hat{\sigma}_{y_{t-k}}} \\
 &amp;= \frac{ \hat{\gamma_k} }{\hat{\gamma_0}}.
 \end{align}\]</span></p>
 <p>The second line follows from the linear regression assumption of constant variance. Here is a simple example of computing the lag 1 autocorrelation.</p>

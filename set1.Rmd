@@ -194,18 +194,17 @@ sum( (x - mean(x)) * (y - mean(y))) / ( (n-1) * sd(x) * sd(y) )
 cor(x, y)
 ```
 
-For time series data, there is a closely related concept called autocorrelation. Given a time series, $y_t$, where $t=1,\ldots,T$, autocorrelation is the correlation between $y_t$ and its lagged value, $y_{t-k}$. That is, autocorrelation is the correlation of a time series with a delayed copy of itself, as a function of delay. Just as correlation is a function of covariance, autocorrelation is a function of autocovariance. The 
-The (sample) autocovariance, $\hat{\gamma}$ for a time series $y$ at lag $k$ is:
+For time series data, there is a closely related concept called autocorrelation. Given a time series, $y_t$, where $t=1,\ldots,T$, autocorrelation is the correlation between $y_t$ and its lagged value, $y_{t-k}$. That is, autocorrelation is the correlation of a time series with a delayed copy of itself, as a function of delay. Just as correlation is a function of covariance, autocorrelation is a function of autocovariance. The (sample) autocovariance, $\hat{\gamma}$ for a time series $y$ at lag $k$ is:
 
 \begin{align}
 \hat{\gamma}_k &= \text{cov}(y_t, y_{t-k}) \\
-&=  \frac{1}{T-k-1} \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y})
+&=  \frac{1}{T} \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y})
 \end{align}
 
 The (sample) autocorrelation function for lag $k$, $\hat{\rho}_k$, is simply the lag $k$ autocovariance, $\hat{\gamma_k}$ , scaled by the standard deviations.
 
 \begin{align}
-\hat{\rho}_k &= \frac{ \hat{\gamma_k} }{\sigma_{y_t} \sigma_{y_{t-k}}} \\
+\hat{\rho}_k &= \frac{ \hat{\gamma_k} }{\hat{\sigma}_{y_t} \hat{\sigma}_{y_{t-k}}} \\
 &= \frac{ \hat{\gamma_k} }{\hat{\gamma_0}}.
 \end{align}
 
