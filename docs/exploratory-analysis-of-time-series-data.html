@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-01-22" />
+<meta name="date" content="2024-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -343,13 +343,13 @@ y = X \beta + \epsilon,
 <div id="lab-1" class="section level2 hasAnchor" number="2.5">
 <h2><span class="header-section-number">2.5</span> Lab 1<a href="exploratory-analysis-of-time-series-data.html#lab-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li><p>Starting from the code chunk in <a href="exploratory-analysis-of-time-series-data.html#time-series-data">Time Series Data</a>, extend the simulated training data to a full week (December 11 through December 15, eight hours each day). Using the data frame representation, <code>plot(trading_dat$hr, trading_dat$pr)</code>. Using the time series data, <code>plot(trading_ts)</code>. What are the differences between these two plots?</p></li>
-<li><p>We can further hone in on the trend of the residuals at the end of <a href="exploratory-analysis-of-time-series-data.html#time-series-eda">Time Series EDA</a> by computing and plotting a moving average. For a time series <span class="math inline">\(y_t\)</span>, <span class="math inline">\(t = 1, \ldots, T\)</span>, a moving average of order <span class="math inline">\(m\)</span> can be written,
+<li><p>Starting from the code chunk in <a href="exploratory-analysis-of-time-series-data.html#time-series-data">Time Series Data</a>, extend the simulated training data to a full week (5 days, eight hours each day). Using the data frame representation, <code>plot(trading_dat$hr, trading_dat$pr)</code>. Using the time series data, <code>plot(trading_ts)</code>. What are the differences between these two plots? Include both plots in your submission.</p></li>
+<li><p>We can further hone in on the underlying trend of the residuals at the end of <a href="exploratory-analysis-of-time-series-data.html#time-series-eda">Time Series EDA</a> by computing and plotting a moving average. For a time series <span class="math inline">\(y_t\)</span>, <span class="math inline">\(t = 1, \ldots, T\)</span>, a moving average of order <span class="math inline">\(m\)</span> can be written,
 <span class="math display">\[\begin{align}
 \hat{y_t} = \frac{1}{m} \sum_{j=-k}^{k} y_{t+j},
 \end{align}\]</span>
 where <span class="math inline">\(m=2k+1\)</span>. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order <span class="math inline">\(m=7\)</span> for the residual time series and plot it along with the residuals in a single plot.</p></li>
-<li><p>Join the Kayak visits data (see below) to the conversions data from <a href="exploratory-analysis-of-time-series-data.html#time-series-eda">Time Series EDA</a>. Use the <code>inner_join</code> function with the argument, <code>by = c(“datestamp”, “country_code”, “marketing_channel”)</code>. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the reponse variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model.</p></li>
+<li><p>Join the Kayak visits data (see below) to the conversions data from <a href="exploratory-analysis-of-time-series-data.html#time-series-eda">Time Series EDA</a>. Use the <code>inner_join</code> function with the argument, <code>by = c(“datestamp”, “country_code”, “marketing_channel”)</code> and then filter to only US observations. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the response variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model.</p></li>
 </ol>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="exploratory-analysis-of-time-series-data.html#cb5-1" tabindex="-1"></a>visits <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv&quot;</span>)</span>
 <span id="cb5-2"><a href="exploratory-analysis-of-time-series-data.html#cb5-2" tabindex="-1"></a>visits<span class="sc">$</span>datestamp <span class="ot">=</span> <span class="fu">ymd</span>(visits<span class="sc">$</span>datestamp)</span></code></pre></div>

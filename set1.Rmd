@@ -146,9 +146,17 @@ fred %>%
 
 It looks like these two time series track pretty closely to one another. We could fit a linear regression to this data in order to estimate the expected change in the Case Shiller Index for a unit ($1) change in GDP/ capital
 
-```{r}
+```{r eval=T}
 m0 = lm(shiller ~ gdp, data = fred)
 m0 %>% tidy() %>% kable()
+
+#gdp = 65000
+#predict(m0, newdata = data.frame(gdp), interval = "prediction")
+
+
+#se = 16.22 * sqrt(1 + 1/55 + (gdp - mean(fred$gdp)) / sum( (fred$gdp - mean(fred$gdp))^2 ))
+#coef(m0) %*% c(1, gdp) - 2 * se
+
 ```
 
 Further, we could also examine the residuals to gain insight into what is missing from this model.
@@ -224,15 +232,15 @@ sum( (a1 - mean(a)) * (a2 - mean(a))) / (sum( (a - mean(a))^2 ) )  # by hand
 
 ## Lab 1
 
-1. Starting from the code chunk in [Time Series Data], extend the simulated training data to a full week (December 11 through December 15, eight hours each day). Using the data frame representation, <code>plot(trading_dat\$hr, trading_dat\$pr)</code>. Using the time series data, <code>plot(trading_ts)</code>. What are the differences between these two plots?
+1. Starting from the code chunk in [Time Series Data], extend the simulated training data to a full week (5 days, eight hours each day). Using the data frame representation, <code>plot(trading_dat\$hr, trading_dat\$pr)</code>. Using the time series data, <code>plot(trading_ts)</code>. What are the differences between these two plots? Include both plots in your submission.
 
-2. We can further hone in on the trend of the residuals at the end of [Time Series EDA] by computing and plotting a moving average. For a time series $y_t$, $t = 1, \ldots, T$, a moving average of order $m$ can be written,
+2. We can further hone in on the underlying trend of the residuals at the end of [Time Series EDA] by computing and plotting a moving average. For a time series $y_t$, $t = 1, \ldots, T$, a moving average of order $m$ can be written,
 \begin{align}
 \hat{y_t} = \frac{1}{m} \sum_{j=-k}^{k} y_{t+j},
 \end{align}
-where $m=2k+1$. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order $m=7$ for the residual time series and plot it along with the residuals in a single plot. 
+where $m=2k+1$. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order $m=7$ for the residual time series and plot it along with the residuals in a single plot.
 
-3. Join the Kayak visits data (see below) to the conversions data from [Time Series EDA]. Use the <code>inner_join</code> function with the argument, <code>by = c("datestamp", "country_code", "marketing_channel")</code>. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the reponse variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model.
+3. Join the Kayak visits data (see below) to the conversions data from [Time Series EDA]. Use the <code>inner_join</code> function with the argument, <code>by = c("datestamp", "country_code", "marketing_channel")</code> and then filter to only US observations. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the response variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model.
 
 ```{r echo=TRUE, eval=FALSE}
 visits = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv")
