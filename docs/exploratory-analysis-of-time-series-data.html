@@ -264,7 +264,9 @@ demand of a product.</li>
 <div id="multiple-time-series" class="section level2 hasAnchor" number="2.3">
 <h2><span class="header-section-number">2.3</span> Multiple Time Series<a href="exploratory-analysis-of-time-series-data.html#multiple-time-series" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database).</p>
-<p><img src="series_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="exploratory-analysis-of-time-series-data.html#cb3-1" tabindex="-1"></a>fred <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv&quot;</span>)[,<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb3-2"><a href="exploratory-analysis-of-time-series-data.html#cb3-2" tabindex="-1"></a>fred<span class="sc">$</span>date <span class="ot">=</span> <span class="fu">ymd</span>(fred<span class="sc">$</span>date)</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>It looks like these two time series track pretty closely to one another. We could fit a linear regression to this data in order to estimate the expected change in the Case Shiller Index for a unit ($1) change in GDP/ capital</p>
 <table>
 <thead>
@@ -294,7 +296,7 @@ demand of a product.</li>
 </tbody>
 </table>
 <p>Further, we could also examine the residuals to gain insight into what is missing from this model.</p>
-<p><img src="series_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="series_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>The model severely underestimates the house index starting during the pandemic. There is a clear pattern to these residuals. Is this a problem?</p>
 </div>
 <div id="autocorrelation" class="section level2 hasAnchor" number="2.4">
@@ -313,13 +315,13 @@ y = X \beta + \epsilon,
                 &amp;= \frac{ \sum_i (x_i - \bar{x})(y_i - \bar{y})}{ \sqrt{ \sum_i (x_i - \bar{x})^2 \sum_i (y_i - \bar{y})^2 }}
 \end{align}\]</span></p>
 <p>Let’s compute this quantity on some simulated data.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="exploratory-analysis-of-time-series-data.html#cb3-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb3-2"><a href="exploratory-analysis-of-time-series-data.html#cb3-2" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">5</span></span>
-<span id="cb3-3"><a href="exploratory-analysis-of-time-series-data.html#cb3-3" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb3-4"><a href="exploratory-analysis-of-time-series-data.html#cb3-4" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb3-5"><a href="exploratory-analysis-of-time-series-data.html#cb3-5" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="exploratory-analysis-of-time-series-data.html#cb3-6" tabindex="-1"></a><span class="fu">sum</span>( (x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">*</span> (y <span class="sc">-</span> <span class="fu">mean</span>(y))) <span class="sc">/</span> ( (n<span class="dv">-1</span>) <span class="sc">*</span> <span class="fu">sd</span>(x) <span class="sc">*</span> <span class="fu">sd</span>(y) )</span>
-<span id="cb3-7"><a href="exploratory-analysis-of-time-series-data.html#cb3-7" tabindex="-1"></a><span class="fu">cor</span>(x, y)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="exploratory-analysis-of-time-series-data.html#cb4-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb4-2"><a href="exploratory-analysis-of-time-series-data.html#cb4-2" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">5</span></span>
+<span id="cb4-3"><a href="exploratory-analysis-of-time-series-data.html#cb4-3" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb4-4"><a href="exploratory-analysis-of-time-series-data.html#cb4-4" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb4-5"><a href="exploratory-analysis-of-time-series-data.html#cb4-5" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="exploratory-analysis-of-time-series-data.html#cb4-6" tabindex="-1"></a><span class="fu">sum</span>( (x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">*</span> (y <span class="sc">-</span> <span class="fu">mean</span>(y))) <span class="sc">/</span> ( (n<span class="dv">-1</span>) <span class="sc">*</span> <span class="fu">sd</span>(x) <span class="sc">*</span> <span class="fu">sd</span>(y) )</span>
+<span id="cb4-7"><a href="exploratory-analysis-of-time-series-data.html#cb4-7" tabindex="-1"></a><span class="fu">cor</span>(x, y)</span></code></pre></div>
 <p>For time series data, there is a closely related concept called autocorrelation. Given a time series, <span class="math inline">\(y_t\)</span>, where <span class="math inline">\(t=1,\ldots,T\)</span>, autocorrelation is the correlation between <span class="math inline">\(y_t\)</span> and its lagged value, <span class="math inline">\(y_{t-k}\)</span>. That is, autocorrelation is the correlation of a time series with a delayed copy of itself, as a function of delay. Just as correlation is a function of covariance, autocorrelation is a function of autocovariance. The (sample) autocovariance, <span class="math inline">\(\hat{\gamma}\)</span> for a time series <span class="math inline">\(y\)</span> at lag <span class="math inline">\(k\)</span> is:</p>
 <p><span class="math display">\[\begin{align}
 \hat{\gamma}_k &amp;= \text{cov}(y_t, y_{t-k}) \\
@@ -331,14 +333,14 @@ y = X \beta + \epsilon,
 &amp;= \frac{ \hat{\gamma_k} }{\hat{\gamma_0}}.
 \end{align}\]</span></p>
 <p>The second line follows from the linear regression assumption of constant variance. Here is a simple example of computing the lag 1 autocorrelation.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="exploratory-analysis-of-time-series-data.html#cb4-1" tabindex="-1"></a>a <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
-<span id="cb4-2"><a href="exploratory-analysis-of-time-series-data.html#cb4-2" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="exploratory-analysis-of-time-series-data.html#cb4-3" tabindex="-1"></a>a1 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)</span>
-<span id="cb4-4"><a href="exploratory-analysis-of-time-series-data.html#cb4-4" tabindex="-1"></a>a2 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
-<span id="cb4-5"><a href="exploratory-analysis-of-time-series-data.html#cb4-5" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="exploratory-analysis-of-time-series-data.html#cb4-6" tabindex="-1"></a><span class="co"># lag 1 autocorrelation</span></span>
-<span id="cb4-7"><a href="exploratory-analysis-of-time-series-data.html#cb4-7" tabindex="-1"></a><span class="fu">sum</span>( (a1 <span class="sc">-</span> <span class="fu">mean</span>(a)) <span class="sc">*</span> (a2 <span class="sc">-</span> <span class="fu">mean</span>(a))) <span class="sc">/</span> (<span class="fu">sum</span>( (a <span class="sc">-</span> <span class="fu">mean</span>(a))<span class="sc">^</span><span class="dv">2</span> ) )  <span class="co"># by hand</span></span>
-<span id="cb4-8"><a href="exploratory-analysis-of-time-series-data.html#cb4-8" tabindex="-1"></a>(<span class="fu">acf</span>(a))</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="exploratory-analysis-of-time-series-data.html#cb5-1" tabindex="-1"></a>a <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
+<span id="cb5-2"><a href="exploratory-analysis-of-time-series-data.html#cb5-2" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="exploratory-analysis-of-time-series-data.html#cb5-3" tabindex="-1"></a>a1 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)</span>
+<span id="cb5-4"><a href="exploratory-analysis-of-time-series-data.html#cb5-4" tabindex="-1"></a>a2 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
+<span id="cb5-5"><a href="exploratory-analysis-of-time-series-data.html#cb5-5" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="exploratory-analysis-of-time-series-data.html#cb5-6" tabindex="-1"></a><span class="co"># lag 1 autocorrelation</span></span>
+<span id="cb5-7"><a href="exploratory-analysis-of-time-series-data.html#cb5-7" tabindex="-1"></a><span class="fu">sum</span>( (a1 <span class="sc">-</span> <span class="fu">mean</span>(a)) <span class="sc">*</span> (a2 <span class="sc">-</span> <span class="fu">mean</span>(a))) <span class="sc">/</span> (<span class="fu">sum</span>( (a <span class="sc">-</span> <span class="fu">mean</span>(a))<span class="sc">^</span><span class="dv">2</span> ) )  <span class="co"># by hand</span></span>
+<span id="cb5-8"><a href="exploratory-analysis-of-time-series-data.html#cb5-8" tabindex="-1"></a>(<span class="fu">acf</span>(a))</span></code></pre></div>
 </div>
 <div id="lab-1" class="section level2 hasAnchor" number="2.5">
 <h2><span class="header-section-number">2.5</span> Lab 1<a href="exploratory-analysis-of-time-series-data.html#lab-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -351,8 +353,8 @@ y = X \beta + \epsilon,
 where <span class="math inline">\(m=2k+1\)</span>. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order <span class="math inline">\(m=7\)</span> for the residual time series and plot it along with the residuals in a single plot.</p></li>
 <li><p>Join the Kayak visits data (see below) to the conversions data from <a href="exploratory-analysis-of-time-series-data.html#time-series-eda">Time Series EDA</a>. Use the <code>inner_join</code> function with the argument, <code>by = c(“datestamp”, “country_code”, “marketing_channel”)</code> and then filter to only US observations. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the response variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model.</p></li>
 </ol>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="exploratory-analysis-of-time-series-data.html#cb5-1" tabindex="-1"></a>visits <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv&quot;</span>)</span>
-<span id="cb5-2"><a href="exploratory-analysis-of-time-series-data.html#cb5-2" tabindex="-1"></a>visits<span class="sc">$</span>datestamp <span class="ot">=</span> <span class="fu">ymd</span>(visits<span class="sc">$</span>datestamp)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="exploratory-analysis-of-time-series-data.html#cb6-1" tabindex="-1"></a>visits <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv&quot;</span>)</span>
+<span id="cb6-2"><a href="exploratory-analysis-of-time-series-data.html#cb6-2" tabindex="-1"></a>visits<span class="sc">$</span>datestamp <span class="ot">=</span> <span class="fu">ymd</span>(visits<span class="sc">$</span>datestamp)</span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li><p>Wrtie a function in R that takes two arguments: a time series (<span class="math inline">\(y\)</span>) formatted as a vector and an integer (<span class="math inline">\(k\)</span>) specifying a lag. The output for this function is the lag <span class="math inline">\(k\)</span> autocorrelation for <span class="math inline">\(y\)</span>, using the formula in <a href="exploratory-analysis-of-time-series-data.html#autocorrelation">Autocorrelation</a>. Compare the output of your function to the output from <code>(acf(y))</code>. An extra challenge is to allow <span class="math inline">\(k\)</span> to be a vector of lags, in which case your function should return a vector of autocorrelation values.</p></li>
 <li><p>The partial autocorrelation function, <span class="math inline">\(\phi_k\)</span>, measures the correlation between a time series <span class="math inline">\(y_t\)</span> and a lagged copy <span class="math inline">\(y_{t-k}\)</span>, with the linear dependence of <span class="math inline">\(\{ y_{t-1}, y_{t-2}, \ldots,y_{t-k-1} \}\)</span> removed. When <span class="math inline">\(k=1\)</span>, <span class="math inline">\(\hat{\phi}_k = \hat{\rho}_k\)</span>. When <span class="math inline">\(k&gt;1\)</span>,
@@ -362,9 +364,9 @@ where <span class="math inline">\(m=2k+1\)</span>. The concept behind this techn
 where <span class="math inline">\(\hat{y_1}|\{ y_2, \ldots, y_{k-1} \}\)</span> is the predicted <span class="math inline">\(y_1\)</span> using the linear regression where <span class="math inline">\(\{ y_2, \ldots, y_{k-1} \}\)</span> are explanatory variables.
 Compute the lag 1 and 2 partial autocorrelations for the following simulated time series. Show your code and validate your answers using the <code>pacf</code> function. The <code>window</code> function may be useful to extract subsets of the time series vector.</p></li>
 </ol>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="exploratory-analysis-of-time-series-data.html#cb6-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb6-2"><a href="exploratory-analysis-of-time-series-data.html#cb6-2" tabindex="-1"></a>ysim <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n=</span><span class="dv">1000</span>, <span class="fu">list</span>(<span class="at">ar=</span><span class="fu">c</span>(.<span class="dv">5</span>)))</span>
-<span id="cb6-3"><a href="exploratory-analysis-of-time-series-data.html#cb6-3" tabindex="-1"></a>(<span class="fu">pacf</span>(ysim))</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="exploratory-analysis-of-time-series-data.html#cb7-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb7-2"><a href="exploratory-analysis-of-time-series-data.html#cb7-2" tabindex="-1"></a>ysim <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n=</span><span class="dv">1000</span>, <span class="fu">list</span>(<span class="at">ar=</span><span class="fu">c</span>(.<span class="dv">5</span>)))</span>
+<span id="cb7-3"><a href="exploratory-analysis-of-time-series-data.html#cb7-3" tabindex="-1"></a>(<span class="fu">pacf</span>(ysim))</span></code></pre></div>
 
 </div>
 </div>

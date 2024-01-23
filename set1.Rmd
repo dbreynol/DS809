@@ -130,10 +130,13 @@ This allows us to more clearly see the trend across the date range, removing the
 
 Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database). 
 
-```{r}
+```{r echo=TRUE}
 fred = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv")[,-1]
 fred$date = ymd(fred$date)
+```
 
+
+```{r}
 fred %>% 
   mutate(gdp_s = (gdp-mean(gdp))/sd(gdp), shiller_s = (shiller - mean(shiller))/sd(shiller))  %>%
   pivot_longer(-date) %>% 
