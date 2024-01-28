@@ -5,3 +5,12 @@ time-series-eda
 multiple-time-series
 autocorrelation
 lab-1
+smoothing-decomposition-noise
+exponential-smoothing
+optimization
+decomposition
+statistical-models
+random-walk
+white-noise
+stationarity
+lab-2

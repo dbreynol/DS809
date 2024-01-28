@@ -31,7 +31,7 @@ t <- 1:n
 x <- x0 + u + rnorm(1, 0, sqrt(q)) 
 for (i in 2:n) x[i] <- x[i - 1] + u + rnorm(1, 0, sqrt(q))
 
-x = x + rep(c(-1,0,1,2), 5)/2
+x = x + rep(c(-1,0,1,2), 5)
 plot(x, type = "l")
 
 # y is our observation of x with error
@@ -80,3 +80,103 @@ fulldat <- lakeWAplanktonTrans
 years <- fulldat[, "Year"] >= 1965 & fulldat[, "Year"] < 1975
 phytos <- c("Diatoms", "Greens", "Bluegreens", "Unicells", "Other.algae")
 dat <- t(fulldat[years, phytos])
+
+# model converstions using seasonality
+library(tidyverse)
+
+conversions = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv")
+
+# base model - Nile
+
+# auto arima?
+
+byday = conversions %>% filter(country_code == "us") %>% 
+  mutate(datestamp = ymd(datestamp)) %>% group_by(datestamp) %>% summarise(conv = sum(conversions)) %>% 
+  mutate(wd = wday(datestamp, label = T)) %>% drop_na()
+
+# C matrix
+mat = model.matrix(conv ~ factor(wd, ordered = F), data = byday)
+mat[,1] = 1 #ifelse( rowSums(mat[, 2:7]) == 0 , 1, 0)
+c.in = t(mat)
+C = matrix ( c("Sun", "M", "T", "W", "Th", "F", "S"), nrow = 1)
+
+
+mod.list <- list(
+  U = matrix(0), ##
+  x0 = matrix("x0"),
+  B = matrix(1), ##
+  Q = matrix("q"),
+  Z = matrix(1), ##
+  A = matrix(0), ##
+  R = matrix("r"),
+  C = (C),
+  c = ( c.in ),
+  tinitx = 0
+)
+
+y_ts = byday$conv - mean(byday$conv)
+fit2 <- MARSS(y_ts, model = mod.list)
+
+fr = forecast(fit2, h = 2, newdata = c.in[,c(1,2)], interval = "prediction")
+
+
+
+mod.list2 <- list(
+  U = matrix(0), ##
+  x0 = matrix("x0"),
+  B = matrix(1), ##
+  Q = matrix(0),
+  Z = matrix(1), ##
+  A = matrix(0), ##
+  R = matrix("r"),
+  tinitx = 0
+)
+
+#y = ts(byday$conv[1:50], frequency = 7)
+#y2 = rnorm(100)
+
+fit3 <- MARSS(y2, model = mod.list2)
+
+############## test using statespacer
+
+library(tidyverse)
+library(statespacer)
+conversions = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv")
+
+byday = conversions %>% filter(country_code == "us") %>% 
+  mutate(datestamp = ymd(datestamp)) %>% group_by(datestamp) %>% summarise(conv = sum(conversions)) %>% 
+  mutate(wd = wday(datestamp, label = T)) %>% drop_na()
+
+
+y <- as.matrix(byday$conv)
+BSM_vec <- 7
+#addvar_list <- list(as.matrix(Data[, c("PetrolPrice")]))
+
+# Format of the variance - covariance matrix of the level component
+# By setting the elements of this matrix to 0, 
+# the component becomes deterministic.
+format_level <- matrix(1)
+
+# Format of the variance - covariance matrix of the seasonal component
+# Note: This format must be a list of matrices, because multiple 
+#       seasonalities can be specified!
+format_BSM_list <- list(matrix(1))
+
+
+# Fitting the model
+fit1 <- statespacer(y = y,
+                    local_level_ind = T,
+                    BSM_vec = BSM_vec,
+                    format_level = format_level, 
+                    format_BSM_list = format_BSM_list,
+                    method = "BFGS",
+                    initial = .5 * log(var(y)),
+                    verbose = TRUE)
+fit1$system_matrices$Q$BSM7
+plot(x = 1:301, byday$conv)
+
+lines(1:301, fit1$filtered$level  , type = 'l', col = "blue")
+
+
+
+plot(x = 1:301, fit1$filtered$BSM7, type = "l")
