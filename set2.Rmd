@@ -23,14 +23,14 @@ Since we don't have data prior to $y_1$, we denote $\hat{y}_{1 | 0} = l_0$. Ther
 \hat{y}_{t+1 | t} = (1-\alpha) ^ t l_0  + \sum_{j=0}^{t-1} \alpha (1-\alpha) ^ j y_{t-j}. \\
 \end{align}
 
-Let's take a look at how this method depends on the parameters.
+Let's take a look at how this method depends on the parameters. We will use Albanian export data from `tsibbledata`, which you can grab here:
 
-```{r}
-set.seed(1)
-
+```{r echo=TRUE}
 alb = global_economy %>% filter(Country == "Albania", Year > 1990) 
 y = alb$Exports
+```
 
+```{r}
 es = function(par, ts) { # parameter vector: first parameter is alpha/ second is l0
   yt = c(par[2])
   for(j in 2:length(ts)) {
@@ -208,7 +208,7 @@ Stationarity is a convenient assumption that allows us to describe the statistic
 
 ## Lab 2
 
-1. Change the <code>es</code> function we developed in [Exponential Smoothing] to return the SSE, rather than <code>yt</code>, the smoothed time series. Now, use the <code>optim</code> function to find the values of $(\alpha, l_0)$ that minimize SSE. Plot the exponentially smoothed time series using the optimized values for $(\alpha, l_0)$.
+1. Change the <code>es</code> function we developed in [Exponential Smoothing] to return the SSE, rather than <code>yt</code>, the smoothed time series. Now, use the <code>optim</code> function to find the values of $(\alpha, l_0)$ that minimize SSE. Plot the exponentially smoothed time series of the Albanian export data using the optimized values for $(\alpha, l_0)$. What are these values?
 
 2. Choose a different type of employee from the <code>us_employment</code> dataset and, first, plot the time series. Now, decompose the time series into trend, seasonal, and random components. Follow the algorithm in [Decomposition]. Plot these and comment on your observations.
 

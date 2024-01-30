@@ -8,3 +8,5 @@ general format
 
 ex w/ nile
 
+forecast forward consumer sentiment (using regression / AR model and state space - show differences like this: https://atsa-es.github.io/atsa/Lectures/Week%203/lec_05_univariate_state_space.html#25    )
+
