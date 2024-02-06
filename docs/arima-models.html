@@ -229,10 +229,10 @@ Var(x_t) &amp;= \frac{\sigma^2_w}{1-\phi_1^2} \\
 \rho(h) &amp;= \phi_1^h
 \end{align}\]</span></p>
 <p>For this to work, <span class="math inline">\(|\phi_1| &lt; 1\)</span>. Now let’s simulate some data from an AR1 model and compare theoretical and observed quantities.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="arima-models.html#cb11-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb11-2"><a href="arima-models.html#cb11-2" tabindex="-1"></a>phi_1 <span class="ot">=</span> <span class="fl">0.5</span></span>
-<span id="cb11-3"><a href="arima-models.html#cb11-3" tabindex="-1"></a>sigsq_w <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb11-4"><a href="arima-models.html#cb11-4" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">10000</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar=</span><span class="fu">c</span>(phi_1)), <span class="at">sd =</span> sigsq_w)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="arima-models.html#cb22-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb22-2"><a href="arima-models.html#cb22-2" tabindex="-1"></a>phi_1 <span class="ot">=</span> <span class="fl">0.5</span></span>
+<span id="cb22-3"><a href="arima-models.html#cb22-3" tabindex="-1"></a>sigsq_w <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb22-4"><a href="arima-models.html#cb22-4" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">10000</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar=</span><span class="fu">c</span>(phi_1)), <span class="at">sd =</span> sigsq_w)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -305,10 +305,10 @@ Var(x_t) &amp;= \sigma^2_w(1+\theta_1^2) \\
 \rho(h) &amp;= \frac{\theta_1}{1+\theta_1^2} \text{ for } h=1 \text{ and 0 otherwise. }
 \end{align}\]</span></p>
 <p>Now let’s simulate some data from an MA1 model and compare theoretical and observed quantities.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="arima-models.html#cb12-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb12-2"><a href="arima-models.html#cb12-2" tabindex="-1"></a>theta_1 <span class="ot">=</span> <span class="fl">0.5</span></span>
-<span id="cb12-3"><a href="arima-models.html#cb12-3" tabindex="-1"></a>sigsq_w <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb12-4"><a href="arima-models.html#cb12-4" tabindex="-1"></a>z <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">10000</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ma=</span><span class="fu">c</span>(theta_1)), <span class="at">sd =</span> sigsq_w)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="arima-models.html#cb23-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb23-2"><a href="arima-models.html#cb23-2" tabindex="-1"></a>theta_1 <span class="ot">=</span> <span class="fl">0.5</span></span>
+<span id="cb23-3"><a href="arima-models.html#cb23-3" tabindex="-1"></a>sigsq_w <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb23-4"><a href="arima-models.html#cb23-4" tabindex="-1"></a>z <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">10000</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ma=</span><span class="fu">c</span>(theta_1)), <span class="at">sd =</span> sigsq_w)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -358,12 +358,12 @@ x_t = \phi_1 x_{t-1} + \dots + \phi_p x_{t-p} + w_t + \theta_1 w_{t-1} + \dots +
 <p>Our data is not always stationary. If the data do not appear stationary, differencing can help. This leads to the class of <em>autoregressive integrated moving average</em> (ARIMA) models. ARIMA models are indexed with orders (<em>p</em>,<em>d</em>,<em>q</em>) where <em>d</em> indicates the order of differencing.</p>
 <p><span class="math inline">\(\{x_t\}\)</span> follows an ARIMA(<em>p</em>,<em>d</em>,<em>q</em>) process if <span class="math inline">\((1-\mathbf{B})^d x_t\)</span> is an ARMA(<em>p</em>,<em>q</em>) process.</p>
 <p>For example, if we look at Japan exports over the time period from 1960 to 2016, we see a clear evolution in the mean of the time series, indicating that the time series is not stationary.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="arima-models.html#cb13-1" tabindex="-1"></a>je <span class="ot">=</span> global_economy <span class="sc">%&gt;%</span> </span>
-<span id="cb13-2"><a href="arima-models.html#cb13-2" tabindex="-1"></a>  <span class="fu">filter</span>(Country <span class="sc">==</span> <span class="st">&quot;Japan&quot;</span>, Year<span class="sc">&lt;</span> <span class="dv">2017</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb13-3"><a href="arima-models.html#cb13-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">d =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="fu">diff</span>(Exports)))</span></code></pre></div>
-<p><img src="series_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="arima-models.html#cb24-1" tabindex="-1"></a>je <span class="ot">=</span> global_economy <span class="sc">%&gt;%</span> </span>
+<span id="cb24-2"><a href="arima-models.html#cb24-2" tabindex="-1"></a>  <span class="fu">filter</span>(Country <span class="sc">==</span> <span class="st">&quot;Japan&quot;</span>, Year<span class="sc">&lt;</span> <span class="dv">2017</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-3"><a href="arima-models.html#cb24-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">d =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="fu">diff</span>(Exports)))</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
 <p>As we saw in week one, if we instead look at the year over year changes in exports, we see something that more closely resembles a stationary time series.</p>
-<p><img src="series_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p><img src="series_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
 <div id="model-selection-fitting" class="section level3 hasAnchor" number="4.4.1">
 <h3><span class="header-section-number">4.4.1</span> Model Selection/ Fitting<a href="arima-models.html#model-selection-fitting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The general sequence of steps involved in fitting an ARIMA model to a given time series are:</p>
@@ -373,8 +373,8 @@ x_t = \phi_1 x_{t-1} + \dots + \phi_p x_{t-p} + w_t + \theta_1 w_{t-1} + \dots +
 <li>Select the AR level (p) and the MA level (q) that optimize the AIC</li>
 </ol>
 <p>Steps two and three are automated with the function <code>forecast::auto.arima</code> function. For instance,</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="arima-models.html#cb14-1" tabindex="-1"></a>m0 <span class="ot">=</span> <span class="fu">auto.arima</span>(je<span class="sc">$</span>Exports)</span>
-<span id="cb14-2"><a href="arima-models.html#cb14-2" tabindex="-1"></a><span class="fu">summary</span>(m0)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="arima-models.html#cb25-1" tabindex="-1"></a>m0 <span class="ot">=</span> <span class="fu">auto.arima</span>(je<span class="sc">$</span>Exports)</span>
+<span id="cb25-2"><a href="arima-models.html#cb25-2" tabindex="-1"></a><span class="fu">summary</span>(m0)</span></code></pre></div>
 <pre><code>## Series: je$Exports 
 ## ARIMA(0,1,0) 
 ## 
@@ -433,10 +433,10 @@ The relationship between <span class="math inline">\(\mu\)</span> and <span clas
 <p>So we can forecast with this model:</p>
 <p><span class="math display">\[z_t = 0.1335991 -0.05580519 z_{t-1} - 0.18850080 z_{t-2} + e_t\]</span>
 To obtain the <span class="math inline">\(T+1\)</span> forecast value:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="arima-models.html#cb19-1" tabindex="-1"></a>zt_1 <span class="ot">=</span> <span class="fl">16.119153</span> <span class="sc">-</span> <span class="fl">17.588928</span></span>
-<span id="cb19-2"><a href="arima-models.html#cb19-2" tabindex="-1"></a>zt_2 <span class="ot">=</span> <span class="fl">17.588928</span> <span class="sc">-</span> <span class="fl">17.540302</span></span>
-<span id="cb19-3"><a href="arima-models.html#cb19-3" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="arima-models.html#cb19-4" tabindex="-1"></a><span class="fl">16.119153</span> <span class="sc">+</span> (<span class="fl">0.1335991</span> <span class="sc">-</span> <span class="fl">0.05580519</span> <span class="sc">*</span> zt_1 <span class="sc">-</span> <span class="fl">0.18850080</span> <span class="sc">*</span> zt_2)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="arima-models.html#cb30-1" tabindex="-1"></a>zt_1 <span class="ot">=</span> <span class="fl">16.119153</span> <span class="sc">-</span> <span class="fl">17.588928</span></span>
+<span id="cb30-2"><a href="arima-models.html#cb30-2" tabindex="-1"></a>zt_2 <span class="ot">=</span> <span class="fl">17.588928</span> <span class="sc">-</span> <span class="fl">17.540302</span></span>
+<span id="cb30-3"><a href="arima-models.html#cb30-3" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="arima-models.html#cb30-4" tabindex="-1"></a><span class="fl">16.119153</span> <span class="sc">+</span> (<span class="fl">0.1335991</span> <span class="sc">-</span> <span class="fl">0.05580519</span> <span class="sc">*</span> zt_1 <span class="sc">-</span> <span class="fl">0.18850080</span> <span class="sc">*</span> zt_2)</span></code></pre></div>
 <pre><code>## [1] 16.32561</code></pre>
 </div>
 <div id="standard-errors" class="section level4 hasAnchor" number="4.4.3.2">
@@ -462,12 +462,12 @@ y_t &amp;= \phi y_{t-1} + w_t \\
 \hat{x}_{T+h} \pm 1.96 \sqrt{ \hat{\sigma}^2_w \sum_{j=0}^{h-1} \psi_j^2 }
 \end{align}\]</span></p>
 <p>For example, the one step ahead forecast for the Japan Export model has a 95% prediction interval:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="arima-models.html#cb21-1" tabindex="-1"></a><span class="fu">c</span>(<span class="fl">16.32561</span> <span class="sc">-</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fl">1.645</span>), <span class="fl">16.32561</span> <span class="sc">+</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fl">1.645</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="arima-models.html#cb32-1" tabindex="-1"></a><span class="fu">c</span>(<span class="fl">16.32561</span> <span class="sc">-</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fl">1.645</span>), <span class="fl">16.32561</span> <span class="sc">+</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fl">1.645</span>))</span></code></pre></div>
 <pre><code>## [1] 13.81181 18.83941</code></pre>
 <p>You can also use the <code>forecast</code> function to obtain point estimates and prediction intervals. For example,</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="arima-models.html#cb23-1" tabindex="-1"></a>fr <span class="ot">=</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> <span class="dv">5</span>)</span>
-<span id="cb23-2"><a href="arima-models.html#cb23-2" tabindex="-1"></a><span class="fu">plot</span>(fr) </span></code></pre></div>
-<p><img src="series_files/figure-html/unnamed-chunk-40-1.png" width="672" /></p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="arima-models.html#cb34-1" tabindex="-1"></a>fr <span class="ot">=</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> <span class="dv">5</span>)</span>
+<span id="cb34-2"><a href="arima-models.html#cb34-2" tabindex="-1"></a><span class="fu">plot</span>(fr) </span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
 </div>
 </div>
 </div>
