@@ -47,7 +47,8 @@ df = data.frame(quantity, theory, empirical)
 knitr::kable(df)
 ```
 
-### AR Stationarity
+
+### <span style="color: red;"> AR Stationarity </span>
 
 In the case of the AR(1) model, it was apparent that the condition we needed to ensure a stationary model was the condition that $|\phi_1| < 1$. For the general AR(p) model, though, the condition is more complicated. Before defining the condition, we define the backshift operator, $\mathbf{B}$:
 
@@ -71,10 +72,7 @@ We will refer to $\phi_p (\mathbf{B}^p)$ as the characteristic equation. To be s
 2. $x_t = -0.2 x_{t-1} + 0.4 x_{t-2} +  w_t$
 3. $x_t = x_{t-1} + w_t$
 
-
 ## MA Models
-
-
 
 A moving average model of order _q_, or MA(_q_), is defined as
 
@@ -253,16 +251,9 @@ summary(m0)
 
 #### Check the residuals
 
-Residuals = difference between the expected (fitted) value of $x_t$ and the data
+Residuals = difference between the observations (data), $y$, and expected (fitted) values, $\hat{y}$. Thus, the i'th residual is: $y_i-\hat{y}_i$.
 
-There is no observation error in an ARMA model. The expected value is the $x_t$ expected from data up to $t-1$.
-
-For example, the residual for an AR(2) model is $y_t - \hat{x}_t$.
-
-$x_t = \phi_1 x_{t-1} + \phi_2 x_{t-2} + w_t$
-
-$\hat{x}_t = \phi_1 x_{t-1} + \phi_2 x_{t-2}$
-
+In R, we can obtain the vector of residuals using the `residuals` function, as shown below.
 
 #### `residuals()` function in R
 
@@ -278,6 +269,17 @@ To check the fit of our model, we want to check that the residuals are white noi
 #### Point Estimates
 
 The basic idea of forecasting with an ARIMA model is to estimate the parameters and forecast forward.
+
+```{r}
+set.seed(1)
+ys = arima.sim(n = 500, model = list(ar = c(.4, .3)) )
+fitmod = Arima(ys, order = c(2,0,0))
+
+
+```
+
+
+
 
 For example, let's say we want to forecast with a ARIMA(2,1,0) model with drift:
 $$z_t = \mu + \beta_1 z_{t-1} + \beta_2 z_{t-2} + e_t$$
@@ -315,7 +317,7 @@ zt_2 = 17.588928 - 17.540302
 ```
 
 
-#### Standard Errors
+#### <span style="color: red;"> Standard Errors </span>
 
 To obtain the standard errors of the model forecast, it is helpful to reformulate the ARIMA model as an infinite order MA model. Any ARIMA model can be written as an infinite order MA model:
 
@@ -381,9 +383,8 @@ plot(fr)
 
 3. Choose an employment type from `fpp3::us_employment`, the total employment in different industries in the United States.
 
-- Decompose the data (seasonality/ trend/ error) and describe the trend and seasonality.
-- Are the data stationary? If not, find an appropriate differencing which yields stationary data.
-- Examine ACF and PACF plots of the differenced data (if this was necessary to attain stationarity) to identify a couple of ARIMA models that might be useful in describing the time series. Which of your models is the best according to their AIC values?
+- Are the data stationary? If not, find an appropriate transformation which yields stationary data.
+- Examine ACF and PACF plots of the transformed data (if this was necessary to attain stationarity) to identify a couple of ARIMA models that might be useful in describing the time series. Which of your models is the best according to their AIC values?
 - Estimate the parameters of your best model and do diagnostic testing on the residuals. Do the residuals resemble white noise? If not, try to find another ARIMA model which fits better.
 - Forecast the next 3 years of data. Get the latest figures from https://fred.stlouisfed.org/categories/11 to check the accuracy of your forecasts.
 - Eventually, the prediction intervals are so wide that the forecasts are not particularly useful. How many years of forecasts do you think are sufficiently accurate to be usable?
@@ -395,56 +396,4 @@ pr = getSymbols('MORTGAGE30US',src='FRED', warnings = F) # 30-Year Fixed Rate Mo
 home = getSymbols('CSUSHPINSA', src = 'FRED') # S&P/Case-Shiller U.S. National Home Price Index
 gdp = getSymbols('A939RX0Q048SBEA', src = 'FRED')
 ```
-
-4. Another way that a time series may violate stationarity is with seasonality. For example, the Leisure and Hospitality sector of the economy spikes in the summer and dips in the winter months. We will look at employment (in thousands) in this sector since 2010:
-
-```{r echo=TRUE}
-leisure = fpp3::us_employment %>% 
-  filter(Title == "Leisure and Hospitality", year(Month) >= 2010) %>% 
-  select(Month, Employed)
-```
-
-- Make a plot of this time series and comment on the trend and the seasonality.
-
-- We can use our differencing tool to try to make this data stationary. Since this data has a strong seasonal component, we can take a seasonal difference, using `employed2 = diff(leisure$Employed, 12)`, which creates a transformed time series, `employed2`. Make a plot of this time series along with an ACF plot. Is this transformed time series stationary?
-
-```{r eval=FALSE}
-ts2 = diff(leisure$Employed, 12)
-plot(ts2)
-acf(ts2)
-```
-
-- Take the first difference of `employed2`. Let's call this new time series `employed3`.  Plot this time series. Does `employed3` appear to be stationary?
-
-```{r eval=F}
-ts3 = diff(ts2, 1)
-plot(ts3)
-acf(ts3, type = "partial")
-```
-
-- Coerce `employed3` to a time series object using, `ts(employed3, frequency = 12, start = c(2010,1), end = c(2019,9))`. Now, use `auto.arima` to fit a time series model to this time series object. What model was selected?
-
-```{r eval=FALSE}
-employed_ts = ts(leisure$Employed, frequency = 12, start = c(2010,1), end = c(2019,9))
-fit1 = auto.arima(employed_ts)
-fr2 = forecast(fit1, h=12)
-plot(fr2)
-```
-
-- Use `forecast` to make a plot of the next twelve months of data. Does the model capture the trend and seasonality?
-
-```{r eval=FALSE}
-plot(log(h02))
-y2 = log(h02)
-y3 = diff(y2,12)
-plot(y3)
-#adf.test(y3)
-test0 = ur.df(y2)
-summary(test0)
-
-yt = c(0)
-for(i in 2:100) {yt[i] = yt[i-1] + rnorm(1)}
-summary ( ur.df(yt) )
-```
-
 

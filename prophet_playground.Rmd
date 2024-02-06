@@ -1,0 +1,33 @@
+
+```{r}
+library(prophet)
+library(tidyverse)
+conversions = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv")
+
+
+us_conv = conversions %>% 
+  drop_na() %>% 
+  filter(country_code == "us") %>% 
+  group_by(datestamp) %>% 
+  summarise(y = sum(conversions)) %>% 
+  mutate(ds = ymd(datestamp))
+
+m = prophet(us_conv)
+fore = predict(m)
+
+plot(m, fore)
+
+prophet_plot_components(m, fore)
+
+plot(1:304, us_conv$y)
+lines(1:304, fore$trend, type = "l")
+
+plot(m, fore) + add_changepoints_to_plot(m)
+
+
+xdf <- read.csv('https://raw.githubusercontent.com/facebook/prophet/main/examples/example_wp_log_peyton_manning.csv')
+
+
+
+```
+
