@@ -2,7 +2,7 @@
 
 ## Exponential Smoothing
 
-An alternate way to smooth a time series, generally appropriate for a time series with no clear seasonality, is with exponential smoothing. Like the moving average, this method averages over recent observations but differs in that it assigns relatively more weight to observations that are relatively closer. This idea can be expressed as,
+An alternate way to smooth a time series, generally appropriate for a time series with no clear seasonality or trend, is with exponential smoothing. Like the moving average, this method averages over recent observations but differs in that it assigns relatively more weight to observations that are relatively closer. This idea can be expressed as,
 
 \begin{align}
 \hat{y}_{t+1 | t} = \alpha y_t + (1-\alpha) \hat{y}_{t | t-1},
@@ -210,12 +210,83 @@ Stationarity is a convenient assumption that allows us to describe the statistic
 
 1. Change the <code>es</code> function we developed in [Exponential Smoothing] to return the SSE, rather than <code>yt</code>, the smoothed time series. Now, use the <code>optim</code> function to find the values of $(\alpha, l_0)$ that minimize SSE. Plot the exponentially smoothed time series of the Albanian export data using the optimized values for $(\alpha, l_0)$. What are these values?
 
+```{r eval=T, echo=TRUE}
+y = alb$Exports
+es_ss = function(par) {
+  yt = es(par, y)
+  return( sum( (yt - y)^2))
+}
+
+optim(par = c(0,0), es_ss, lower = c(0,0), upper = c(1,10), method = "L-BFGS-B")$par
+
+# alpha = 1; l0 = 7.484819
+
+# how does this compare with ets (an implementation of exponential smoothing from the forecast pkg)
+ets(y, model = "ANN")
+```
+
 2. Choose a different type of employee from the <code>us_employment</code> dataset and, first, plot the time series. Now, decompose the time series into trend, seasonal, and random components. Follow the algorithm in [Decomposition]. Plot these and comment on your observations.
 
+```{r echo=TRUE}
+type = "Government: Federal"
+gov = filter(us_employment, Title == "Government: Federal", year(date) >= 1980)
+
+gov$trend = ma(gov$Employed, order = 12)
+gov = gov %>% drop_na()
+gov$detrend = gov$Employed - gov$trend
+gov$season = predict(lm(detrend ~ factor(month(date)), gov))
+gov$noise = gov$Employed - gov$trend - gov$season
+
+gov_plot = data.frame(gov) %>% select(date, Employed, trend, season, noise) %>% 
+  pivot_longer(-date)
+  
+ggplot(gov_plot, aes(date, value)) + 
+  geom_line() + 
+  facet_wrap(~name, scales = "free") + theme_minimal()
+
+```
+
+
 3. Simulate a [Random Walk] with 100 time points ($y_t$, $T= 1,\ldots,100$). Repeat this process 50 times. Choose your own $\sigma^2$ and use the same value for each of the 50 iterations. Plot all 50 time series on the same plot. On the title, report the $\sigma^2$ value you used. Second, make a histogram of each of the end points (i.e., the 100th observation of each of the 50 time series). How does this histogram correspond with the theoretical properties of $Y_{100}$ (i.e., the mean, variance, and shape of the distribution)?
+
+```{r echo=TRUE}
+rw = cumsum(rnorm(100))
+last_el = rw[100]
+par(mfrow = c(1,2))
+plot(1:100, rw, type = "l", ylim = c(-50,50), main = "Random Walks; Sigma = 1")
+
+for (j in 2:50) {
+  rw = cumsum(rnorm(100))
+  last_el[j] = rw[100]
+  lines(1:100, rw, type = "l", col = rainbow(50)[j])
+}
+
+hist(last_el, breaks = 10, main = "Histogram of 100th observations")
+
+```
 
 
 4. Write a function that takes a time series vector as input and returns the Ljung-Box Q-Statistic for $k=2$, along with the p-value for the hypothesis test in [White Noise].
 
+```{r echo=TRUE}
+y = arima.sim(100, model = list(ar=c(.6), ma = c(.1))) # input time series example
+
+boxtest = function(input_ts) {
+  n = length(input_ts)
+  rho_hat = acf(input_ts, plot = F)$acf[2:3] # rho_hat for k=1,2
+  Q = n * (n+2) * (rho_hat[1]^2/(n-1) + rho_hat[2]^2/(n-2))
+  pval = pchisq(Q, df = 2, lower.tail = F)
+  return(list(Q=Q, pval = pval))
+}
+
+boxtest(y)
+Box.test(y, lag = 2, type = "Ljung-Box")
+
+```
+
+
+
 5. Using the <code>quantmod</code> package, choose your favorite stock and see if the differenced version of its closing prices over the past year can be described as white noise. Include plots and the result of the Box test.
+
+See GOOG example above.
 

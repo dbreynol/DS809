@@ -134,3 +134,52 @@ gl = Arima(gtemp_land, order = c(1,1,0), include.drift = T)
 
 (0.13 * -0.5058 + 0.0160 * (1--0.5058) ) + 2.26
 forecast(gl, h=1)
+
+
+
+y = arima.sim(1e4, model = list(ar = c(.4, 3.), ma = c(.6, .5, .4)))
+par(mfrow = c(1,2))
+acf(y, main = "ACF")
+pacf(y, main = "PACF")
+
+
+t = 50
+lambda = 1:t * 2
+y = rpois(t, lambda)
+
+plot( y - mean(y), type = "l")
+
+plot(diff(y), type = "l")
+
+mean = 1:t * .2
+y2 = rnorm(t, mean, sd=2)
+plot(y2, type = "l", main = "Time Series Plot", xlab = "Time")
+
+
+mo = rep(1:12, 12)
+yr = rep(1949:1960, each = 12)
+df = data.frame(mo, yr, ap = as.numeric(AirPassengers))
+df %>% group_by(mo) %>% summarise(m = median(ap)) %>% facet_wrap(~factor(yr))
+
+
+
+
+set.seed(2)
+y = arima.sim(n = 10, model = list(c(ar = .9)))
+Box.test(y)
+
+
+n = 50
+k = 3
+n * (n+2) * ( .13^2/ (n-1) + .07^2/(n-2) + .04^2/(n-3) )
+
+
+killed = Seatbelts[,1]
+plot(killed)
+y = arima.sim(n=1000, model = list(ar=c(.3, .5)))
+y2 = y - mean(y)
+m0 = Arima(y2, order = c(2,0,0), include.mean = F)
+summary(m0)
+y2[1000] * coef(m0)[1]  + coef(m0)[2] * y2[999]
+
+forecast(m0,h=1)

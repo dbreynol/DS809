@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-02-06" />
+<meta name="date" content="2024-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -207,7 +207,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Set 3</span> Smoothing, Decomposition, Noise<a href="smoothing-decomposition-noise.html#smoothing-decomposition-noise" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="exponential-smoothing" class="section level2 hasAnchor" number="3.1">
 <h2><span class="header-section-number">3.1</span> Exponential Smoothing<a href="smoothing-decomposition-noise.html#exponential-smoothing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>An alternate way to smooth a time series, generally appropriate for a time series with no clear seasonality, is with exponential smoothing. Like the moving average, this method averages over recent observations but differs in that it assigns relatively more weight to observations that are relatively closer. This idea can be expressed as,</p>
+<p>An alternate way to smooth a time series, generally appropriate for a time series with no clear seasonality or trend, is with exponential smoothing. Like the moving average, this method averages over recent observations but differs in that it assigns relatively more weight to observations that are relatively closer. This idea can be expressed as,</p>
 <p><span class="math display">\[\begin{align}
 \hat{y}_{t+1 | t} = \alpha y_t + (1-\alpha) \hat{y}_{t | t-1},
 \end{align}\]</span></p>
@@ -313,12 +313,99 @@ Q = n(n+2) \sum_{i=1}^k \frac{\hat{\rho}_i^2}{(n-k)}
 <div id="lab-2" class="section level2 hasAnchor" number="3.5">
 <h2><span class="header-section-number">3.5</span> Lab 2<a href="smoothing-decomposition-noise.html#lab-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li><p>Change the <code>es</code> function we developed in <a href="smoothing-decomposition-noise.html#exponential-smoothing">Exponential Smoothing</a> to return the SSE, rather than <code>yt</code>, the smoothed time series. Now, use the <code>optim</code> function to find the values of <span class="math inline">\((\alpha, l_0)\)</span> that minimize SSE. Plot the exponentially smoothed time series of the Albanian export data using the optimized values for <span class="math inline">\((\alpha, l_0)\)</span>. What are these values?</p></li>
-<li><p>Choose a different type of employee from the <code>us_employment</code> dataset and, first, plot the time series. Now, decompose the time series into trend, seasonal, and random components. Follow the algorithm in <a href="smoothing-decomposition-noise.html#decomposition">Decomposition</a>. Plot these and comment on your observations.</p></li>
-<li><p>Simulate a <a href="smoothing-decomposition-noise.html#random-walk">Random Walk</a> with 100 time points (<span class="math inline">\(y_t\)</span>, <span class="math inline">\(T= 1,\ldots,100\)</span>). Repeat this process 50 times. Choose your own <span class="math inline">\(\sigma^2\)</span> and use the same value for each of the 50 iterations. Plot all 50 time series on the same plot. On the title, report the <span class="math inline">\(\sigma^2\)</span> value you used. Second, make a histogram of each of the end points (i.e., the 100th observation of each of the 50 time series). How does this histogram correspond with the theoretical properties of <span class="math inline">\(Y_{100}\)</span> (i.e., the mean, variance, and shape of the distribution)?</p></li>
-<li><p>Write a function that takes a time series vector as input and returns the Ljung-Box Q-Statistic for <span class="math inline">\(k=2\)</span>, along with the p-value for the hypothesis test in <a href="smoothing-decomposition-noise.html#white-noise">White Noise</a>.</p></li>
-<li><p>Using the <code>quantmod</code> package, choose your favorite stock and see if the differenced version of its closing prices over the past year can be described as white noise. Include plots and the result of the Box test.</p></li>
+<li>Change the <code>es</code> function we developed in <a href="smoothing-decomposition-noise.html#exponential-smoothing">Exponential Smoothing</a> to return the SSE, rather than <code>yt</code>, the smoothed time series. Now, use the <code>optim</code> function to find the values of <span class="math inline">\((\alpha, l_0)\)</span> that minimize SSE. Plot the exponentially smoothed time series of the Albanian export data using the optimized values for <span class="math inline">\((\alpha, l_0)\)</span>. What are these values?</li>
 </ol>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="smoothing-decomposition-noise.html#cb22-1" tabindex="-1"></a>y <span class="ot">=</span> alb<span class="sc">$</span>Exports</span>
+<span id="cb22-2"><a href="smoothing-decomposition-noise.html#cb22-2" tabindex="-1"></a>es_ss <span class="ot">=</span> <span class="cf">function</span>(par) {</span>
+<span id="cb22-3"><a href="smoothing-decomposition-noise.html#cb22-3" tabindex="-1"></a>  yt <span class="ot">=</span> <span class="fu">es</span>(par, y)</span>
+<span id="cb22-4"><a href="smoothing-decomposition-noise.html#cb22-4" tabindex="-1"></a>  <span class="fu">return</span>( <span class="fu">sum</span>( (yt <span class="sc">-</span> y)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb22-5"><a href="smoothing-decomposition-noise.html#cb22-5" tabindex="-1"></a>}</span>
+<span id="cb22-6"><a href="smoothing-decomposition-noise.html#cb22-6" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="smoothing-decomposition-noise.html#cb22-7" tabindex="-1"></a><span class="fu">optim</span>(<span class="at">par =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), es_ss, <span class="at">lower =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">upper =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">10</span>), <span class="at">method =</span> <span class="st">&quot;L-BFGS-B&quot;</span>)<span class="sc">$</span>par</span></code></pre></div>
+<pre><code>## [1] 1.000000 7.484819</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="smoothing-decomposition-noise.html#cb24-1" tabindex="-1"></a><span class="co"># alpha = 1; l0 = 7.484819</span></span>
+<span id="cb24-2"><a href="smoothing-decomposition-noise.html#cb24-2" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="smoothing-decomposition-noise.html#cb24-3" tabindex="-1"></a><span class="co"># how does this compare with ets (an implementation of exponential smoothing from the forecast pkg)</span></span>
+<span id="cb24-4"><a href="smoothing-decomposition-noise.html#cb24-4" tabindex="-1"></a><span class="fu">ets</span>(y, <span class="at">model =</span> <span class="st">&quot;ANN&quot;</span>)</span></code></pre></div>
+<pre><code>## ETS(A,N,N) 
+## 
+## Call:
+##  ets(y = y, model = &quot;ANN&quot;) 
+## 
+##   Smoothing parameters:
+##     alpha = 0.9999 
+## 
+##   Initial states:
+##     l = 7.4818 
+## 
+##   sigma:  2.4075
+## 
+##      AIC     AICc      BIC 
+## 140.3544 141.3979 144.2419</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Choose a different type of employee from the <code>us_employment</code> dataset and, first, plot the time series. Now, decompose the time series into trend, seasonal, and random components. Follow the algorithm in <a href="smoothing-decomposition-noise.html#decomposition">Decomposition</a>. Plot these and comment on your observations.</li>
+</ol>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="smoothing-decomposition-noise.html#cb26-1" tabindex="-1"></a>type <span class="ot">=</span> <span class="st">&quot;Government: Federal&quot;</span></span>
+<span id="cb26-2"><a href="smoothing-decomposition-noise.html#cb26-2" tabindex="-1"></a>gov <span class="ot">=</span> <span class="fu">filter</span>(us_employment, Title <span class="sc">==</span> <span class="st">&quot;Government: Federal&quot;</span>, <span class="fu">year</span>(date) <span class="sc">&gt;=</span> <span class="dv">1980</span>)</span>
+<span id="cb26-3"><a href="smoothing-decomposition-noise.html#cb26-3" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="smoothing-decomposition-noise.html#cb26-4" tabindex="-1"></a>gov<span class="sc">$</span>trend <span class="ot">=</span> <span class="fu">ma</span>(gov<span class="sc">$</span>Employed, <span class="at">order =</span> <span class="dv">12</span>)</span>
+<span id="cb26-5"><a href="smoothing-decomposition-noise.html#cb26-5" tabindex="-1"></a>gov <span class="ot">=</span> gov <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>()</span>
+<span id="cb26-6"><a href="smoothing-decomposition-noise.html#cb26-6" tabindex="-1"></a>gov<span class="sc">$</span>detrend <span class="ot">=</span> gov<span class="sc">$</span>Employed <span class="sc">-</span> gov<span class="sc">$</span>trend</span>
+<span id="cb26-7"><a href="smoothing-decomposition-noise.html#cb26-7" tabindex="-1"></a>gov<span class="sc">$</span>season <span class="ot">=</span> <span class="fu">predict</span>(<span class="fu">lm</span>(detrend <span class="sc">~</span> <span class="fu">factor</span>(<span class="fu">month</span>(date)), gov))</span>
+<span id="cb26-8"><a href="smoothing-decomposition-noise.html#cb26-8" tabindex="-1"></a>gov<span class="sc">$</span>noise <span class="ot">=</span> gov<span class="sc">$</span>Employed <span class="sc">-</span> gov<span class="sc">$</span>trend <span class="sc">-</span> gov<span class="sc">$</span>season</span>
+<span id="cb26-9"><a href="smoothing-decomposition-noise.html#cb26-9" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="smoothing-decomposition-noise.html#cb26-10" tabindex="-1"></a>gov_plot <span class="ot">=</span> <span class="fu">data.frame</span>(gov) <span class="sc">%&gt;%</span> <span class="fu">select</span>(date, Employed, trend, season, noise) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-11"><a href="smoothing-decomposition-noise.html#cb26-11" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>date)</span>
+<span id="cb26-12"><a href="smoothing-decomposition-noise.html#cb26-12" tabindex="-1"></a>  </span>
+<span id="cb26-13"><a href="smoothing-decomposition-noise.html#cb26-13" tabindex="-1"></a><span class="fu">ggplot</span>(gov_plot, <span class="fu">aes</span>(date, value)) <span class="sc">+</span> </span>
+<span id="cb26-14"><a href="smoothing-decomposition-noise.html#cb26-14" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb26-15"><a href="smoothing-decomposition-noise.html#cb26-15" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>name, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Simulate a <a href="smoothing-decomposition-noise.html#random-walk">Random Walk</a> with 100 time points (<span class="math inline">\(y_t\)</span>, <span class="math inline">\(T= 1,\ldots,100\)</span>). Repeat this process 50 times. Choose your own <span class="math inline">\(\sigma^2\)</span> and use the same value for each of the 50 iterations. Plot all 50 time series on the same plot. On the title, report the <span class="math inline">\(\sigma^2\)</span> value you used. Second, make a histogram of each of the end points (i.e., the 100th observation of each of the 50 time series). How does this histogram correspond with the theoretical properties of <span class="math inline">\(Y_{100}\)</span> (i.e., the mean, variance, and shape of the distribution)?</li>
+</ol>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="smoothing-decomposition-noise.html#cb27-1" tabindex="-1"></a>rw <span class="ot">=</span> <span class="fu">cumsum</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>))</span>
+<span id="cb27-2"><a href="smoothing-decomposition-noise.html#cb27-2" tabindex="-1"></a>last_el <span class="ot">=</span> rw[<span class="dv">100</span>]</span>
+<span id="cb27-3"><a href="smoothing-decomposition-noise.html#cb27-3" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb27-4"><a href="smoothing-decomposition-noise.html#cb27-4" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, rw, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">50</span>,<span class="dv">50</span>), <span class="at">main =</span> <span class="st">&quot;Random Walks; Sigma = 1&quot;</span>)</span>
+<span id="cb27-5"><a href="smoothing-decomposition-noise.html#cb27-5" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="smoothing-decomposition-noise.html#cb27-6" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">50</span>) {</span>
+<span id="cb27-7"><a href="smoothing-decomposition-noise.html#cb27-7" tabindex="-1"></a>  rw <span class="ot">=</span> <span class="fu">cumsum</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>))</span>
+<span id="cb27-8"><a href="smoothing-decomposition-noise.html#cb27-8" tabindex="-1"></a>  last_el[j] <span class="ot">=</span> rw[<span class="dv">100</span>]</span>
+<span id="cb27-9"><a href="smoothing-decomposition-noise.html#cb27-9" tabindex="-1"></a>  <span class="fu">lines</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, rw, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="dv">50</span>)[j])</span>
+<span id="cb27-10"><a href="smoothing-decomposition-noise.html#cb27-10" tabindex="-1"></a>}</span>
+<span id="cb27-11"><a href="smoothing-decomposition-noise.html#cb27-11" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="smoothing-decomposition-noise.html#cb27-12" tabindex="-1"></a><span class="fu">hist</span>(last_el, <span class="at">breaks =</span> <span class="dv">10</span>, <span class="at">main =</span> <span class="st">&quot;Histogram of 100th observations&quot;</span>)</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<ol start="4" style="list-style-type: decimal">
+<li>Write a function that takes a time series vector as input and returns the Ljung-Box Q-Statistic for <span class="math inline">\(k=2\)</span>, along with the p-value for the hypothesis test in <a href="smoothing-decomposition-noise.html#white-noise">White Noise</a>.</li>
+</ol>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="smoothing-decomposition-noise.html#cb28-1" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="dv">100</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar=</span><span class="fu">c</span>(.<span class="dv">6</span>), <span class="at">ma =</span> <span class="fu">c</span>(.<span class="dv">1</span>))) <span class="co"># input time series example</span></span>
+<span id="cb28-2"><a href="smoothing-decomposition-noise.html#cb28-2" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="smoothing-decomposition-noise.html#cb28-3" tabindex="-1"></a>boxtest <span class="ot">=</span> <span class="cf">function</span>(input_ts) {</span>
+<span id="cb28-4"><a href="smoothing-decomposition-noise.html#cb28-4" tabindex="-1"></a>  n <span class="ot">=</span> <span class="fu">length</span>(input_ts)</span>
+<span id="cb28-5"><a href="smoothing-decomposition-noise.html#cb28-5" tabindex="-1"></a>  rho_hat <span class="ot">=</span> <span class="fu">acf</span>(input_ts, <span class="at">plot =</span> F)<span class="sc">$</span>acf[<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>] <span class="co"># rho_hat for k=1,2</span></span>
+<span id="cb28-6"><a href="smoothing-decomposition-noise.html#cb28-6" tabindex="-1"></a>  Q <span class="ot">=</span> n <span class="sc">*</span> (n<span class="sc">+</span><span class="dv">2</span>) <span class="sc">*</span> (rho_hat[<span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>(n<span class="dv">-1</span>) <span class="sc">+</span> rho_hat[<span class="dv">2</span>]<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>(n<span class="dv">-2</span>))</span>
+<span id="cb28-7"><a href="smoothing-decomposition-noise.html#cb28-7" tabindex="-1"></a>  pval <span class="ot">=</span> <span class="fu">pchisq</span>(Q, <span class="at">df =</span> <span class="dv">2</span>, <span class="at">lower.tail =</span> F)</span>
+<span id="cb28-8"><a href="smoothing-decomposition-noise.html#cb28-8" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">Q=</span>Q, <span class="at">pval =</span> pval))</span>
+<span id="cb28-9"><a href="smoothing-decomposition-noise.html#cb28-9" tabindex="-1"></a>}</span>
+<span id="cb28-10"><a href="smoothing-decomposition-noise.html#cb28-10" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="smoothing-decomposition-noise.html#cb28-11" tabindex="-1"></a><span class="fu">boxtest</span>(y)</span></code></pre></div>
+<pre><code>## $Q
+## [1] 56.90976
+## 
+## $pval
+## [1] 4.387343e-13</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="smoothing-decomposition-noise.html#cb30-1" tabindex="-1"></a><span class="fu">Box.test</span>(y, <span class="at">lag =</span> <span class="dv">2</span>, <span class="at">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+##  Box-Ljung test
+## 
+## data:  y
+## X-squared = 56.91, df = 2, p-value = 4.388e-13</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Using the <code>quantmod</code> package, choose your favorite stock and see if the differenced version of its closing prices over the past year can be described as white noise. Include plots and the result of the Box test.</li>
+</ol>
+<p>See GOOG example above.</p>
 
 </div>
 </div>
