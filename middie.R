@@ -169,17 +169,97 @@ y = arima.sim(n = 10, model = list(c(ar = .9)))
 Box.test(y)
 
 
-n = 50
-k = 3
-n * (n+2) * ( .13^2/ (n-1) + .07^2/(n-2) + .04^2/(n-3) )
+diff(LakeHuron)
+m0 = arima(LakeHuron, order = c(1,1,0))
+
+library(tidyverse)
+# Take 1: 2/12
+conversions = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv")
+
+conversions %>% 
+  mutate(datestamp = ymd(datestamp)) %>% 
+  filter(country_code == "be", month(datestamp) == 7, marketing_channel == "Display Ads") %>%
+  summarise(m2 = mean(conversions))
+  group_by(datestamp) %>% summarise(c = sum(conversions)) %>% 
+  summarise(m = mean(c))
+  
+
+conversions %>% filter(country_code == "us") %>% 
+    mutate(datestamp = ymd(datestamp)) %>% 
+  group_by(datestamp) %>%  summarise(tot = sum(conversions)) %>% 
+    mutate(wd = wday(datestamp, label = T)) %>% 
+    filter(wd == "Tue") %>% View()
 
 
-killed = Seatbelts[,1]
-plot(killed)
-y = arima.sim(n=1000, model = list(ar=c(.3, .5)))
-y2 = y - mean(y)
-m0 = Arima(y2, order = c(2,0,0), include.mean = F)
+econ_dat = read.csv("https://raw.githubusercontent.com/dbreynol/admn510_data/main/infl_csent.csv")
+
+head(econ_dat)
+m0 = lm(UMCSENT ~ MICH, econ_dat)
 summary(m0)
-y2[1000] * coef(m0)[1]  + coef(m0)[2] * y2[999]
+econ_dat %>% mutate(date = ymd(date)) %>% mutate(yr = year(date)) %>% 
+  group_by(yr) %>% summarise(c = cor(UMCSENT, MICH)) %>% View()
 
-forecast(m0,h=1)
+
+Arima(LakeHuron, order = c(1,1,0))
+
+n = 50
+n * (n+2) * sum(.13^2/(n-1)+.07^2/(n-2) + .04^2/(n-3))
+
+pchisq(1.25, df = 3, lower.tail = F)
+
+Arima(LakeHuron, order = c(1, 0, 1))
+
+library(tidyverse)
+
+
+conversions = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv")
+c2 = mutate(conversions, datestamp = ymd(datestamp))
+
+
+c2 %>% filter(country_code == "be", 
+              marketing_channel == "Display Ads",
+              wday(datestamp, label == T) == "Tue") %>% 
+  group_by(datestamp) %>% 
+  summarise(s = sum(conversions)) %>% summarise(s = mean(s))
+
+c2 %>% filter(country_code == "us", 
+              wday(datestamp, label = T) == "Tue") %>% 
+  group_by(datestamp) %>% 
+  summarise(s = sum(conversions)) %>% summarise(s = mean(s))
+
+
+
+
+b = c(0,25,60)
+pr = c(.54, .34, .12)
+eb = sum(b * pr)
+sqrt ( sum ( (b - eb) ^ 2 * pr ) )
+
+
+# L4
+# corticosteroids in AUS
+cortico = PBS %>% filter(ATC2 == "H02", Type == "Co-payments", Concession == "Concessional") %>% 
+  mutate(cost2 = Cost/1e6)
+
+
+plot(cortico$cost2, type = "l")
+
+lcost = ts ( log(cortico$cost2) , frequency = 12)
+d1_lcost = diff(lcost)
+acf(d1_lcost)
+sd1_lcost = ts( diff(d1_lcost, 12), frequency = 12)
+acf(sd1_lcost)
+
+m0 = auto.arima(lcost)
+plot ( forecast(m0, h= 12) )
+
+
+
+
+hist(Boston$lstat)
+hist(Boston$medv)
+m0 = lm(medv ~ lstat, Boston)
+summary(m0)
+hist(residuals(m0))
+
+

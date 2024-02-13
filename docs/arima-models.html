@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-02-11" />
+<meta name="date" content="2024-02-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -185,6 +185,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.4.3" data-path="arima-models.html"><a href="arima-models.html#forecasting"><i class="fa fa-check"></i><b>4.4.3</b> Forecasting</a></li>
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="arima-models.html"><a href="arima-models.html#lab-3"><i class="fa fa-check"></i><b>4.5</b> Lab 3</a></li>
+<li class="chapter" data-level="4.6" data-path="arima-models.html"><a href="arima-models.html#lab-3.5"><i class="fa fa-check"></i><b>4.6</b> Lab 3.5</a></li>
 </ul></li>
 </ul>
 
@@ -521,6 +522,19 @@ y_t &amp;= \phi y_{t-1} + w_t \\
 <li>Forecast the next 3 years of data. Get the latest figures from <a href="https://fred.stlouisfed.org/categories/11" class="uri">https://fred.stlouisfed.org/categories/11</a> to check the accuracy of your forecasts.</li>
 <li>Eventually, the prediction intervals are so wide that the forecasts are not particularly useful. How many years of forecasts do you think are sufficiently accurate to be usable?</li>
 </ul>
+</div>
+<div id="lab-3.5" class="section level2 hasAnchor" number="4.6">
+<h2><span class="header-section-number">4.6</span> Lab 3.5<a href="arima-models.html#lab-3.5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Another way that a time series may violate stationarity is with seasonality. For example, the Leisure and Hospitality sector of the economy spikes in the summer and dips in the winter months. We will look at employment (in thousands) in this sector since 2010:</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="arima-models.html#cb45-1" tabindex="-1"></a>leisure <span class="ot">=</span> fpp3<span class="sc">::</span>us_employment <span class="sc">%&gt;%</span> </span>
+<span id="cb45-2"><a href="arima-models.html#cb45-2" tabindex="-1"></a>  <span class="fu">filter</span>(Title <span class="sc">==</span> <span class="st">&quot;Leisure and Hospitality&quot;</span>, <span class="fu">year</span>(Month) <span class="sc">&gt;=</span> <span class="dv">2010</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-3"><a href="arima-models.html#cb45-3" tabindex="-1"></a>  <span class="fu">select</span>(Month, Employed)</span></code></pre></div>
+<ol style="list-style-type: decimal">
+<li><p>Make a plot of this time series and comment on the trend and the seasonality.</p></li>
+<li><p>Find appropriate transformation(s) to make the time series stationary. What were the transformations? Provide any necessary plots to validate stationarity.</p></li>
+<li><p>Use <code>auto.arima</code> to fit an ARIMA model to the data. You can use either the original time series or the transformed time series. In either case, you may find it helpful to coerce your input time series into a time series object with frequency 12. This will ensure that the function explores seasonal parameters and transformations in the fitting process. What model was selected?</p></li>
+<li><p>Use <code>forecast</code> to forecast the next twelve months of data. Plot the forecast along with the orginal time series. Does the model capture the trend and seasonality?</p></li>
+</ol>
 
 </div>
 </div>

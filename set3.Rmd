@@ -397,3 +397,20 @@ home = getSymbols('CSUSHPINSA', src = 'FRED') # S&P/Case-Shiller U.S. National H
 gdp = getSymbols('A939RX0Q048SBEA', src = 'FRED')
 ```
 
+## Lab 3.5
+
+Another way that a time series may violate stationarity is with seasonality. For example, the Leisure and Hospitality sector of the economy spikes in the summer and dips in the winter months. We will look at employment (in thousands) in this sector since 2010:
+
+```{r echo=TRUE}
+leisure = fpp3::us_employment %>% 
+  filter(Title == "Leisure and Hospitality", year(Month) >= 2010) %>% 
+  select(Month, Employed)
+```
+
+1. Make a plot of this time series and comment on the trend and the seasonality.
+
+2. Find appropriate transformation(s) to make the time series stationary. What were the transformations? Provide any necessary plots to validate stationarity.
+
+3. Use `auto.arima` to fit an ARIMA model to the data. You can use either the original time series or the transformed time series. In either case, you may find it helpful to coerce your input time series into a time series object with frequency 12. This will ensure that the function explores seasonal parameters and transformations in the fitting process. What model was selected?
+
+4. Use `forecast` to forecast the next twelve months of data. Plot the forecast along with the orginal time series. Does the model capture the trend and seasonality?
