@@ -1,6 +1,6 @@
 # Prophet Lab
 
-Before doing this lab, read the paper on Canvas that describes the method implemented by the prophet package. Install and load the `prophet` package. And, skim the [online tutorial](https://facebook.github.io/prophet/docs/quick_start.html#r-api) so you know roughly where to look for further guidance if you get stuck anywhere. In this lab you will model daily US conversions generated across Kayak's marketing channels from November 2014 through August 2015.
+Before doing this lab, read the paper on Canvas ("Forecasting at Scale," in Other Resources within Modules) that describes the method implemented by the prophet package. Install and load the `prophet` package. And, skim the [online tutorial](https://facebook.github.io/prophet/docs/quick_start.html#r-api) so you know roughly where to look for further guidance if you get stuck anywhere. In this lab you will model daily US conversions generated across Kayak's marketing channels from November 2014 through August 2015.
 
 1. Read in the conversions data (see code below). Manipulate the data frame so that it is compatible with `prophet`. That is, make it a dataframe with columns `ds` and `y`, containing the date (starting with `2014-11-01`) and response variable (total US conversions across all marketing channels by day, starting with 18,669) respectively. See https://facebook.github.io/prophet/docs/quick_start.html#r-api for more details. In your written response, just show the first 6 rows of your dataframe, named `df`.
 
