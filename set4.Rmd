@@ -1,122 +1,91 @@
-Another way that a time series may violate stationarity is with seasonality. For example, the Leisure and Hospitality sector of the economy spikes in the summer and dips in the winter months. We will look at employment (in thousands) in this sector since 2010:
+# Covariates
+
+
+
+```{r}
+#library(forecast)
+#library(dynlm)
+
+insurance %>% pivot_longer(-Month) %>% 
+  ggplot(aes(x = Month, y = value)) + 
+  geom_line(aes(color = name)) + 
+  theme_minimal() + ggtitle("Advertising verus Quotes")
+```
+
+## Linear Regression
+
+We begin by modeling $y=$ Quotes as a *linear function* of $x=$ TV Spend. That is, we have the following model:
+
+\begin{align}
+y_t = \beta_0 + \beta_1 x_t + e_t,
+\end{align}
+
+where $e_1, \ldots, e_t$ are mutually independent and each $e_t \sim \text{N}(0,\sigma^2)$.
+
+```{r}
+# option one - simple linear regression
+linmod = lm(Quotes ~ TVadverts, data = insurance)
+linmod %>% tidy %>% kable()
+plot(residuals(linmod), type = "l")
+```
+
+When we do regressions using time series variables, it is common for the errors (residuals) to have a time series structure. This violates the usual assumption of independent errors made in ordinary least squares regression. The consequence is that the estimates of coefficients and their standard errors will be wrong if the time series structure of the errors is ignored.
+
+## `dynlm` Linear Model
+
+Another way of fitting a linear model to time series data is using the package `dynlm`. This package, through its namesake function `dynlm`, fits the same model as above but is noteworthy for its helpful set of functions related to time. Before showing those, let us fit the same model as above using `dynlm`.
 
 ```{r echo=TRUE}
-leisure = fpp3::us_employment %>% 
-  filter(Title == "Leisure and Hospitality", year(Month) >= 2010) %>% 
-  select(Month, Employed)
+# option two - time series regression: LM with very useful time functions
+y = ts(insurance$Quotes, frequency = 4)
+x1 = ts(insurance$TVadverts, frequency = 4)
+md = dynlm(y ~ x1 )
 ```
-
-- Make a plot of this time series and comment on the trend and the seasonality.
-
-- We can use our differencing tool to try to make this data stationary. Since this data has a strong seasonal component, we can take a seasonal difference, using `employed2 = diff(leisure$Employed, 12)`, which creates a transformed time series, `employed2`. Make a plot of this time series along with an ACF plot. Is this transformed time series stationary?
-
-```{r eval=FALSE}
-ts2 = diff(leisure$Employed, 12)
-plot(ts2)
-acf(ts2)
-```
-
-- Take the first difference of `employed2`. Let's call this new time series `employed3`.  Plot this time series. Does `employed3` appear to be stationary?
-
-```{r eval=F}
-ts3 = diff(ts2, 1)
-plot(ts3)
-acf(ts3, type = "partial")
-```
-
-- Coerce `employed3` to a time series object using, `ts(employed3, frequency = 12, start = c(2010,1), end = c(2019,9))`. Now, use `auto.arima` to fit a time series model to this time series object. What model was selected?
-
-```{r eval=FALSE}
-employed_ts = ts(leisure$Employed, frequency = 12, start = c(2010,1), end = c(2019,9))
-fit1 = auto.arima(employed_ts)
-fr2 = forecast(fit1, h=12)
-plot(fr2)
-```
-
-- Use `forecast` to make a plot of the next twelve months of data. Does the model capture the trend and seasonality?
-
-```{r eval=FALSE}
-plot(log(h02))
-y2 = log(h02)
-y3 = diff(y2,12)
-plot(y3)
-#adf.test(y3)
-test0 = ur.df(y2)
-summary(test0)
-
-yt = c(0)
-for(i in 2:100) {yt[i] = yt[i-1] + rnorm(1)}
-summary ( ur.df(yt) )
-```
-
-
-
-
-
-# State Space Models
-
-## (Noisy) Exponential Smoothing
-
-## State Space Models
 
 ```{r}
-cs = getSymbols('UMCSENT', src = "FRED")
-cs_df = data.frame(date = ymd(index(UMCSENT)), sent = UMCSENT$UMCSENT) %>% filter(date > mdy("4-1-2020"))
-ggplot(cs_df, aes(x = date, y = UMCSENT)) + geom_line()
 
+md2 = dynlm(y ~ x1 + L(x1,1) + trend(y) + season(y))
+#summary(md2)
 ```
 
+
+## Linear Regression with ARIMA Errors
 
 ```{r}
-m0 = auto.arima(cs_df$UMCSENT)
-h = forecast(m0, h = 7)
-
-cs_df$t = 1:nrow(cs_df)
-m1 = lm(UMCSENT ~ t, data = cs_df)
-summary(m1)
-predict(m1, newdata = data.frame(t = 44:48), interval = "prediction", level = .95)
+# option three - time series with ARIMA errors
+m0 = auto.arima(insurance$Quotes, xreg = as.matrix(insurance$TVadverts))
+#summary(m0)
+checkresiduals(m0)
+#m0 %>% tidy() %>% kable()
 ```
 
-general format
+## State Space Model
 
-ex w/ nile
-
-forecast forward consumer sentiment (using regression / AR model and state space - show differences like this: https://atsa-es.github.io/atsa/Lectures/Week%203/lec_05_univariate_state_space.html#25    )
-
+### Framework
 
 ```{r}
-library(statespacer)
-
-y = matrix(cs_df$UMCSENT)
-fit <- statespacer(y = y,
-                   local_level_ind = TRUE,
-                   initial = 0.5*log(var(y)),
-                   verbose = TRUE)
-
-
-
-
-plotdf = data.frame(y = y, level = fit$smoothed$level, date = cs_df$date)
-
-ggplot(plotdf) +
-  geom_point(aes(x = date, y = y)) +
-  geom_line(aes(x = date, y = level))
-
-fc = predict(fit, forecast_period = 5, nsim = 10)
-
-plot(1:5, fc$y_fc, type = 'l')
-lines(1:5, fc$sim$y[, 1, 1], type = 'p')
-
-
-lines(1871:1970, fit$smoothed$level, type = 'l')
-lines(1871:1970, fit$smoothed$level + qnorm(0.95) * sqrt(fit$smoothed$V[1,1,]),
-      type = 'l', col = 'gray'
-)
-lines(1871:1970, fit$smoothed$level - qnorm(0.95) * sqrt(fit$smoothed$V[1,1,]),
-      type = 'l', col = 'gray'
-)
-
-
-
+m0 = ets(y, model = "ANN")
+#summary(m0)
+m1 = StructTS(y, type = "level")
+#summary(m1)
+plot(forecast(m0, h = 5))
 ```
 
+### General Framework
+
+
+### Specific Problem
+
+```{r}
+#library(bsts)
+ss <- AddLocalLinearTrend(list(), y)
+model1 <- bsts(y ~ x1,
+               state.specification = ss,
+               niter = 1000)
+
+plot(model1)
+fore = predict(model1, horizon = 4, newdata = rep(8,5))
+plot(fore)
+```
+
+## Prophet

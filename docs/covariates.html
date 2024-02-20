@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>DS809</title>
+  <title>Set 6 Covariates | DS809</title>
   <meta name="description" content="Course materials for DS809, Spring 2024." />
   <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="DS809" />
+  <meta property="og:title" content="Set 6 Covariates | DS809" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Course materials for DS809, Spring 2024." />
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="DS809" />
+  <meta name="twitter:title" content="Set 6 Covariates | DS809" />
   
   <meta name="twitter:description" content="Course materials for DS809, Spring 2024." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
+<link rel="prev" href="prophet-lab.html"/>
 
-<link rel="next" href="exploratory-analysis-of-time-series-data.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -188,6 +188,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.6" data-path="arima-models.html"><a href="arima-models.html#lab-3.5"><i class="fa fa-check"></i><b>4.6</b> Lab 3.5</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="prophet-lab.html"><a href="prophet-lab.html"><i class="fa fa-check"></i><b>5</b> Prophet Lab</a></li>
+<li class="chapter" data-level="6" data-path="covariates.html"><a href="covariates.html"><i class="fa fa-check"></i><b>6</b> Covariates</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="covariates.html"><a href="covariates.html#linear-regression"><i class="fa fa-check"></i><b>6.1</b> Linear Regression</a></li>
+<li class="chapter" data-level="6.2" data-path="covariates.html"><a href="covariates.html#dynlm-linear-model"><i class="fa fa-check"></i><b>6.2</b> <code>dynlm</code> Linear Model</a></li>
+<li class="chapter" data-level="6.3" data-path="covariates.html"><a href="covariates.html#linear-regression-with-arima-errors"><i class="fa fa-check"></i><b>6.3</b> Linear Regression with ARIMA Errors</a></li>
+<li class="chapter" data-level="6.4" data-path="covariates.html"><a href="covariates.html#state-space-model"><i class="fa fa-check"></i><b>6.4</b> State Space Model</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="covariates.html"><a href="covariates.html#framework"><i class="fa fa-check"></i><b>6.4.1</b> Framework</a></li>
+<li class="chapter" data-level="6.4.2" data-path="covariates.html"><a href="covariates.html#general-framework"><i class="fa fa-check"></i><b>6.4.2</b> General Framework</a></li>
+<li class="chapter" data-level="6.4.3" data-path="covariates.html"><a href="covariates.html#specific-problem"><i class="fa fa-check"></i><b>6.4.3</b> Specific Problem</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="covariates.html"><a href="covariates.html#prophet"><i class="fa fa-check"></i><b>6.5</b> Prophet</a></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -205,23 +218,101 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">DS809</h1>
-<p class="author"><em>David Reynolds</em></p>
-<p class="date"><em>2024-02-20</em></p>
+<div id="covariates" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Set 6</span> Covariates<a href="covariates.html#covariates" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p><img src="series_files/figure-html/unnamed-chunk-54-1.png" width="672" /></p>
+<div id="linear-regression" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Linear Regression<a href="covariates.html#linear-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We begin by modeling <span class="math inline">\(y=\)</span> Quotes as a <em>linear function</em> of <span class="math inline">\(x=\)</span> TV Spend. That is, we have the following model:</p>
+<p><span class="math display">\[\begin{align}
+y_t = \beta_0 + \beta_1 x_t + e_t,
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(e_1, \ldots, e_t\)</span> are mutually independent and each <span class="math inline">\(e_t \sim \text{N}(0,\sigma^2)\)</span>.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-0.2401883</td>
+<td align="right">0.9008432</td>
+<td align="right">-0.2666261</td>
+<td align="right">0.7911986</td>
+</tr>
+<tr class="even">
+<td align="left">TVadverts</td>
+<td align="right">1.6934377</td>
+<td align="right">0.1088208</td>
+<td align="right">15.5617088</td>
+<td align="right">0.0000000</td>
+</tr>
+</tbody>
+</table>
+<p><img src="series_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
+<p>When we do regressions using time series variables, it is common for the errors (residuals) to have a time series structure. This violates the usual assumption of independent errors made in ordinary least squares regression. The consequence is that the estimates of coefficients and their standard errors will be wrong if the time series structure of the errors is ignored.</p>
 </div>
-<div id="course-info" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">Set 1</span> Course Info<a href="index.html#course-info" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>The course is designed to introduce techniques needed in the estimation/analysis of temporal data (time series) in various business disciplines. The first half of the course focuses on traditional stationary time series models. Some examples of business application areas include demand forecasting, financial asset return modeling, stochastic volatility modeling of financial indexes and securities, mortgage default risk assessment, call center arrival modeling, online webpage click-rate modeling, and market share modeling. The second half of the course focuses on state space modelling approaches to time series data and Bayesian techniques for time series data.</p>
+<div id="dynlm-linear-model" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> <code>dynlm</code> Linear Model<a href="covariates.html#dynlm-linear-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Another way of fitting a linear model to time series data is using the package <code>dynlm</code>. This package, through its namesake function <code>dynlm</code>, fits the same model as above but is noteworthy for its helpful set of functions related to time. Before showing those, let us fit the same model as above using <code>dynlm</code>.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="covariates.html#cb48-1" tabindex="-1"></a><span class="co"># option two - time series regression: LM with very useful time functions</span></span>
+<span id="cb48-2"><a href="covariates.html#cb48-2" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">ts</span>(insurance<span class="sc">$</span>Quotes, <span class="at">frequency =</span> <span class="dv">4</span>)</span>
+<span id="cb48-3"><a href="covariates.html#cb48-3" tabindex="-1"></a>x1 <span class="ot">=</span> <span class="fu">ts</span>(insurance<span class="sc">$</span>TVadverts, <span class="at">frequency =</span> <span class="dv">4</span>)</span>
+<span id="cb48-4"><a href="covariates.html#cb48-4" tabindex="-1"></a>md <span class="ot">=</span> <span class="fu">dynlm</span>(y <span class="sc">~</span> x1 )</span></code></pre></div>
+</div>
+<div id="linear-regression-with-arima-errors" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Linear Regression with ARIMA Errors<a href="covariates.html#linear-regression-with-arima-errors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><img src="series_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
+<pre><code>## 
+##  Ljung-Box test
+## 
+## data:  Residuals from Regression with ARIMA(0,1,0) errors
+## Q* = 9.1602, df = 8, p-value = 0.329
+## 
+## Model df: 0.   Total lags used: 8</code></pre>
+</div>
+<div id="state-space-model" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> State Space Model<a href="covariates.html#state-space-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="framework" class="section level3 hasAnchor" number="6.4.1">
+<h3><span class="header-section-number">6.4.1</span> Framework<a href="covariates.html#framework" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="series_files/figure-html/unnamed-chunk-59-1.png" width="672" /></p>
+</div>
+<div id="general-framework" class="section level3 hasAnchor" number="6.4.2">
+<h3><span class="header-section-number">6.4.2</span> General Framework<a href="covariates.html#general-framework" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="specific-problem" class="section level3 hasAnchor" number="6.4.3">
+<h3><span class="header-section-number">6.4.3</span> Specific Problem<a href="covariates.html#specific-problem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<pre><code>## =-=-=-=-= Iteration 0 Tue Feb 20 07:52:03 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 100 Tue Feb 20 07:52:03 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 200 Tue Feb 20 07:52:03 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 300 Tue Feb 20 07:52:03 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 400 Tue Feb 20 07:52:03 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 500 Tue Feb 20 07:52:03 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 600 Tue Feb 20 07:52:03 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 700 Tue Feb 20 07:52:03 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 800 Tue Feb 20 07:52:03 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 900 Tue Feb 20 07:52:03 2024 =-=-=-=-=</code></pre>
+<p><img src="series_files/figure-html/unnamed-chunk-60-1.png" width="672" /><img src="series_files/figure-html/unnamed-chunk-60-2.png" width="672" /></p>
+</div>
+</div>
+<div id="prophet" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Prophet<a href="covariates.html#prophet" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
+<a href="prophet-lab.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="exploratory-analysis-of-time-series-data.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -252,7 +343,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/dbreynol/DS809/edit/master/index.Rmd",
+"link": "https://github.com/dbreynol/DS809/edit/master/set4.Rmd",
 "text": "Edit"
 },
 "history": {

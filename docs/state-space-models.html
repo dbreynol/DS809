@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Set 3 State Space Models | DS809</title>
+  <title>Set 7 State Space Models | DS809</title>
   <meta name="description" content="Course materials for DS809, Spring 2024." />
   <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Set 3 State Space Models | DS809" />
+  <meta property="og:title" content="Set 7 State Space Models | DS809" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Course materials for DS809, Spring 2024." />
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Set 3 State Space Models | DS809" />
+  <meta name="twitter:title" content="Set 7 State Space Models | DS809" />
   
   <meta name="twitter:description" content="Course materials for DS809, Spring 2024." />
   
@@ -23,14 +23,14 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-01-28" />
+<meta name="date" content="2024-02-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="exploratory-analysis-of-time-series-data.html"/>
+<link rel="prev" href="covariates.html"/>
 
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -147,9 +147,52 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocorrelation"><i class="fa fa-check"></i><b>2.4</b> Autocorrelation</a></li>
 <li class="chapter" data-level="2.5" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#lab-1"><i class="fa fa-check"></i><b>2.5</b> Lab 1</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="state-space-models.html"><a href="state-space-models.html"><i class="fa fa-check"></i><b>3</b> State Space Models</a>
+<li class="chapter" data-level="3" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html"><i class="fa fa-check"></i><b>3</b> Smoothing, Decomposition, Noise</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="state-space-models.html"><a href="state-space-models.html#noisy-exponential-smoothing"><i class="fa fa-check"></i><b>3.1</b> (Noisy) Exponential Smoothing</a></li>
+<li class="chapter" data-level="3.1" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#exponential-smoothing"><i class="fa fa-check"></i><b>3.1</b> Exponential Smoothing</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#optimization"><i class="fa fa-check"></i><b>3.1.1</b> Optimization</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#decomposition"><i class="fa fa-check"></i><b>3.2</b> Decomposition</a></li>
+<li class="chapter" data-level="3.3" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#statistical-models"><i class="fa fa-check"></i><b>3.3</b> Statistical Models</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#random-walk"><i class="fa fa-check"></i><b>3.3.1</b> Random Walk</a></li>
+<li class="chapter" data-level="3.3.2" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#white-noise"><i class="fa fa-check"></i><b>3.3.2</b> White noise</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#stationarity"><i class="fa fa-check"></i><b>3.4</b> Stationarity</a></li>
+<li class="chapter" data-level="3.5" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#lab-2"><i class="fa fa-check"></i><b>3.5</b> Lab 2</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="arima-models.html"><a href="arima-models.html"><i class="fa fa-check"></i><b>4</b> ARIMA Models</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="arima-models.html"><a href="arima-models.html#ar-models"><i class="fa fa-check"></i><b>4.1</b> AR Models</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="arima-models.html"><a href="arima-models.html#ar1-model"><i class="fa fa-check"></i><b>4.1.1</b> AR(1) Model</a></li>
+<li class="chapter" data-level="4.1.2" data-path="arima-models.html"><a href="arima-models.html#ar-stationarity"><i class="fa fa-check"></i><b>4.1.2</b> <span style="color: red;"> AR Stationarity </span></a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="arima-models.html"><a href="arima-models.html#ma-models"><i class="fa fa-check"></i><b>4.2</b> MA Models</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="arima-models.html"><a href="arima-models.html#ma1-model"><i class="fa fa-check"></i><b>4.2.1</b> MA(1) Model</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="arima-models.html"><a href="arima-models.html#arma-models"><i class="fa fa-check"></i><b>4.3</b> ARMA Models</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="arima-models.html"><a href="arima-models.html#acf-for-armapq-models"><i class="fa fa-check"></i><b>4.3.1</b> ACF for ARMA(<em>p</em>,<em>q</em>) models</a></li>
+<li class="chapter" data-level="4.3.2" data-path="arima-models.html"><a href="arima-models.html#pacf-for-armapq-models"><i class="fa fa-check"></i><b>4.3.2</b> PACF for ARMA(<em>p</em>,<em>q</em>) models</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="arima-models.html"><a href="arima-models.html#arima-models-1"><i class="fa fa-check"></i><b>4.4</b> ARIMA Models</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="arima-models.html"><a href="arima-models.html#model-selection-fitting"><i class="fa fa-check"></i><b>4.4.1</b> Model Selection/ Fitting</a></li>
+<li class="chapter" data-level="4.4.2" data-path="arima-models.html"><a href="arima-models.html#model-checking"><i class="fa fa-check"></i><b>4.4.2</b> Model Checking</a></li>
+<li class="chapter" data-level="4.4.3" data-path="arima-models.html"><a href="arima-models.html#forecasting"><i class="fa fa-check"></i><b>4.4.3</b> Forecasting</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="arima-models.html"><a href="arima-models.html#lab-3"><i class="fa fa-check"></i><b>4.5</b> Lab 3</a></li>
+<li class="chapter" data-level="4.6" data-path="arima-models.html"><a href="arima-models.html#lab-3.5"><i class="fa fa-check"></i><b>4.6</b> Lab 3.5</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="prophet-lab.html"><a href="prophet-lab.html"><i class="fa fa-check"></i><b>5</b> Prophet Lab</a></li>
+<li class="chapter" data-level="6" data-path="covariates.html"><a href="covariates.html"><i class="fa fa-check"></i><b>6</b> Covariates</a></li>
+<li class="chapter" data-level="7" data-path="state-space-models.html"><a href="state-space-models.html"><i class="fa fa-check"></i><b>7</b> State Space Models</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="state-space-models.html"><a href="state-space-models.html#noisy-exponential-smoothing"><i class="fa fa-check"></i><b>7.1</b> (Noisy) Exponential Smoothing</a></li>
+<li class="chapter" data-level="7.2" data-path="state-space-models.html"><a href="state-space-models.html#state-space-models-1"><i class="fa fa-check"></i><b>7.2</b> State Space Models</a></li>
 </ul></li>
 </ul>
 
@@ -168,10 +211,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="state-space-models" class="section level1 hasAnchor" number="3">
-<h1><span class="header-section-number">Set 3</span> State Space Models<a href="state-space-models.html#state-space-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="noisy-exponential-smoothing" class="section level2 hasAnchor" number="3.1">
-<h2><span class="header-section-number">3.1</span> (Noisy) Exponential Smoothing<a href="state-space-models.html#noisy-exponential-smoothing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="state-space-models" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Set 7</span> State Space Models<a href="state-space-models.html#state-space-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="noisy-exponential-smoothing" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> (Noisy) Exponential Smoothing<a href="state-space-models.html#noisy-exponential-smoothing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="state-space-models-1" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> State Space Models<a href="state-space-models.html#state-space-models-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>general format</p>
+<p>ex w/ nile</p>
+<p>forecast forward consumer sentiment (using regression / AR model and state space - show differences like this: <a href="https://atsa-es.github.io/atsa/Lectures/Week%203/lec_05_univariate_state_space.html#25" class="uri">https://atsa-es.github.io/atsa/Lectures/Week%203/lec_05_univariate_state_space.html#25</a> )</p>
 
 </div>
 </div>
@@ -180,7 +229,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="exploratory-analysis-of-time-series-data.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="covariates.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>
