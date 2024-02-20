@@ -40,52 +40,75 @@ Another way of fitting a linear model to time series data is using the package `
 y = ts(insurance$Quotes, frequency = 4)
 x1 = ts(insurance$TVadverts, frequency = 4)
 md = dynlm(y ~ x1 )
+summary(md) %>% tidy() %>% kable()
 ```
 
-```{r}
+The results from this model are identcal to the simple linear regression. The utility of this package comes from the ease with which you can add lagged terms, trends and seasonal factors:
 
+```{r echo=TRUE}
 md2 = dynlm(y ~ x1 + L(x1,1) + trend(y) + season(y))
-#summary(md2)
 ```
 
+## `lm` with ARIMA Errors
 
-## Linear Regression with ARIMA Errors
+It is possible to adjust estimated regression coefficients and standard errors when the errors have an ARIMA structure. The purpose is to adjust "ordinary" regression estimates for the fact that the residuals have an ARIMA structure.
 
-```{r}
+In this case, the model is written as,
+
+\begin{align}
+y_t &= \beta_0 + \beta_1 x_t + \eta_t \\
+\eta_t &= \phi_1 \eta_{t-1} + \dots + \phi_p \eta_{t-p} + w_t + \theta_1 w_{t-1} + \dots + \theta_q w_{t-q},
+\end{align}
+
+where $w_t \sim N(0, \sigma^2)$ are white noise. This model can be fit within `auto.arima` or `Arima`.
+
+```{r echo=TRUE}
 # option three - time series with ARIMA errors
-m0 = auto.arima(insurance$Quotes, xreg = as.matrix(insurance$TVadverts))
-#summary(m0)
+linmod2 = auto.arima(insurance$Quotes, xreg = as.matrix(insurance$TVadverts))
+summary(linmod2)
 checkresiduals(m0)
-#m0 %>% tidy() %>% kable()
 ```
 
 ## State Space Model
 
 ### Framework
 
-```{r}
-m0 = ets(y, model = "ANN")
-#summary(m0)
-m1 = StructTS(y, type = "level")
-#summary(m1)
-plot(forecast(m0, h = 5))
+An alternate framework for time series modeling is the state space model. These models are based on a decomposition of the series into a number of components, each of which may be accompanied by error terms (and thus, uncertainty). The simplest model is the *local level model*. In this model,
+
+\begin{align}
+y_t &= \mu_t + \epsilon_t \\
+\mu_t &= \mu_{t-1} + \tau_t.
+\end{align}
+
+The idea of this model is that the observations $y$ consist of noisy measurements (observation error) of an underlying random walk. 
+
+What is the estimate for $\mu_t$ when $\tau_t = 0$? How about when $\epsilon_t = 0$? How does this relate to simple exponential smoothing?
+
+```{r echo=TRUE}
+ss1 = StructTS(y, type = "level")
+plot(forecast(ss1, h = 5))
 ```
-
-### General Framework
-
 
 ### Specific Problem
 
-```{r}
+For our problem, we will introduce the covariate into the measurement equation. Our model is,
+
+\begin{align}
+y_t &= \mu_t + \beta x_t + \epsilon_t \\
+\mu_t = \mu_{t-1} + \eta_t.
+\end{align}
+
+We will use the package `bsts` to fit this model. The first thing to do when specifying a `bsts` package is the specify the contents of the latent state vector $\mu_t$
+
+```{r message=FALSE}
 #library(bsts)
-ss <- AddLocalLinearTrend(list(), y)
+ss <- AddLocalLevel(list(), y)
 model1 <- bsts(y ~ x1,
                state.specification = ss,
                niter = 1000)
 
-plot(model1)
-fore = predict(model1, horizon = 4, newdata = rep(8,5))
+plot(model1, "components")
+fore = predict(model1, horizon = 4, newdata = rep(mean(x1),5))
 plot(fore)
 ```
 
-## Prophet

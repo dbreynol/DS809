@@ -192,14 +192,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="6.1" data-path="covariates.html"><a href="covariates.html#linear-regression"><i class="fa fa-check"></i><b>6.1</b> Linear Regression</a></li>
 <li class="chapter" data-level="6.2" data-path="covariates.html"><a href="covariates.html#dynlm-linear-model"><i class="fa fa-check"></i><b>6.2</b> <code>dynlm</code> Linear Model</a></li>
-<li class="chapter" data-level="6.3" data-path="covariates.html"><a href="covariates.html#linear-regression-with-arima-errors"><i class="fa fa-check"></i><b>6.3</b> Linear Regression with ARIMA Errors</a></li>
+<li class="chapter" data-level="6.3" data-path="covariates.html"><a href="covariates.html#lm-with-arima-errors"><i class="fa fa-check"></i><b>6.3</b> <code>lm</code> with ARIMA Errors</a></li>
 <li class="chapter" data-level="6.4" data-path="covariates.html"><a href="covariates.html#state-space-model"><i class="fa fa-check"></i><b>6.4</b> State Space Model</a>
 <ul>
 <li class="chapter" data-level="6.4.1" data-path="covariates.html"><a href="covariates.html#framework"><i class="fa fa-check"></i><b>6.4.1</b> Framework</a></li>
-<li class="chapter" data-level="6.4.2" data-path="covariates.html"><a href="covariates.html#general-framework"><i class="fa fa-check"></i><b>6.4.2</b> General Framework</a></li>
-<li class="chapter" data-level="6.4.3" data-path="covariates.html"><a href="covariates.html#specific-problem"><i class="fa fa-check"></i><b>6.4.3</b> Specific Problem</a></li>
+<li class="chapter" data-level="6.4.2" data-path="covariates.html"><a href="covariates.html#specific-problem"><i class="fa fa-check"></i><b>6.4.2</b> Specific Problem</a></li>
 </ul></li>
-<li class="chapter" data-level="6.5" data-path="covariates.html"><a href="covariates.html#prophet"><i class="fa fa-check"></i><b>6.5</b> Prophet</a></li>
 </ul></li>
 </ul>
 
@@ -264,46 +262,112 @@ y_t = \beta_0 + \beta_1 x_t + e_t,
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="covariates.html#cb48-1" tabindex="-1"></a><span class="co"># option two - time series regression: LM with very useful time functions</span></span>
 <span id="cb48-2"><a href="covariates.html#cb48-2" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">ts</span>(insurance<span class="sc">$</span>Quotes, <span class="at">frequency =</span> <span class="dv">4</span>)</span>
 <span id="cb48-3"><a href="covariates.html#cb48-3" tabindex="-1"></a>x1 <span class="ot">=</span> <span class="fu">ts</span>(insurance<span class="sc">$</span>TVadverts, <span class="at">frequency =</span> <span class="dv">4</span>)</span>
-<span id="cb48-4"><a href="covariates.html#cb48-4" tabindex="-1"></a>md <span class="ot">=</span> <span class="fu">dynlm</span>(y <span class="sc">~</span> x1 )</span></code></pre></div>
+<span id="cb48-4"><a href="covariates.html#cb48-4" tabindex="-1"></a>md <span class="ot">=</span> <span class="fu">dynlm</span>(y <span class="sc">~</span> x1 )</span>
+<span id="cb48-5"><a href="covariates.html#cb48-5" tabindex="-1"></a><span class="fu">summary</span>(md) <span class="sc">%&gt;%</span> <span class="fu">tidy</span>() <span class="sc">%&gt;%</span> <span class="fu">kable</span>()</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-0.2401883</td>
+<td align="right">0.9008432</td>
+<td align="right">-0.2666261</td>
+<td align="right">0.7911986</td>
+</tr>
+<tr class="even">
+<td align="left">x1</td>
+<td align="right">1.6934377</td>
+<td align="right">0.1088208</td>
+<td align="right">15.5617088</td>
+<td align="right">0.0000000</td>
+</tr>
+</tbody>
+</table>
+<p>The results from this model are identcal to the simple linear regression. The utility of this package comes from the ease with which you can add lagged terms, trends and seasonal factors:</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="covariates.html#cb49-1" tabindex="-1"></a>md2 <span class="ot">=</span> <span class="fu">dynlm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> <span class="fu">L</span>(x1,<span class="dv">1</span>) <span class="sc">+</span> <span class="fu">trend</span>(y) <span class="sc">+</span> <span class="fu">season</span>(y))</span></code></pre></div>
 </div>
-<div id="linear-regression-with-arima-errors" class="section level2 hasAnchor" number="6.3">
-<h2><span class="header-section-number">6.3</span> Linear Regression with ARIMA Errors<a href="covariates.html#linear-regression-with-arima-errors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="lm-with-arima-errors" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> <code>lm</code> with ARIMA Errors<a href="covariates.html#lm-with-arima-errors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>It is possible to adjust estimated regression coefficients and standard errors when the errors have an ARIMA structure. The purpose is to adjust “ordinary” regression estimates for the fact that the residuals have an ARIMA structure.</p>
+<p>In this case, the model is written as,</p>
+<p><span class="math display">\[\begin{align}
+y_t &amp;= \beta_0 + \beta_1 x_t + \eta_t \\
+\eta_t &amp;= \phi_1 \eta_{t-1} + \dots + \phi_p \eta_{t-p} + w_t + \theta_1 w_{t-1} + \dots + \theta_q w_{t-q},
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(w_t \sim N(0, \sigma^2)\)</span> are white noise. This model can be fit within <code>auto.arima</code> or <code>Arima</code>.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="covariates.html#cb50-1" tabindex="-1"></a><span class="co"># option three - time series with ARIMA errors</span></span>
+<span id="cb50-2"><a href="covariates.html#cb50-2" tabindex="-1"></a>linmod2 <span class="ot">=</span> <span class="fu">auto.arima</span>(insurance<span class="sc">$</span>Quotes, <span class="at">xreg =</span> <span class="fu">as.matrix</span>(insurance<span class="sc">$</span>TVadverts))</span>
+<span id="cb50-3"><a href="covariates.html#cb50-3" tabindex="-1"></a><span class="fu">summary</span>(linmod2)</span></code></pre></div>
+<pre><code>## Series: insurance$Quotes 
+## Regression with ARIMA(0,1,0) errors 
+## 
+## Coefficients:
+##         xreg
+##       1.3485
+## s.e.  0.0666
+## 
+## sigma^2 = 0.3301:  log likelihood = -33.22
+## AIC=70.44   AICc=70.77   BIC=73.77
+## 
+## Training set error measures:
+##                       ME      RMSE       MAE         MPE     MAPE      MASE
+## Training set -0.01299736 0.5599955 0.4354811 -0.09980506 3.271638 0.2767685
+##                   ACF1
+## Training set 0.1664547</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="covariates.html#cb52-1" tabindex="-1"></a><span class="fu">checkresiduals</span>(m0)</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
 <pre><code>## 
 ##  Ljung-Box test
 ## 
-## data:  Residuals from Regression with ARIMA(0,1,0) errors
-## Q* = 9.1602, df = 8, p-value = 0.329
+## data:  Residuals from ARIMA(0,1,0)
+## Q* = 5.0746, df = 10, p-value = 0.8861
 ## 
-## Model df: 0.   Total lags used: 8</code></pre>
+## Model df: 0.   Total lags used: 10</code></pre>
 </div>
 <div id="state-space-model" class="section level2 hasAnchor" number="6.4">
 <h2><span class="header-section-number">6.4</span> State Space Model<a href="covariates.html#state-space-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="framework" class="section level3 hasAnchor" number="6.4.1">
 <h3><span class="header-section-number">6.4.1</span> Framework<a href="covariates.html#framework" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>An alternate framework for time series modeling is the state space model. These models are based on a decomposition of the series into a number of components, each of which may be accompanied by error terms (and thus, uncertainty). The simplest model is the <em>local level model</em>. In this model,</p>
+<p><span class="math display">\[\begin{align}
+y_t &amp;= \mu_t + \epsilon_t \\
+\mu_t &amp;= \mu_{t-1} + \tau_t.
+\end{align}\]</span></p>
+<p>The idea of this model is that the observations <span class="math inline">\(y\)</span> consist of noisy measurements (observation error) of an underlying random walk.</p>
+<p>What is the estimate for <span class="math inline">\(\mu_t\)</span> when <span class="math inline">\(\tau_t = 0\)</span>? How about when <span class="math inline">\(\epsilon_t = 0\)</span>? How does this relate to simple exponential smoothing?</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="covariates.html#cb54-1" tabindex="-1"></a>ss1 <span class="ot">=</span> <span class="fu">StructTS</span>(y, <span class="at">type =</span> <span class="st">&quot;level&quot;</span>)</span>
+<span id="cb54-2"><a href="covariates.html#cb54-2" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">forecast</span>(ss1, <span class="at">h =</span> <span class="dv">5</span>))</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-59-1.png" width="672" /></p>
 </div>
-<div id="general-framework" class="section level3 hasAnchor" number="6.4.2">
-<h3><span class="header-section-number">6.4.2</span> General Framework<a href="covariates.html#general-framework" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-</div>
-<div id="specific-problem" class="section level3 hasAnchor" number="6.4.3">
-<h3><span class="header-section-number">6.4.3</span> Specific Problem<a href="covariates.html#specific-problem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<pre><code>## =-=-=-=-= Iteration 0 Tue Feb 20 07:52:03 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 100 Tue Feb 20 07:52:03 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 200 Tue Feb 20 07:52:03 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 300 Tue Feb 20 07:52:03 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 400 Tue Feb 20 07:52:03 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 500 Tue Feb 20 07:52:03 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 600 Tue Feb 20 07:52:03 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 700 Tue Feb 20 07:52:03 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 800 Tue Feb 20 07:52:03 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 900 Tue Feb 20 07:52:03 2024 =-=-=-=-=</code></pre>
+<div id="specific-problem" class="section level3 hasAnchor" number="6.4.2">
+<h3><span class="header-section-number">6.4.2</span> Specific Problem<a href="covariates.html#specific-problem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For our problem, we will introduce the covariate into the measurement equation. Our model is,</p>
+<p><span class="math display">\[\begin{align}
+y_t &amp;= \mu_t + \beta x_t + \epsilon_t \\
+\mu_t = \mu_{t-1} + \eta_t.
+\end{align}\]</span></p>
+<p>We will use the package <code>bsts</code> to fit this model. The first thing to do when specifying a <code>bsts</code> package is the specify the contents of the latent state vector <span class="math inline">\(\mu_t\)</span></p>
+<pre><code>## =-=-=-=-= Iteration 0 Tue Feb 20 18:52:00 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 100 Tue Feb 20 18:52:00 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 200 Tue Feb 20 18:52:00 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 300 Tue Feb 20 18:52:00 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 400 Tue Feb 20 18:52:00 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 500 Tue Feb 20 18:52:00 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 600 Tue Feb 20 18:52:00 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 700 Tue Feb 20 18:52:00 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 800 Tue Feb 20 18:52:00 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 900 Tue Feb 20 18:52:00 2024 =-=-=-=-=</code></pre>
 <p><img src="series_files/figure-html/unnamed-chunk-60-1.png" width="672" /><img src="series_files/figure-html/unnamed-chunk-60-2.png" width="672" /></p>
-</div>
-</div>
-<div id="prophet" class="section level2 hasAnchor" number="6.5">
-<h2><span class="header-section-number">6.5</span> Prophet<a href="covariates.html#prophet" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 
+</div>
 </div>
 </div>
             </section>
