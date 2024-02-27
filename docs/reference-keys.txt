@@ -34,3 +34,11 @@ standard-errors
 lab-3
 lab-3.5
 prophet-lab
+covariates
+linear-regression
+dynlm-linear-model
+lm-with-arima-errors
+state-space-model
+framework
+specific-problem
+lab-5
