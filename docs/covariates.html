@@ -264,16 +264,18 @@ y_t = \beta_0 + \beta_1 x_t + e_t,
 </table>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="covariates.html#cb50-1" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">residuals</span>(linmod), <span class="at">type =</span> <span class="st">&quot;l&quot;</span>)</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="covariates.html#cb51-1" tabindex="-1"></a><span class="fu">acf</span>(<span class="fu">residuals</span>(linmod))</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-55-2.png" width="672" /></p>
 <p>When we do regressions using time series variables, it is common for the errors (residuals) to have a time series structure. This violates the usual assumption of independent errors made in ordinary least squares regression. The consequence is that the estimates of coefficients and their standard errors will be wrong if the time series structure of the errors is ignored.</p>
 </div>
 <div id="dynlm-linear-model" class="section level2 hasAnchor" number="6.2">
 <h2><span class="header-section-number">6.2</span> <code>dynlm</code> Linear Model<a href="covariates.html#dynlm-linear-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Another way of fitting a linear model to time series data is using the package <code>dynlm</code>. This package, through its namesake function <code>dynlm</code>, fits the same model as above but is noteworthy for its helpful set of functions related to time. Before showing those, let us fit the same model as above using <code>dynlm</code>.</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="covariates.html#cb51-1" tabindex="-1"></a><span class="co"># option two - time series regression: LM with very useful time functions</span></span>
-<span id="cb51-2"><a href="covariates.html#cb51-2" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">ts</span>(insurance<span class="sc">$</span>Quotes, <span class="at">frequency =</span> <span class="dv">4</span>)</span>
-<span id="cb51-3"><a href="covariates.html#cb51-3" tabindex="-1"></a>x1 <span class="ot">=</span> <span class="fu">ts</span>(insurance<span class="sc">$</span>TVadverts, <span class="at">frequency =</span> <span class="dv">4</span>)</span>
-<span id="cb51-4"><a href="covariates.html#cb51-4" tabindex="-1"></a>md <span class="ot">=</span> <span class="fu">dynlm</span>(y <span class="sc">~</span> x1 )</span>
-<span id="cb51-5"><a href="covariates.html#cb51-5" tabindex="-1"></a><span class="fu">summary</span>(md) <span class="sc">%&gt;%</span> <span class="fu">tidy</span>() <span class="sc">%&gt;%</span> <span class="fu">kable</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="covariates.html#cb52-1" tabindex="-1"></a><span class="co"># option two - time series regression: LM with very useful time functions</span></span>
+<span id="cb52-2"><a href="covariates.html#cb52-2" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">ts</span>(insurance<span class="sc">$</span>Quotes, <span class="at">frequency =</span> <span class="dv">4</span>)</span>
+<span id="cb52-3"><a href="covariates.html#cb52-3" tabindex="-1"></a>x1 <span class="ot">=</span> <span class="fu">ts</span>(insurance<span class="sc">$</span>TVadverts, <span class="at">frequency =</span> <span class="dv">4</span>)</span>
+<span id="cb52-4"><a href="covariates.html#cb52-4" tabindex="-1"></a>md <span class="ot">=</span> <span class="fu">dynlm</span>(y <span class="sc">~</span> x1 )</span>
+<span id="cb52-5"><a href="covariates.html#cb52-5" tabindex="-1"></a><span class="fu">summary</span>(md) <span class="sc">%&gt;%</span> <span class="fu">tidy</span>() <span class="sc">%&gt;%</span> <span class="fu">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -302,7 +304,7 @@ y_t = \beta_0 + \beta_1 x_t + e_t,
 </tbody>
 </table>
 <p>The results from this model are identcal to the simple linear regression. The utility of this package comes from the ease with which you can add lagged terms, trends and seasonal factors:</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="covariates.html#cb52-1" tabindex="-1"></a>md2 <span class="ot">=</span> <span class="fu">dynlm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> <span class="fu">L</span>(x1,<span class="dv">1</span>) <span class="sc">+</span> <span class="fu">trend</span>(y) <span class="sc">+</span> <span class="fu">season</span>(y))</span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="covariates.html#cb53-1" tabindex="-1"></a>md2 <span class="ot">=</span> <span class="fu">dynlm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> <span class="fu">L</span>(x1,<span class="dv">1</span>) <span class="sc">+</span> <span class="fu">trend</span>(y) <span class="sc">+</span> <span class="fu">season</span>(y))</span></code></pre></div>
 </div>
 <div id="lm-with-arima-errors" class="section level2 hasAnchor" number="6.3">
 <h2><span class="header-section-number">6.3</span> <code>lm</code> with ARIMA Errors<a href="covariates.html#lm-with-arima-errors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -314,9 +316,9 @@ y_t &amp;= \beta_0 + \beta_1 x_t + \eta_t \\
 \eta_t &amp;= \phi_1 \eta_{t-1} + \dots + \phi_p \eta_{t-p} + w_t + \theta_1 w_{t-1} + \dots + \theta_q w_{t-q},
 \end{align}\]</span></p>
 <p>where <span class="math inline">\(w_t \sim N(0, \sigma^2)\)</span> are white noise. This model can be fit within <code>auto.arima</code> or <code>Arima</code>.</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="covariates.html#cb53-1" tabindex="-1"></a><span class="co"># option three - time series with ARIMA errors</span></span>
-<span id="cb53-2"><a href="covariates.html#cb53-2" tabindex="-1"></a>linmod2 <span class="ot">=</span> <span class="fu">auto.arima</span>(insurance<span class="sc">$</span>Quotes, <span class="at">xreg =</span> <span class="fu">as.matrix</span>(insurance<span class="sc">$</span>TVadverts))</span>
-<span id="cb53-3"><a href="covariates.html#cb53-3" tabindex="-1"></a><span class="fu">summary</span>(linmod2)</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="covariates.html#cb54-1" tabindex="-1"></a><span class="co"># option three - time series with ARIMA errors</span></span>
+<span id="cb54-2"><a href="covariates.html#cb54-2" tabindex="-1"></a>linmod2 <span class="ot">=</span> <span class="fu">auto.arima</span>(insurance<span class="sc">$</span>Quotes, <span class="at">xreg =</span> <span class="fu">as.matrix</span>(insurance<span class="sc">$</span>TVadverts))</span>
+<span id="cb54-3"><a href="covariates.html#cb54-3" tabindex="-1"></a><span class="fu">summary</span>(linmod2)</span></code></pre></div>
 <pre><code>## Series: insurance$Quotes 
 ## Regression with ARIMA(0,1,0) errors 
 ## 
@@ -333,7 +335,7 @@ y_t &amp;= \beta_0 + \beta_1 x_t + \eta_t \\
 ## Training set -0.01299736 0.5599955 0.4354811 -0.09980506 3.271638 0.2767685
 ##                   ACF1
 ## Training set 0.1664547</code></pre>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="covariates.html#cb55-1" tabindex="-1"></a><span class="fu">checkresiduals</span>(m0)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="covariates.html#cb56-1" tabindex="-1"></a><span class="fu">checkresiduals</span>(m0)</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
 <pre><code>## 
 ##  Ljung-Box test
@@ -354,8 +356,8 @@ y_t &amp;= \mu_t + \epsilon_t \\
 \end{align}\]</span></p>
 <p>The idea of this model is that the observations <span class="math inline">\(y\)</span> consist of noisy measurements (observation error) of an underlying random walk.</p>
 <p>What is the estimate for <span class="math inline">\(\mu_t\)</span> when <span class="math inline">\(\text{Var}(\tau_t) = 0\)</span>? How about when <span class="math inline">\(\text{Var}(\epsilon_t) = 0\)</span>? How does this relate to simple exponential smoothing?</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="covariates.html#cb57-1" tabindex="-1"></a>ss1 <span class="ot">=</span> <span class="fu">StructTS</span>(y, <span class="at">type =</span> <span class="st">&quot;level&quot;</span>)</span>
-<span id="cb57-2"><a href="covariates.html#cb57-2" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">forecast</span>(ss1, <span class="at">h =</span> <span class="dv">5</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="covariates.html#cb58-1" tabindex="-1"></a>ss1 <span class="ot">=</span> <span class="fu">StructTS</span>(y, <span class="at">type =</span> <span class="st">&quot;level&quot;</span>)</span>
+<span id="cb58-2"><a href="covariates.html#cb58-2" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">forecast</span>(ss1, <span class="at">h =</span> <span class="dv">5</span>))</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-59-1.png" width="672" /></p>
 </div>
 <div id="specific-problem" class="section level3 hasAnchor" number="6.4.2">
@@ -367,25 +369,25 @@ y_t &amp;= \mu_t + \beta x_t + \epsilon_t \\
 \mu_t &amp;= \mu_{t-1} + \eta_t.
 \end{align}\]</span></p>
 <p>We will use the package <code>bsts</code> to fit this model. The first thing to do when specifying a <code>bsts</code> package is the specify the contents of the latent state vector <span class="math inline">\(\mu_t\)</span></p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="covariates.html#cb58-1" tabindex="-1"></a><span class="co">#library(bsts)</span></span>
-<span id="cb58-2"><a href="covariates.html#cb58-2" tabindex="-1"></a>ss <span class="ot">&lt;-</span> <span class="fu">AddLocalLevel</span>(<span class="fu">list</span>(), y)</span>
-<span id="cb58-3"><a href="covariates.html#cb58-3" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">bsts</span>(y <span class="sc">~</span> x1,</span>
-<span id="cb58-4"><a href="covariates.html#cb58-4" tabindex="-1"></a>               <span class="at">state.specification =</span> ss,</span>
-<span id="cb58-5"><a href="covariates.html#cb58-5" tabindex="-1"></a>               <span class="at">niter =</span> <span class="dv">1000</span>)</span></code></pre></div>
-<pre><code>## =-=-=-=-= Iteration 0 Tue Feb 27 12:12:36 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 100 Tue Feb 27 12:12:36 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 200 Tue Feb 27 12:12:36 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 300 Tue Feb 27 12:12:37 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 400 Tue Feb 27 12:12:37 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 500 Tue Feb 27 12:12:37 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 600 Tue Feb 27 12:12:37 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 700 Tue Feb 27 12:12:37 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 800 Tue Feb 27 12:12:37 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 900 Tue Feb 27 12:12:37 2024 =-=-=-=-=</code></pre>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="covariates.html#cb60-1" tabindex="-1"></a><span class="fu">plot</span>(model1, <span class="st">&quot;components&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="covariates.html#cb59-1" tabindex="-1"></a><span class="co">#library(bsts)</span></span>
+<span id="cb59-2"><a href="covariates.html#cb59-2" tabindex="-1"></a>ss <span class="ot">&lt;-</span> <span class="fu">AddLocalLevel</span>(<span class="fu">list</span>(), y)</span>
+<span id="cb59-3"><a href="covariates.html#cb59-3" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">bsts</span>(y <span class="sc">~</span> x1,</span>
+<span id="cb59-4"><a href="covariates.html#cb59-4" tabindex="-1"></a>               <span class="at">state.specification =</span> ss,</span>
+<span id="cb59-5"><a href="covariates.html#cb59-5" tabindex="-1"></a>               <span class="at">niter =</span> <span class="dv">1000</span>)</span></code></pre></div>
+<pre><code>## =-=-=-=-= Iteration 0 Tue Feb 27 15:30:16 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 100 Tue Feb 27 15:30:16 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 200 Tue Feb 27 15:30:16 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 300 Tue Feb 27 15:30:16 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 400 Tue Feb 27 15:30:16 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 500 Tue Feb 27 15:30:16 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 600 Tue Feb 27 15:30:16 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 700 Tue Feb 27 15:30:16 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 800 Tue Feb 27 15:30:16 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 900 Tue Feb 27 15:30:16 2024 =-=-=-=-=</code></pre>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="covariates.html#cb61-1" tabindex="-1"></a><span class="fu">plot</span>(model1, <span class="st">&quot;components&quot;</span>)</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-60-1.png" width="672" /></p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="covariates.html#cb61-1" tabindex="-1"></a>fore <span class="ot">=</span> <span class="fu">predict</span>(model1, <span class="at">horizon =</span> <span class="dv">4</span>, <span class="at">newdata =</span> <span class="fu">rep</span>(<span class="fu">mean</span>(x1),<span class="dv">5</span>))</span>
-<span id="cb61-2"><a href="covariates.html#cb61-2" tabindex="-1"></a><span class="fu">plot</span>(fore)</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="covariates.html#cb62-1" tabindex="-1"></a>fore <span class="ot">=</span> <span class="fu">predict</span>(model1, <span class="at">horizon =</span> <span class="dv">4</span>, <span class="at">newdata =</span> <span class="fu">rep</span>(<span class="fu">mean</span>(x1),<span class="dv">5</span>))</span>
+<span id="cb62-2"><a href="covariates.html#cb62-2" tabindex="-1"></a><span class="fu">plot</span>(fore)</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-60-2.png" width="672" /></p>
 </div>
 </div>

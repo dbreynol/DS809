@@ -24,6 +24,7 @@ where $e_1, \ldots, e_t$ are mutually independent and each $e_t \sim \text{N}(0,
 linmod = lm(Quotes ~ TVadverts, data = insurance)
 linmod %>% tidy %>% kable()
 plot(residuals(linmod), type = "l")
+acf(residuals(linmod))
 ```
 
 When we do regressions using time series variables, it is common for the errors (residuals) to have a time series structure. This violates the usual assumption of independent errors made in ordinary least squares regression. The consequence is that the estimates of coefficients and their standard errors will be wrong if the time series structure of the errors is ignored.
