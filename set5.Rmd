@@ -1,25 +1,100 @@
 # Set 5
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+## Monte Carlo Idea
+
+Suppose we can sample from $p(\theta \vert \text{data})$. Then we could generate,
+
+\begin{align}
+\theta^{1},\ldots,\theta^{S} \sim p(\theta | \text{data})
+\end{align}
+
+and obtain Monte Carlo approximations of posterior quantities:
+
+\begin{align}
+E(g(\theta) \vert \text{data}) \approx \frac{1}{S} \sum_{i=1}^S g(\theta^i).
+\end{align}
+
+But what if you can't sample from $p(\theta \vert \text{data})$?
+
+## Metropolis Algorithm
+
+The metropolis algorithm proceeds as follows:
+
+1. Sample $\theta^{\star} \sim J(\theta \vert \theta^{s})$
+
+2. Compute the acceptance ratio, $r$:
+
+
+$$r = \frac{p(\theta^\star \vert \text{data})}{p(\theta^{s} \vert \text{data})}$$
+3 Let
+
+\begin{equation}
+  \theta^{s+1} =
+    \begin{cases}
+      \theta^{\star} & \text{with prob min}(r,1) \\
+      \theta^{s} & \text{otherwise}
+    \end{cases}       
+\end{equation}
+
+
+Step 3 can be accomplished by sampling $u \sim \text{Unif}(0,1)$ and setting $\theta^{s+1} = \theta^\star$ if $u < r$ and setting $\theta^{s+1} = \theta^s$ otherwise.
+
+## Example
+
+\begin{align}
+p(\beta \vert \text{data}) &\propto p(\text{Data} \vert \beta) p(\beta) \\
+&= \text{likelihood} \times \text{prior}
+\end{align}
+
+For the model,
+
+\begin{align}
+p(\text{data} \vert \beta) = (2\pi \sigma)^{-n/2} \exp{\bigg( -\frac{1}{2 \sigma^2} (y - X \beta)^T (y - X \beta) \bigg)}
+\end{align}
+
+We will use the proposal distribution,
+
+\begin{align}
+J(\theta^{\star} \vert \theta) \sim N(\theta, cI)
+\end{align}.
+
+How do we sample from this distribution?
+
+```{r}
+set.seed(1)
+n = 100
+X = matrix( data = c(rep(1,n), rnorm(n) ), ncol = 2)
+beta_true = c(1,2)
+y = rnorm(100, mean = X %*% beta_true, sd = 1)
+
+nIter = 1e5
+betas = matrix(0, nrow = nIter, ncol = 2)
+
+beta_current = betas[1,]
+p_current = exp ( -1/2 * t(y - X %*% betas[1,]) %*% (y- X %*% betas[1,] ))
+
+for(j in 2:nIter) {
+  # propose a new value for betas
+  beta_prop = rnorm( 2, mean = betas[(j-1),], sd = .1)
+  
+  # compute probability of data | beta proposed
+  p_prop = exp ( -1/2 * t(y - X %*% beta_prop) %*% (y- X %*% beta_prop ))
+  
+  r = p_prop/p_current
+  
+  if ( r > 1 ) {
+    beta_current = beta_prop
+    p_current = p_prop
+    
+  } else if (runif(1) < r) {
+    beta_current = beta_prop
+    p_current = p_prop
+  }
+  
+  betas[j, ] = beta_current
+  
+}
+
+plot(1:nIter, betas[,2])
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
