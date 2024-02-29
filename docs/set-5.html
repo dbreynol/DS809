@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-02-27" />
+<meta name="date" content="2024-02-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -202,9 +202,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7" data-path="set-5.html"><a href="set-5.html"><i class="fa fa-check"></i><b>7</b> Set 5</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="set-5.html"><a href="set-5.html#monte-carlo-idea"><i class="fa fa-check"></i><b>7.1</b> Monte Carlo Idea</a></li>
-<li class="chapter" data-level="7.2" data-path="set-5.html"><a href="set-5.html#metropolis-algorithm"><i class="fa fa-check"></i><b>7.2</b> Metropolis Algorithm</a></li>
-<li class="chapter" data-level="7.3" data-path="set-5.html"><a href="set-5.html#example"><i class="fa fa-check"></i><b>7.3</b> Example</a></li>
+<li class="chapter" data-level="7.1" data-path="set-5.html"><a href="set-5.html#bayesian-logic"><i class="fa fa-check"></i><b>7.1</b> Bayesian logic</a></li>
+<li class="chapter" data-level="7.2" data-path="set-5.html"><a href="set-5.html#monte-carlo-idea"><i class="fa fa-check"></i><b>7.2</b> Monte Carlo Idea</a></li>
+<li class="chapter" data-level="7.3" data-path="set-5.html"><a href="set-5.html#metropolis-algorithm"><i class="fa fa-check"></i><b>7.3</b> Metropolis Algorithm</a></li>
+<li class="chapter" data-level="7.4" data-path="set-5.html"><a href="set-5.html#example"><i class="fa fa-check"></i><b>7.4</b> Example</a></li>
+<li class="chapter" data-level="7.5" data-path="set-5.html"><a href="set-5.html#stochastic-volatility-model"><i class="fa fa-check"></i><b>7.5</b> Stochastic Volatility Model</a></li>
+<li class="chapter" data-level="7.6" data-path="set-5.html"><a href="set-5.html#lab-6"><i class="fa fa-check"></i><b>7.6</b> Lab 6</a></li>
 </ul></li>
 </ul>
 
@@ -225,8 +228,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="set-5" class="section level1 hasAnchor" number="7">
 <h1><span class="header-section-number">Set 7</span> Set 5<a href="set-5.html#set-5" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="monte-carlo-idea" class="section level2 hasAnchor" number="7.1">
-<h2><span class="header-section-number">7.1</span> Monte Carlo Idea<a href="set-5.html#monte-carlo-idea" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="bayesian-logic" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Bayesian logic<a href="set-5.html#bayesian-logic" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the Bayesian paradigm, parameters (<span class="math inline">\(\theta\)</span>) are random and data (<span class="math inline">\(y\)</span>) are fixed. Inference is carried out through the posterior distribution of parameters given data.</p>
+<p><span class="math display">\[p(\theta \vert y) = \frac{p(y|\theta) p(\theta)}{p(y)}\]</span>
+For very simple models, we can write the analytical solution for the posterior. For example, suppose we are flipping a coin and we are interested in learning about the parameter <span class="math inline">\(\theta = P(\text{Heads})\)</span>.</p>
+<p>Before observing any data, we believe that <span class="math inline">\(\theta\)</span> is probably around 0.5 but we are not sure. We can encode this belief with a prior distribution whose expected value is 0.5 and ranges from 0 to 1. A good choice is the <a href="https://en.wikipedia.org/wiki/Beta_distribution">Beta distribution</a>. In particular, we can use a Beta(<span class="math inline">\(\alpha = 2\)</span>, <span class="math inline">\(\beta = 2\)</span>),</p>
+<p><span class="math display">\[\begin{align}
+p(\theta) = 6\theta (1-\theta).
+\end{align}\]</span></p>
+<p>Now we generate some data. We flip the coin (independently) 7 times and observe 5 heads. Since our data is a sequence of 0s and 1s, we can use the binomial distribution for the likelihood. That is:</p>
+<p><span class="math display">\[\begin{align}
+p(y_1, \ldots y_7 \vert \theta) &amp;= {7 \choose 5}  \theta^5 (1-\theta)^2.
+\end{align}\]</span></p>
+<p>Now we can multiply them together to get the posterior distribution of <span class="math inline">\(\theta\)</span>:</p>
+<p><span class="math display">\[\begin{align}
+p(\theta \vert y) &amp;= \frac{p(y|\theta) p(\theta)}{p(y)} \\
+&amp;= \theta^5 (1-\theta)^2 \times \theta (1-\theta) \times 6/p(y) \\
+&amp;= \theta^6 (1-\theta)^3 \times 6/p(y) \\
+&amp;= \text{Beta}(7,4)
+\end{align}\]</span></p>
+<p><img src="series_files/figure-html/unnamed-chunk-63-1.png" width="672" /></p>
+</div>
+<div id="monte-carlo-idea" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Monte Carlo Idea<a href="set-5.html#monte-carlo-idea" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Suppose we can sample from <span class="math inline">\(p(\theta \vert \text{data})\)</span>. Then we could generate,</p>
 <p><span class="math display">\[\begin{align}
 \theta^{1},\ldots,\theta^{S} \sim p(\theta | \text{data})
@@ -237,11 +262,11 @@ E(g(\theta) \vert \text{data}) \approx \frac{1}{S} \sum_{i=1}^S g(\theta^i).
 \end{align}\]</span></p>
 <p>But what if you can’t sample from <span class="math inline">\(p(\theta \vert \text{data})\)</span>?</p>
 </div>
-<div id="metropolis-algorithm" class="section level2 hasAnchor" number="7.2">
-<h2><span class="header-section-number">7.2</span> Metropolis Algorithm<a href="set-5.html#metropolis-algorithm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="metropolis-algorithm" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> Metropolis Algorithm<a href="set-5.html#metropolis-algorithm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The metropolis algorithm proceeds as follows:</p>
 <ol style="list-style-type: decimal">
-<li><p>Sample <span class="math inline">\(\theta^{\star} \sim J(\theta \vert \theta^{s})\)</span></p></li>
+<li><p>Sample <span class="math inline">\(\theta^{\star} \sim J(\theta \vert \theta^{s})\)</span>, where <span class="math inline">\(J\)</span> is called the <em>proposal distribution</em>. For the Metropolis Algorithm, we assume that this distribution is symmetric.</p></li>
 <li><p>Compute the acceptance ratio, <span class="math inline">\(r\)</span>:</p></li>
 </ol>
 <p><span class="math display">\[r = \frac{p(\theta^\star \vert \text{data})}{p(\theta^{s} \vert \text{data})}\]</span>
@@ -255,22 +280,65 @@ E(g(\theta) \vert \text{data}) \approx \frac{1}{S} \sum_{i=1}^S g(\theta^i).
 \end{equation}\]</span></p>
 <p>Step 3 can be accomplished by sampling <span class="math inline">\(u \sim \text{Unif}(0,1)\)</span> and setting <span class="math inline">\(\theta^{s+1} = \theta^\star\)</span> if <span class="math inline">\(u &lt; r\)</span> and setting <span class="math inline">\(\theta^{s+1} = \theta^s\)</span> otherwise.</p>
 </div>
-<div id="example" class="section level2 hasAnchor" number="7.3">
-<h2><span class="header-section-number">7.3</span> Example<a href="set-5.html#example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="example" class="section level2 hasAnchor" number="7.4">
+<h2><span class="header-section-number">7.4</span> Example<a href="set-5.html#example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let’s consider a multivariate linear regression model. That is, we will model our response variable, <span class="math inline">\(y\)</span>, as</p>
 <p><span class="math display">\[\begin{align}
-p(\beta \vert \text{data}) &amp;\propto p(\text{Data} \vert \beta) p(\beta) \\
+y = X\beta + \epsilon.
+\end{align}\]</span></p>
+<p>For simplicity, let us assume that <span class="math inline">\(\epsilon \sim N(0,1)\)</span>. Therefore, the parameter that we want to do inference on is <span class="math inline">\(\beta\)</span>. So, we want to sample from <span class="math inline">\(p(\beta \vert y)\)</span>.To do so, we need two ingredients, a likelihood function and a prior distribution for <span class="math inline">\(\beta\)</span>, <span class="math inline">\(p(\beta)\)</span>.</p>
+<p><span class="math display">\[\begin{align}
+p(\beta \vert y) &amp;\propto p(y \vert \beta) p(\beta) \\
 &amp;= \text{likelihood} \times \text{prior}
 \end{align}\]</span></p>
-<p>For the model,</p>
+<p>For the linear regression model, our likelihood function can be written as,</p>
 <p><span class="math display">\[\begin{align}
-p(\text{data} \vert \beta) = (2\pi \sigma)^{-n/2} \exp{\bigg( -\frac{1}{2 \sigma^2} (y - X \beta)^T (y - X \beta) \bigg)}
+p(y \vert \beta) = (2\pi \sigma)^{-n/2} \exp{\bigg( -\frac{1}{2 \sigma^2} (y - X \beta)^T (y - X \beta) \bigg)}.
+\end{align}\]</span></p>
+<p>For the prior, we will assum that we know nothing about <span class="math inline">\(\beta\)</span>. So, we will use the prior distribution,</p>
+<p><span class="math display">\[\begin{align}
+p( \beta) \propto 1.
 \end{align}\]</span></p>
 <p>We will use the proposal distribution,</p>
 <p><span class="math display">\[\begin{align}
 J(\theta^{\star} \vert \theta) \sim N(\theta, cI)
 \end{align}\]</span>.</p>
-<p>How do we sample from this distribution?</p>
-<p><img src="series_files/figure-html/unnamed-chunk-63-1.png" width="672" /></p>
+<p>Let us start by sampling some data that follows this model.</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="set-5.html#cb63-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb63-2"><a href="set-5.html#cb63-2" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span></span>
+<span id="cb63-3"><a href="set-5.html#cb63-3" tabindex="-1"></a>X <span class="ot">=</span> <span class="fu">matrix</span>( <span class="at">data =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,n), <span class="fu">rnorm</span>(n) ), <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb63-4"><a href="set-5.html#cb63-4" tabindex="-1"></a>beta_true <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb63-5"><a href="set-5.html#cb63-5" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> X <span class="sc">%*%</span> beta_true, <span class="at">sd =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>Now let’s implement the MH algorithm and sample from the posterior distribution of <span class="math inline">\(\beta\)</span>. Our MCMC for the slope coefficient are summarized below.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-66-1.png" width="672" /></p>
+</div>
+<div id="stochastic-volatility-model" class="section level2 hasAnchor" number="7.5">
+<h2><span class="header-section-number">7.5</span> Stochastic Volatility Model<a href="set-5.html#stochastic-volatility-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A stochastic volatility model is a special case of a state space model. The simplest version is:</p>
+<p><span class="math display">\[\begin{align}
+y_t &amp;= \beta_0 + \beta_1 y_{t-1} + \exp(h_t/2) \epsilon_t \\
+h_t &amp;= \mu + \phi(h_{t-1} - \mu) + \sigma \eta_t
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\epsilon \sim N(0,1)\)</span> and <span class="math inline">\(\eta_t \sim N(0,1)\)</span>.</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="set-5.html#cb64-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb64-2"><a href="set-5.html#cb64-2" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;exrates&quot;</span>)</span>
+<span id="cb64-3"><a href="set-5.html#cb64-3" tabindex="-1"></a>ind <span class="ot">=</span> <span class="fu">which</span>(exrates<span class="sc">$</span>date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2011-03-01&quot;</span>) <span class="sc">&amp;</span> exrates<span class="sc">$</span>date <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2012-03-01&quot;</span>))</span>
+<span id="cb64-4"><a href="set-5.html#cb64-4" tabindex="-1"></a>CHF_price <span class="ot">&lt;-</span> exrates<span class="sc">$</span>CHF[ind]</span>
+<span id="cb64-5"><a href="set-5.html#cb64-5" tabindex="-1"></a>res_sv <span class="ot">&lt;-</span> <span class="fu">svsample</span>(CHF_price, <span class="at">designmatrix =</span> <span class="st">&quot;ar1&quot;</span>)</span></code></pre></div>
+<pre><code>## Done!</code></pre>
+<pre><code>## Summarizing posterior draws...</code></pre>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="set-5.html#cb67-1" tabindex="-1"></a><span class="fu">plot</span>(res_sv)</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-67-1.png" width="672" /></p>
+</div>
+<div id="lab-6" class="section level2 hasAnchor" number="7.6">
+<h2><span class="header-section-number">7.6</span> Lab 6<a href="set-5.html#lab-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li>Adjust the MH algorithm in <a href="set-5.html#example">Example</a> by including an informative prior for <span class="math inline">\(\beta\)</span>. In particular, use</li>
+</ol>
+<p><span class="math display">\[\begin{align}
+p(\beta) \sim N(\mathbf{0}, \frac{1}{\lambda} I),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(I\)</span> is a <span class="math inline">\(2 \times 2\)</span> identity matrix. Use the same simulated data as in the example.</p>
 
 </div>
 </div>

@@ -1,5 +1,42 @@
 # Set 5
 
+## Bayesian logic
+
+In the Bayesian paradigm, parameters ($\theta$) are random and data ($y$) are fixed. Inference is carried out through the posterior distribution of parameters given data.
+
+$$p(\theta \vert y) = \frac{p(y|\theta) p(\theta)}{p(y)}$$
+For very simple models, we can write the analytical solution for the posterior. For example, suppose we are flipping a coin and we are interested in learning about the parameter $\theta = P(\text{Heads})$. 
+
+Before observing any data, we believe that $\theta$ is probably around 0.5 but we are not sure. We can encode this belief with a prior distribution whose expected value is 0.5 and ranges from 0 to 1. A good choice is the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution). In particular, we can use a Beta($\alpha = 2$, $\beta = 2$),
+
+\begin{align}
+p(\theta) = 6\theta (1-\theta).
+\end{align}
+
+Now we generate some data. We flip the coin (independently) 7 times and observe 5 heads. Since our data is a sequence of 0s and 1s, we can use the binomial distribution for the likelihood. That is:
+
+\begin{align}
+p(y_1, \ldots y_7 \vert \theta) &= {7 \choose 5}  \theta^5 (1-\theta)^2.
+\end{align}
+
+Now we can multiply them together to get the posterior distribution of $\theta$:
+
+\begin{align}
+p(\theta \vert y) &= \frac{p(y|\theta) p(\theta)}{p(y)} \\
+&= \theta^5 (1-\theta)^2 \times \theta (1-\theta) \times 6/p(y) \\
+&= \theta^6 (1-\theta)^3 \times 6/p(y) \\
+&= \text{Beta}(7,4)
+\end{align}
+
+```{r}
+x = seq(0,1, by = 0.01)
+y = dbeta(x, 2, 2)
+y2 = dbeta(x, 7, 4)
+plot(x,y, type = "l", col = "blue", ylim = c(0,3),
+     main = "Prior (blue) and Posterior (red)")
+lines(x, y2, col = "red")
+```
+
 ## Monte Carlo Idea
 
 Suppose we can sample from $p(\theta \vert \text{data})$. Then we could generate,
@@ -20,7 +57,7 @@ But what if you can't sample from $p(\theta \vert \text{data})$?
 
 The metropolis algorithm proceeds as follows:
 
-1. Sample $\theta^{\star} \sim J(\theta \vert \theta^{s})$
+1. Sample $\theta^{\star} \sim J(\theta \vert \theta^{s})$, where $J$ is called the *proposal distribution*. For the Metropolis Algorithm, we assume that this distribution is symmetric. 
 
 2. Compute the acceptance ratio, $r$:
 
@@ -41,15 +78,29 @@ Step 3 can be accomplished by sampling $u \sim \text{Unif}(0,1)$ and setting $\t
 
 ## Example
 
+Let's consider a multivariate linear regression model. That is, we will model our response variable, $y$, as
+
 \begin{align}
-p(\beta \vert \text{data}) &\propto p(\text{Data} \vert \beta) p(\beta) \\
+y = X\beta + \epsilon.
+\end{align}
+
+For simplicity, let us assume that $\epsilon \sim N(0,1)$. Therefore, the parameter that we want to do inference on is $\beta$. So, we want to sample from $p(\beta \vert y)$.To do so, we need two ingredients, a likelihood function and a prior distribution for $\beta$, $p(\beta)$.
+
+\begin{align}
+p(\beta \vert y) &\propto p(y \vert \beta) p(\beta) \\
 &= \text{likelihood} \times \text{prior}
 \end{align}
 
-For the model,
+For the linear regression model, our likelihood function can be written as,
 
 \begin{align}
-p(\text{data} \vert \beta) = (2\pi \sigma)^{-n/2} \exp{\bigg( -\frac{1}{2 \sigma^2} (y - X \beta)^T (y - X \beta) \bigg)}
+p(y \vert \beta) = (2\pi \sigma)^{-n/2} \exp{\bigg( -\frac{1}{2 \sigma^2} (y - X \beta)^T (y - X \beta) \bigg)}.
+\end{align}
+
+For the prior, we will assum that we know nothing about $\beta$. So, we will use the prior distribution,
+
+\begin{align}
+p( \beta) \propto 1.
 \end{align}
 
 We will use the proposal distribution,
@@ -58,15 +109,19 @@ We will use the proposal distribution,
 J(\theta^{\star} \vert \theta) \sim N(\theta, cI)
 \end{align}.
 
-How do we sample from this distribution?
+Let us start by sampling some data that follows this model.
 
-```{r}
+```{r echo=TRUE}
 set.seed(1)
 n = 100
 X = matrix( data = c(rep(1,n), rnorm(n) ), ncol = 2)
 beta_true = c(1,2)
 y = rnorm(100, mean = X %*% beta_true, sd = 1)
+```
 
+Now let's implement the MH algorithm and sample from the posterior distribution of $\beta$. Our MCMC for the slope coefficient are summarized below.
+
+```{r}
 nIter = 1e5
 betas = matrix(0, nrow = nIter, ncol = 2)
 
@@ -75,7 +130,7 @@ p_current = exp ( -1/2 * t(y - X %*% betas[1,]) %*% (y- X %*% betas[1,] ))
 
 for(j in 2:nIter) {
   # propose a new value for betas
-  beta_prop = rnorm( 2, mean = betas[(j-1),], sd = .1)
+  beta_prop = rnorm( 2, mean = betas[(j-1),], sd = .2)
   
   # compute probability of data | beta proposed
   p_prop = exp ( -1/2 * t(y - X %*% beta_prop) %*% (y- X %*% beta_prop ))
@@ -94,7 +149,74 @@ for(j in 2:nIter) {
   betas[j, ] = beta_current
   
 }
-
-plot(1:nIter, betas[,2])
 ```
+
+```{r}
+par(mfrow = c(1,2))
+plot(100:nIter, betas[100:nIter,2], col = "blue", main = TeX("$\\beta_1$ Trace Plot"), cex = 0.01)
+hist(betas[100:nIter,2], main = TeX("Samples from $\\beta_1$"))
+```
+
+## Stochastic Volatility Model
+
+A stochastic volatility model is a special case of a state space model. The simplest version is:
+
+\begin{align}
+y_t &= \beta_0 + \beta_1 y_{t-1} + \exp(h_t/2) \epsilon_t \\
+h_t &= \mu + \phi(h_{t-1} - \mu) + \sigma \eta_t
+\end{align}
+
+where $\epsilon \sim N(0,1)$ and $\eta_t \sim N(0,1)$.
+
+```{r echo=TRUE}
+set.seed(1)
+data("exrates")
+ind = which(exrates$date >= as.Date("2011-03-01") & exrates$date <= as.Date("2012-03-01"))
+CHF_price <- exrates$CHF[ind]
+res_sv <- svsample(CHF_price, designmatrix = "ar1")
+plot(res_sv)
+```
+
+## Lab 6
+
+1. Adjust the MH algorithm in [Example] by including an informative prior for $\beta$. In particular, use 
+
+\begin{align}
+p(\beta) \sim N(\mathbf{0}, \frac{1}{\lambda} I),
+\end{align}
+
+where $I$ is a $2 \times 2$ identity matrix and $\mathbf{0}$ is a vector with two elements. Use the same simulated data as in the example. Run the algorithm for three different $\lambda$ values (10, 50, 100). For each one, make a trace plot and a histogram for $\beta_1$.
+
+```{r eval = F}
+nIter = 1e5
+betas = matrix(0, nrow = nIter, ncol = 2)
+lam = 100
+beta_current = betas[1,]
+p_current = exp ( -1/2 * t(y - X %*% betas[1,]) %*% (y- X %*% betas[1,] ) - lam/2 * t(betas[1,]) %*% betas[1,]  )
+
+for(j in 2:nIter) {
+  # propose a new value for betas
+  beta_prop = rnorm( 2, mean = betas[(j-1),], sd = .2)
+  
+  # compute probability of data | beta proposed
+  p_prop = exp ( -1/2 * t(y - X %*% beta_prop) %*% (y- X %*% beta_prop ) - lam/2 * t(beta_prop) %*% beta_prop)
+  
+  r = p_prop/p_current
+  
+  if ( r > 1 ) {
+    beta_current = beta_prop
+    p_current = p_prop
+    
+  } else if (runif(1) < r) {
+    beta_current = beta_prop
+    p_current = p_prop
+  }
+  
+  betas[j, ] = beta_current
+  
+}
+
+hist(betas[,2])
+```
+
 
