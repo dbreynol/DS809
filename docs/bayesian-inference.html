@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Set 7 Set 5 | DS809</title>
+  <title>Set 7 Bayesian Inference | DS809</title>
   <meta name="description" content="Course materials for DS809, Spring 2024." />
   <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Set 7 Set 5 | DS809" />
+  <meta property="og:title" content="Set 7 Bayesian Inference | DS809" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Course materials for DS809, Spring 2024." />
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Set 7 Set 5 | DS809" />
+  <meta name="twitter:title" content="Set 7 Bayesian Inference | DS809" />
   
   <meta name="twitter:description" content="Course materials for DS809, Spring 2024." />
   
@@ -200,17 +200,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="covariates.html"><a href="covariates.html#lab-5"><i class="fa fa-check"></i><b>6.5</b> Lab 5</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="set-5.html"><a href="set-5.html"><i class="fa fa-check"></i><b>7</b> Set 5</a>
+<li class="chapter" data-level="7" data-path="bayesian-inference.html"><a href="bayesian-inference.html"><i class="fa fa-check"></i><b>7</b> Bayesian Inference</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="set-5.html"><a href="set-5.html#bayesian-logic"><i class="fa fa-check"></i><b>7.1</b> Bayesian logic</a></li>
-<li class="chapter" data-level="7.2" data-path="set-5.html"><a href="set-5.html#monte-carlo-idea"><i class="fa fa-check"></i><b>7.2</b> Monte Carlo Idea</a></li>
-<li class="chapter" data-level="7.3" data-path="set-5.html"><a href="set-5.html#metropolis-algorithm"><i class="fa fa-check"></i><b>7.3</b> Metropolis Algorithm</a></li>
-<li class="chapter" data-level="7.4" data-path="set-5.html"><a href="set-5.html#example"><i class="fa fa-check"></i><b>7.4</b> Example</a>
+<li class="chapter" data-level="7.1" data-path="bayesian-inference.html"><a href="bayesian-inference.html#bayesian-logic"><i class="fa fa-check"></i><b>7.1</b> Bayesian logic</a></li>
+<li class="chapter" data-level="7.2" data-path="bayesian-inference.html"><a href="bayesian-inference.html#monte-carlo-idea"><i class="fa fa-check"></i><b>7.2</b> Monte Carlo Idea</a></li>
+<li class="chapter" data-level="7.3" data-path="bayesian-inference.html"><a href="bayesian-inference.html#metropolis-algorithm"><i class="fa fa-check"></i><b>7.3</b> Metropolis Algorithm</a></li>
+<li class="chapter" data-level="7.4" data-path="bayesian-inference.html"><a href="bayesian-inference.html#example"><i class="fa fa-check"></i><b>7.4</b> Example</a>
 <ul>
-<li class="chapter" data-level="7.4.1" data-path="set-5.html"><a href="set-5.html#dynamic-regression"><i class="fa fa-check"></i><b>7.4.1</b> Dynamic Regression</a></li>
+<li class="chapter" data-level="7.4.1" data-path="bayesian-inference.html"><a href="bayesian-inference.html#dynamic-regression"><i class="fa fa-check"></i><b>7.4.1</b> Dynamic Regression</a></li>
 </ul></li>
-<li class="chapter" data-level="7.5" data-path="set-5.html"><a href="set-5.html#stochastic-volatility-model"><i class="fa fa-check"></i><b>7.5</b> Stochastic Volatility Model</a></li>
-<li class="chapter" data-level="7.6" data-path="set-5.html"><a href="set-5.html#lab-6"><i class="fa fa-check"></i><b>7.6</b> Lab 6</a></li>
+<li class="chapter" data-level="7.5" data-path="bayesian-inference.html"><a href="bayesian-inference.html#stochastic-volatility-model"><i class="fa fa-check"></i><b>7.5</b> Stochastic Volatility Model</a></li>
+<li class="chapter" data-level="7.6" data-path="bayesian-inference.html"><a href="bayesian-inference.html#lab-6"><i class="fa fa-check"></i><b>7.6</b> Lab 6</a></li>
 </ul></li>
 </ul>
 
@@ -229,10 +229,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="set-5" class="section level1 hasAnchor" number="7">
-<h1><span class="header-section-number">Set 7</span> Set 5<a href="set-5.html#set-5" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="bayesian-inference" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Set 7</span> Bayesian Inference<a href="bayesian-inference.html#bayesian-inference" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="bayesian-logic" class="section level2 hasAnchor" number="7.1">
-<h2><span class="header-section-number">7.1</span> Bayesian logic<a href="set-5.html#bayesian-logic" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">7.1</span> Bayesian logic<a href="bayesian-inference.html#bayesian-logic" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In the Bayesian paradigm, parameters (<span class="math inline">\(\theta\)</span>) are random and data (<span class="math inline">\(y\)</span>) are fixed. Inference is carried out through the posterior distribution of parameters given data.</p>
 <p><span class="math display">\[p(\theta \vert y) = \frac{p(y|\theta) p(\theta)}{p(y)}\]</span>
 For very simple models, we can write the analytical solution for the posterior. For example, suppose we are flipping a coin and we are interested in learning about the parameter <span class="math inline">\(\theta = P(\text{Heads})\)</span>.</p>
@@ -254,7 +254,7 @@ p(\theta \vert y) &amp;= \frac{p(y|\theta) p(\theta)}{p(y)} \\
 <p><img src="series_files/figure-html/unnamed-chunk-63-1.png" width="672" /></p>
 </div>
 <div id="monte-carlo-idea" class="section level2 hasAnchor" number="7.2">
-<h2><span class="header-section-number">7.2</span> Monte Carlo Idea<a href="set-5.html#monte-carlo-idea" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">7.2</span> Monte Carlo Idea<a href="bayesian-inference.html#monte-carlo-idea" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Suppose we can sample from <span class="math inline">\(p(\theta \vert \text{data})\)</span>. Then we could generate,</p>
 <p><span class="math display">\[\begin{align}
 \theta^{1},\ldots,\theta^{S} \sim p(\theta | \text{data})
@@ -266,7 +266,7 @@ E(g(\theta) \vert \text{data}) \approx \frac{1}{S} \sum_{i=1}^S g(\theta^i).
 <p>But what if you can’t sample from <span class="math inline">\(p(\theta \vert \text{data})\)</span>?</p>
 </div>
 <div id="metropolis-algorithm" class="section level2 hasAnchor" number="7.3">
-<h2><span class="header-section-number">7.3</span> Metropolis Algorithm<a href="set-5.html#metropolis-algorithm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">7.3</span> Metropolis Algorithm<a href="bayesian-inference.html#metropolis-algorithm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The metropolis algorithm proceeds as follows:</p>
 <ol style="list-style-type: decimal">
 <li><p>Sample <span class="math inline">\(\theta^{\star} \sim J(\theta \vert \theta^{s})\)</span>, where <span class="math inline">\(J\)</span> is called the <em>proposal distribution</em>. For the Metropolis Algorithm, we assume that this distribution is symmetric.</p></li>
@@ -284,7 +284,7 @@ E(g(\theta) \vert \text{data}) \approx \frac{1}{S} \sum_{i=1}^S g(\theta^i).
 <p>Step 3 can be accomplished by sampling <span class="math inline">\(u \sim \text{Unif}(0,1)\)</span> and setting <span class="math inline">\(\theta^{s+1} = \theta^\star\)</span> if <span class="math inline">\(u &lt; r\)</span> and setting <span class="math inline">\(\theta^{s+1} = \theta^s\)</span> otherwise.</p>
 </div>
 <div id="example" class="section level2 hasAnchor" number="7.4">
-<h2><span class="header-section-number">7.4</span> Example<a href="set-5.html#example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">7.4</span> Example<a href="bayesian-inference.html#example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Let’s consider a multivariate linear regression model. That is, we will model our response variable, <span class="math inline">\(y\)</span>, as</p>
 <p><span class="math display">\[\begin{align}
 y = X\beta + \epsilon.
@@ -307,93 +307,93 @@ p( \beta) \propto 1.
 J(\theta^{\star} \vert \theta) \sim N(\theta, cI)
 \end{align}\]</span>.</p>
 <p>Let us start by sampling some data that follows this model.</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="set-5.html#cb63-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb63-2"><a href="set-5.html#cb63-2" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span></span>
-<span id="cb63-3"><a href="set-5.html#cb63-3" tabindex="-1"></a>X <span class="ot">=</span> <span class="fu">matrix</span>( <span class="at">data =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,n), <span class="fu">rnorm</span>(n) ), <span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb63-4"><a href="set-5.html#cb63-4" tabindex="-1"></a>beta_true <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span>
-<span id="cb63-5"><a href="set-5.html#cb63-5" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> X <span class="sc">%*%</span> beta_true, <span class="at">sd =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="bayesian-inference.html#cb63-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb63-2"><a href="bayesian-inference.html#cb63-2" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span></span>
+<span id="cb63-3"><a href="bayesian-inference.html#cb63-3" tabindex="-1"></a>X <span class="ot">=</span> <span class="fu">matrix</span>( <span class="at">data =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,n), <span class="fu">rnorm</span>(n) ), <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb63-4"><a href="bayesian-inference.html#cb63-4" tabindex="-1"></a>beta_true <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb63-5"><a href="bayesian-inference.html#cb63-5" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> X <span class="sc">%*%</span> beta_true, <span class="at">sd =</span> <span class="dv">1</span>)</span></code></pre></div>
 <p>Now let’s implement the MH algorithm and sample from the posterior distribution of <span class="math inline">\(\beta\)</span>. Our MCMC for the slope coefficient are summarized below.</p>
 <p><img src="series_files/figure-html/unnamed-chunk-66-1.png" width="672" /></p>
 <div id="dynamic-regression" class="section level3 hasAnchor" number="7.4.1">
-<h3><span class="header-section-number">7.4.1</span> Dynamic Regression<a href="set-5.html#dynamic-regression" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<h3><span class="header-section-number">7.4.1</span> Dynamic Regression<a href="bayesian-inference.html#dynamic-regression" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Let’s look at this concept at work with a dynamic regression model. We will use the <code>Seatbelts</code> dataset and fit a model using <code>y=DriversKilled</code> and <code>x = PetrolPrice</code>. The model we will fit is:</p>
 <p><span class="math display">\[\begin{align}
 y_t &amp;= \mu_t + \beta_t x_t + \epsilon_t \\
 \mu_t &amp;= \mu_{t-1} + \eta_t \\
 \beta_t &amp;= \beta_{t-1} + \tau_t
 \end{align}\]</span></p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="set-5.html#cb64-1" tabindex="-1"></a>y <span class="ot">=</span> Seatbelts[,<span class="dv">1</span>] <span class="co"># drivers killed</span></span>
-<span id="cb64-2"><a href="set-5.html#cb64-2" tabindex="-1"></a>x <span class="ot">=</span> Seatbelts[,<span class="dv">6</span>] <span class="co"># petrol price</span></span>
-<span id="cb64-3"><a href="set-5.html#cb64-3" tabindex="-1"></a></span>
-<span id="cb64-4"><a href="set-5.html#cb64-4" tabindex="-1"></a><span class="co"># fit the model</span></span>
-<span id="cb64-5"><a href="set-5.html#cb64-5" tabindex="-1"></a>ss <span class="ot">=</span> <span class="fu">list</span>()</span>
-<span id="cb64-6"><a href="set-5.html#cb64-6" tabindex="-1"></a>ss <span class="ot">=</span> <span class="fu">AddLocalLevel</span>(ss, y)</span>
-<span id="cb64-7"><a href="set-5.html#cb64-7" tabindex="-1"></a>ss <span class="ot">=</span> <span class="fu">AddSeasonal</span>(ss, y, <span class="at">nseasons =</span> <span class="dv">12</span>)</span>
-<span id="cb64-8"><a href="set-5.html#cb64-8" tabindex="-1"></a>ss <span class="ot">=</span> <span class="fu">AddDynamicRegression</span>(ss, y <span class="sc">~</span> x)</span>
-<span id="cb64-9"><a href="set-5.html#cb64-9" tabindex="-1"></a>dynmodel <span class="ot">&lt;-</span> <span class="fu">bsts</span>(y,</span>
-<span id="cb64-10"><a href="set-5.html#cb64-10" tabindex="-1"></a>               <span class="at">state.specification =</span> ss,</span>
-<span id="cb64-11"><a href="set-5.html#cb64-11" tabindex="-1"></a>               <span class="at">niter =</span> <span class="dv">1000</span>)</span></code></pre></div>
-<pre><code>## =-=-=-=-= Iteration 0 Sat Mar  2 18:21:08 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 100 Sat Mar  2 18:21:09 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 200 Sat Mar  2 18:21:09 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 300 Sat Mar  2 18:21:09 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 400 Sat Mar  2 18:21:09 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 500 Sat Mar  2 18:21:09 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 600 Sat Mar  2 18:21:09 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 700 Sat Mar  2 18:21:09 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 800 Sat Mar  2 18:21:10 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 900 Sat Mar  2 18:21:10 2024 =-=-=-=-=</code></pre>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="set-5.html#cb66-1" tabindex="-1"></a><span class="fu">PlotBstsComponents</span>(dynmodel)</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="bayesian-inference.html#cb64-1" tabindex="-1"></a>y <span class="ot">=</span> Seatbelts[,<span class="dv">1</span>] <span class="co"># drivers killed</span></span>
+<span id="cb64-2"><a href="bayesian-inference.html#cb64-2" tabindex="-1"></a>x <span class="ot">=</span> Seatbelts[,<span class="dv">6</span>] <span class="co"># petrol price</span></span>
+<span id="cb64-3"><a href="bayesian-inference.html#cb64-3" tabindex="-1"></a></span>
+<span id="cb64-4"><a href="bayesian-inference.html#cb64-4" tabindex="-1"></a><span class="co"># fit the model</span></span>
+<span id="cb64-5"><a href="bayesian-inference.html#cb64-5" tabindex="-1"></a>ss <span class="ot">=</span> <span class="fu">list</span>()</span>
+<span id="cb64-6"><a href="bayesian-inference.html#cb64-6" tabindex="-1"></a>ss <span class="ot">=</span> <span class="fu">AddLocalLevel</span>(ss, y)</span>
+<span id="cb64-7"><a href="bayesian-inference.html#cb64-7" tabindex="-1"></a>ss <span class="ot">=</span> <span class="fu">AddSeasonal</span>(ss, y, <span class="at">nseasons =</span> <span class="dv">12</span>)</span>
+<span id="cb64-8"><a href="bayesian-inference.html#cb64-8" tabindex="-1"></a>ss <span class="ot">=</span> <span class="fu">AddDynamicRegression</span>(ss, y <span class="sc">~</span> x)</span>
+<span id="cb64-9"><a href="bayesian-inference.html#cb64-9" tabindex="-1"></a>dynmodel <span class="ot">&lt;-</span> <span class="fu">bsts</span>(y,</span>
+<span id="cb64-10"><a href="bayesian-inference.html#cb64-10" tabindex="-1"></a>               <span class="at">state.specification =</span> ss,</span>
+<span id="cb64-11"><a href="bayesian-inference.html#cb64-11" tabindex="-1"></a>               <span class="at">niter =</span> <span class="dv">1000</span>)</span></code></pre></div>
+<pre><code>## =-=-=-=-= Iteration 0 Sat Mar  2 18:22:04 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 100 Sat Mar  2 18:22:04 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 200 Sat Mar  2 18:22:04 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 300 Sat Mar  2 18:22:05 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 400 Sat Mar  2 18:22:05 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 500 Sat Mar  2 18:22:05 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 600 Sat Mar  2 18:22:05 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 700 Sat Mar  2 18:22:05 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 800 Sat Mar  2 18:22:05 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 900 Sat Mar  2 18:22:06 2024 =-=-=-=-=</code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="bayesian-inference.html#cb66-1" tabindex="-1"></a><span class="fu">PlotBstsComponents</span>(dynmodel)</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-67-1.png" width="672" /></p>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="set-5.html#cb67-1" tabindex="-1"></a><span class="co"># dynmodel$dynamic.regression.coefficients</span></span></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="bayesian-inference.html#cb67-1" tabindex="-1"></a><span class="co"># dynmodel$dynamic.regression.coefficients</span></span></code></pre></div>
 <p>A relevant question is whether this model improves performance as compared with the simpler model:</p>
 <p><span class="math display">\[\begin{align}
 y_t &amp;= \mu_t + \beta x_t + \epsilon_t \\
 \mu_t &amp;= \mu_{t-1} + \eta_t.
 \end{align}\]</span></p>
 <p>To address this, we can fit the simpler model and compare the cumulative error of the two models.</p>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="set-5.html#cb68-1" tabindex="-1"></a>ss2 <span class="ot">=</span> <span class="fu">list</span>()</span>
-<span id="cb68-2"><a href="set-5.html#cb68-2" tabindex="-1"></a>ss2 <span class="ot">=</span> <span class="fu">AddLocalLevel</span>(ss2, y)</span>
-<span id="cb68-3"><a href="set-5.html#cb68-3" tabindex="-1"></a>ss <span class="ot">=</span> <span class="fu">AddSeasonal</span>(ss2, y, <span class="at">nseasons =</span> <span class="dv">12</span>)</span>
-<span id="cb68-4"><a href="set-5.html#cb68-4" tabindex="-1"></a>fixedmodel <span class="ot">&lt;-</span> <span class="fu">bsts</span>(y <span class="sc">~</span> x,</span>
-<span id="cb68-5"><a href="set-5.html#cb68-5" tabindex="-1"></a>               <span class="at">state.specification =</span> ss2,</span>
-<span id="cb68-6"><a href="set-5.html#cb68-6" tabindex="-1"></a>               <span class="at">niter =</span> <span class="dv">1000</span>)</span></code></pre></div>
-<pre><code>## =-=-=-=-= Iteration 0 Sat Mar  2 18:21:11 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 100 Sat Mar  2 18:21:11 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 200 Sat Mar  2 18:21:11 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 300 Sat Mar  2 18:21:11 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 400 Sat Mar  2 18:21:11 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 500 Sat Mar  2 18:21:11 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 600 Sat Mar  2 18:21:11 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 700 Sat Mar  2 18:21:11 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 800 Sat Mar  2 18:21:11 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 900 Sat Mar  2 18:21:11 2024 =-=-=-=-=</code></pre>
-<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="set-5.html#cb70-1" tabindex="-1"></a><span class="fu">CompareBstsModels</span>(<span class="fu">list</span>(<span class="st">&quot;fixed coef&quot;</span> <span class="ot">=</span> fixedmodel, <span class="st">&quot;dynamic&quot;</span> <span class="ot">=</span> dynmodel))</span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="bayesian-inference.html#cb68-1" tabindex="-1"></a>ss2 <span class="ot">=</span> <span class="fu">list</span>()</span>
+<span id="cb68-2"><a href="bayesian-inference.html#cb68-2" tabindex="-1"></a>ss2 <span class="ot">=</span> <span class="fu">AddLocalLevel</span>(ss2, y)</span>
+<span id="cb68-3"><a href="bayesian-inference.html#cb68-3" tabindex="-1"></a>ss <span class="ot">=</span> <span class="fu">AddSeasonal</span>(ss2, y, <span class="at">nseasons =</span> <span class="dv">12</span>)</span>
+<span id="cb68-4"><a href="bayesian-inference.html#cb68-4" tabindex="-1"></a>fixedmodel <span class="ot">&lt;-</span> <span class="fu">bsts</span>(y <span class="sc">~</span> x,</span>
+<span id="cb68-5"><a href="bayesian-inference.html#cb68-5" tabindex="-1"></a>               <span class="at">state.specification =</span> ss2,</span>
+<span id="cb68-6"><a href="bayesian-inference.html#cb68-6" tabindex="-1"></a>               <span class="at">niter =</span> <span class="dv">1000</span>)</span></code></pre></div>
+<pre><code>## =-=-=-=-= Iteration 0 Sat Mar  2 18:22:06 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 100 Sat Mar  2 18:22:06 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 200 Sat Mar  2 18:22:06 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 300 Sat Mar  2 18:22:06 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 400 Sat Mar  2 18:22:07 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 500 Sat Mar  2 18:22:07 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 600 Sat Mar  2 18:22:07 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 700 Sat Mar  2 18:22:07 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 800 Sat Mar  2 18:22:07 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 900 Sat Mar  2 18:22:07 2024 =-=-=-=-=</code></pre>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="bayesian-inference.html#cb70-1" tabindex="-1"></a><span class="fu">CompareBstsModels</span>(<span class="fu">list</span>(<span class="st">&quot;fixed coef&quot;</span> <span class="ot">=</span> fixedmodel, <span class="st">&quot;dynamic&quot;</span> <span class="ot">=</span> dynmodel))</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-68-1.png" width="672" /></p>
 </div>
 </div>
 <div id="stochastic-volatility-model" class="section level2 hasAnchor" number="7.5">
-<h2><span class="header-section-number">7.5</span> Stochastic Volatility Model<a href="set-5.html#stochastic-volatility-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">7.5</span> Stochastic Volatility Model<a href="bayesian-inference.html#stochastic-volatility-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>A stochastic volatility model is a special case of a state space model. The simplest version is:</p>
 <p><span class="math display">\[\begin{align}
 y_t &amp;= \beta_0 + \beta_1 y_{t-1} + \exp(h_t/2) \epsilon_t \\
 h_t &amp;= \mu + \phi(h_{t-1} - \mu) + \sigma \eta_t
 \end{align}\]</span></p>
 <p>where <span class="math inline">\(\epsilon \sim N(0,1)\)</span> and <span class="math inline">\(\eta_t \sim N(0,1)\)</span>.</p>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="set-5.html#cb71-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb71-2"><a href="set-5.html#cb71-2" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;exrates&quot;</span>)</span>
-<span id="cb71-3"><a href="set-5.html#cb71-3" tabindex="-1"></a>ind <span class="ot">=</span> <span class="fu">which</span>(exrates<span class="sc">$</span>date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2011-03-01&quot;</span>) <span class="sc">&amp;</span> exrates<span class="sc">$</span>date <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2012-03-01&quot;</span>))</span>
-<span id="cb71-4"><a href="set-5.html#cb71-4" tabindex="-1"></a>CHF_price <span class="ot">&lt;-</span> exrates<span class="sc">$</span>CHF[ind]</span>
-<span id="cb71-5"><a href="set-5.html#cb71-5" tabindex="-1"></a>res_sv <span class="ot">&lt;-</span> <span class="fu">svsample</span>(CHF_price, <span class="at">designmatrix =</span> <span class="st">&quot;ar1&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="bayesian-inference.html#cb71-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb71-2"><a href="bayesian-inference.html#cb71-2" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;exrates&quot;</span>)</span>
+<span id="cb71-3"><a href="bayesian-inference.html#cb71-3" tabindex="-1"></a>ind <span class="ot">=</span> <span class="fu">which</span>(exrates<span class="sc">$</span>date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2011-03-01&quot;</span>) <span class="sc">&amp;</span> exrates<span class="sc">$</span>date <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2012-03-01&quot;</span>))</span>
+<span id="cb71-4"><a href="bayesian-inference.html#cb71-4" tabindex="-1"></a>CHF_price <span class="ot">&lt;-</span> exrates<span class="sc">$</span>CHF[ind]</span>
+<span id="cb71-5"><a href="bayesian-inference.html#cb71-5" tabindex="-1"></a>res_sv <span class="ot">&lt;-</span> <span class="fu">svsample</span>(CHF_price, <span class="at">designmatrix =</span> <span class="st">&quot;ar1&quot;</span>)</span></code></pre></div>
 <pre><code>## Done!</code></pre>
 <pre><code>## Summarizing posterior draws...</code></pre>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="set-5.html#cb74-1" tabindex="-1"></a><span class="fu">plot</span>(res_sv)</span></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="bayesian-inference.html#cb74-1" tabindex="-1"></a><span class="fu">plot</span>(res_sv)</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-69-1.png" width="672" /></p>
 </div>
 <div id="lab-6" class="section level2 hasAnchor" number="7.6">
-<h2><span class="header-section-number">7.6</span> Lab 6<a href="set-5.html#lab-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">7.6</span> Lab 6<a href="bayesian-inference.html#lab-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li>Adjust the MH algorithm in <a href="set-5.html#example">Example</a> by including an informative prior for <span class="math inline">\(\beta\)</span>. In particular, use</li>
+<li>Adjust the MH algorithm in <a href="bayesian-inference.html#example">Example</a> by including an informative prior for <span class="math inline">\(\beta\)</span>. In particular, use</li>
 </ol>
 <p><span class="math display">\[\begin{align}
 p(\beta) \sim N(\mathbf{0}, \frac{1}{\lambda} I),

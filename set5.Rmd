@@ -1,4 +1,4 @@
-# Set 5
+# Bayesian Inference 
 
 ## Bayesian logic
 
@@ -157,6 +157,55 @@ plot(100:nIter, betas[100:nIter,2], col = "blue", main = TeX("$\\beta_1$ Trace P
 hist(betas[100:nIter,2], main = TeX("Samples from $\\beta_1$"))
 ```
 
+### Dynamic Regression
+
+Let's look at this concept at work with a dynamic regression model. We will use the `Seatbelts` dataset and fit a model using `y=DriversKilled` and `x = PetrolPrice`. The model we will fit is:
+
+\begin{align}
+y_t &= \mu_t + \beta_t x_t + \epsilon_t \\
+\mu_t &= \mu_{t-1} + \eta_t \\
+\beta_t &= \beta_{t-1} + \tau_t 
+\end{align}
+
+
+```{r echo=TRUE}
+y = Seatbelts[,1] # drivers killed
+x = Seatbelts[,6] # petrol price
+
+# fit the model
+ss = list()
+ss = AddLocalLevel(ss, y)
+ss = AddSeasonal(ss, y, nseasons = 12)
+ss = AddDynamicRegression(ss, y ~ x)
+dynmodel <- bsts(y,
+               state.specification = ss,
+               niter = 1000)
+
+PlotBstsComponents(dynmodel)
+# dynmodel$dynamic.regression.coefficients
+```
+
+A relevant question is whether this model improves performance as compared with the simpler model:
+
+\begin{align}
+y_t &= \mu_t + \beta x_t + \epsilon_t \\
+\mu_t &= \mu_{t-1} + \eta_t.
+\end{align}
+
+To address this, we can fit the simpler model and compare the cumulative error of the two models.
+
+```{r echo=TRUE}
+ss2 = list()
+ss2 = AddLocalLevel(ss2, y)
+ss = AddSeasonal(ss2, y, nseasons = 12)
+fixedmodel <- bsts(y ~ x,
+               state.specification = ss2,
+               niter = 1000)
+
+CompareBstsModels(list("fixed coef" = fixedmodel, "dynamic" = dynmodel))
+```
+
+
 ## Stochastic Volatility Model
 
 A stochastic volatility model is a special case of a state space model. The simplest version is:
@@ -185,7 +234,7 @@ plot(res_sv)
 p(\beta) \sim N(\mathbf{0}, \frac{1}{\lambda} I),
 \end{align}
 
-where $I$ is a $2 \times 2$ identity matrix and $\mathbf{0}$ is a vector with two elements. Use the same simulated data as in the example. Run the algorithm for three different $\lambda$ values (10, 50, 100). For each one, make a trace plot and a histogram for $\beta_1$.
+where $I$ is a $2 \times 2$ identity matrix and $\mathbf{0}$ is a vector with two elements. Use the same simulated data as in the example. Run the algorithm for three different $\lambda$ values (10, 50, 100). For each of the three $\lambda$ values, make a trace plot and a histogram for $\beta_1$.
 
 ```{r eval = F}
 nIter = 1e5
@@ -219,4 +268,4 @@ for(j in 2:nIter) {
 hist(betas[,2])
 ```
 
-
+2. Fit a dynamic regression model to the livestock data used in Lab 5. Compare with the state space model fit in question 5 of lab 5 using `CompareBstsModels`. Based on this plot, which model fits the data better?

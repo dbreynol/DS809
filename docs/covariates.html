@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-02-29" />
+<meta name="date" content="2024-03-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="prophet-lab.html"/>
-
+<link rel="next" href="bayesian-inference.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -199,6 +199,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.4.2" data-path="covariates.html"><a href="covariates.html#specific-problem"><i class="fa fa-check"></i><b>6.4.2</b> Specific Problem</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="covariates.html"><a href="covariates.html#lab-5"><i class="fa fa-check"></i><b>6.5</b> Lab 5</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="bayesian-inference.html"><a href="bayesian-inference.html"><i class="fa fa-check"></i><b>7</b> Bayesian Inference</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="bayesian-inference.html"><a href="bayesian-inference.html#bayesian-logic"><i class="fa fa-check"></i><b>7.1</b> Bayesian logic</a></li>
+<li class="chapter" data-level="7.2" data-path="bayesian-inference.html"><a href="bayesian-inference.html#monte-carlo-idea"><i class="fa fa-check"></i><b>7.2</b> Monte Carlo Idea</a></li>
+<li class="chapter" data-level="7.3" data-path="bayesian-inference.html"><a href="bayesian-inference.html#metropolis-algorithm"><i class="fa fa-check"></i><b>7.3</b> Metropolis Algorithm</a></li>
+<li class="chapter" data-level="7.4" data-path="bayesian-inference.html"><a href="bayesian-inference.html#example"><i class="fa fa-check"></i><b>7.4</b> Example</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="bayesian-inference.html"><a href="bayesian-inference.html#dynamic-regression"><i class="fa fa-check"></i><b>7.4.1</b> Dynamic Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="bayesian-inference.html"><a href="bayesian-inference.html#stochastic-volatility-model"><i class="fa fa-check"></i><b>7.5</b> Stochastic Volatility Model</a></li>
+<li class="chapter" data-level="7.6" data-path="bayesian-inference.html"><a href="bayesian-inference.html#lab-6"><i class="fa fa-check"></i><b>7.6</b> Lab 6</a></li>
 </ul></li>
 </ul>
 
@@ -374,16 +386,16 @@ y_t &amp;= \mu_t + \beta x_t + \epsilon_t \\
 <span id="cb59-3"><a href="covariates.html#cb59-3" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">bsts</span>(y <span class="sc">~</span> x1,</span>
 <span id="cb59-4"><a href="covariates.html#cb59-4" tabindex="-1"></a>               <span class="at">state.specification =</span> ss,</span>
 <span id="cb59-5"><a href="covariates.html#cb59-5" tabindex="-1"></a>               <span class="at">niter =</span> <span class="dv">1000</span>)</span></code></pre></div>
-<pre><code>## =-=-=-=-= Iteration 0 Thu Feb 29 11:51:04 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 100 Thu Feb 29 11:51:04 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 200 Thu Feb 29 11:51:04 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 300 Thu Feb 29 11:51:04 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 400 Thu Feb 29 11:51:04 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 500 Thu Feb 29 11:51:04 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 600 Thu Feb 29 11:51:04 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 700 Thu Feb 29 11:51:04 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 800 Thu Feb 29 11:51:04 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 900 Thu Feb 29 11:51:04 2024 =-=-=-=-=</code></pre>
+<pre><code>## =-=-=-=-= Iteration 0 Sat Mar  2 18:22:02 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 100 Sat Mar  2 18:22:02 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 200 Sat Mar  2 18:22:02 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 300 Sat Mar  2 18:22:02 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 400 Sat Mar  2 18:22:02 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 500 Sat Mar  2 18:22:02 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 600 Sat Mar  2 18:22:02 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 700 Sat Mar  2 18:22:02 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 800 Sat Mar  2 18:22:02 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 900 Sat Mar  2 18:22:02 2024 =-=-=-=-=</code></pre>
 <div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="covariates.html#cb61-1" tabindex="-1"></a><span class="fu">plot</span>(model1, <span class="st">&quot;components&quot;</span>)</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-60-1.png" width="672" /></p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="covariates.html#cb62-1" tabindex="-1"></a>fore <span class="ot">=</span> <span class="fu">predict</span>(model1, <span class="at">horizon =</span> <span class="dv">4</span>, <span class="at">newdata =</span> <span class="fu">rep</span>(<span class="fu">mean</span>(x1),<span class="dv">5</span>))</span>
@@ -410,8 +422,8 @@ y_t &amp;= \mu_t + \beta x_t + \epsilon_t \\
           </div>
         </div>
       </div>
-<a href="prophet-lab.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="prophet-lab.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="bayesian-inference.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

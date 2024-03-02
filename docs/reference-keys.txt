@@ -42,3 +42,11 @@ state-space-model
 framework
 specific-problem
 lab-5
+bayesian-inference
+bayesian-logic
+monte-carlo-idea
+metropolis-algorithm
+example
+dynamic-regression
+stochastic-volatility-model
+lab-6
