@@ -121,7 +121,7 @@ y = rnorm(100, mean = X %*% beta_true, sd = 1)
 
 Now let's implement the MH algorithm and sample from the posterior distribution of $\beta$. Our MCMC output for the slope coefficient, $\beta_1$, is summarized below.
 
-```{r}
+```{r echo=TRUE}
 nIter = 1e5
 betas = matrix(0, nrow = nIter, ncol = 2)
 

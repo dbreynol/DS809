@@ -384,16 +384,16 @@ y_t &amp;= \mu_t + \beta x_t + \epsilon_t \\
 <span id="cb59-3"><a href="covariates.html#cb59-3" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">bsts</span>(y <span class="sc">~</span> x1,</span>
 <span id="cb59-4"><a href="covariates.html#cb59-4" tabindex="-1"></a>               <span class="at">state.specification =</span> ss,</span>
 <span id="cb59-5"><a href="covariates.html#cb59-5" tabindex="-1"></a>               <span class="at">niter =</span> <span class="dv">1000</span>)</span></code></pre></div>
-<pre><code>## =-=-=-=-= Iteration 0 Tue Mar  5 12:33:28 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 100 Tue Mar  5 12:33:28 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 200 Tue Mar  5 12:33:28 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 300 Tue Mar  5 12:33:28 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 400 Tue Mar  5 12:33:28 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 500 Tue Mar  5 12:33:28 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 600 Tue Mar  5 12:33:28 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 700 Tue Mar  5 12:33:28 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 800 Tue Mar  5 12:33:28 2024 =-=-=-=-=
-## =-=-=-=-= Iteration 900 Tue Mar  5 12:33:28 2024 =-=-=-=-=</code></pre>
+<pre><code>## =-=-=-=-= Iteration 0 Tue Mar  5 15:17:25 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 100 Tue Mar  5 15:17:25 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 200 Tue Mar  5 15:17:25 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 300 Tue Mar  5 15:17:25 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 400 Tue Mar  5 15:17:25 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 500 Tue Mar  5 15:17:25 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 600 Tue Mar  5 15:17:25 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 700 Tue Mar  5 15:17:25 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 800 Tue Mar  5 15:17:25 2024 =-=-=-=-=
+## =-=-=-=-= Iteration 900 Tue Mar  5 15:17:25 2024 =-=-=-=-=</code></pre>
 <div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="covariates.html#cb61-1" tabindex="-1"></a><span class="fu">plot</span>(model1, <span class="st">&quot;components&quot;</span>)</span></code></pre></div>
 <p><img src="series_files/figure-html/unnamed-chunk-60-1.png" width="672" /></p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="covariates.html#cb62-1" tabindex="-1"></a>fore <span class="ot">=</span> <span class="fu">predict</span>(model1, <span class="at">horizon =</span> <span class="dv">4</span>, <span class="at">newdata =</span> <span class="fu">rep</span>(<span class="fu">mean</span>(x1),<span class="dv">5</span>))</span>
