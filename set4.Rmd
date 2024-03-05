@@ -112,6 +112,8 @@ model1 <- bsts(y ~ x1,
 plot(model1, "components")
 fore = predict(model1, horizon = 4, newdata = rep(mean(x1),5))
 plot(fore)
+#plot(model1$coefficients[,2])
+
 ```
 
 

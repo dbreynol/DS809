@@ -119,7 +119,7 @@ beta_true = c(1,2)
 y = rnorm(100, mean = X %*% beta_true, sd = 1)
 ```
 
-Now let's implement the MH algorithm and sample from the posterior distribution of $\beta$. Our MCMC for the slope coefficient are summarized below.
+Now let's implement the MH algorithm and sample from the posterior distribution of $\beta$. Our MCMC output for the slope coefficient, $\beta_1$, is summarized below.
 
 ```{r}
 nIter = 1e5
@@ -157,9 +157,18 @@ plot(100:nIter, betas[100:nIter,2], col = "blue", main = TeX("$\\beta_1$ Trace P
 hist(betas[100:nIter,2], main = TeX("Samples from $\\beta_1$"))
 ```
 
-### Dynamic Regression
+## Dynamic Regression
 
-Let's look at this concept at work with a dynamic regression model. We will use the `Seatbelts` dataset and fit a model using `y=DriversKilled` and `x = PetrolPrice`. The model we will fit is:
+Let's look at this concept at work with a dynamic regression model. We will use the `Seatbelts` dataset and fit a model using `y=DriversKilled` and `x = PetrolPrice`. 
+
+```{r}
+par(mfrow = c(1,2))
+plot(Seatbelts[,1], main = "Drivers Killed")
+plot(Seatbelts[,6], main = "Petrol Price")
+```
+
+
+The model we will fit is:
 
 \begin{align}
 y_t &= \mu_t + \beta_t x_t + \epsilon_t \\
@@ -269,3 +278,13 @@ hist(betas[,2])
 ```
 
 2. Fit a dynamic regression model to the livestock data used in Lab 5. Compare with the state space model fit in question 5 of lab 5 using `CompareBstsModels`. Based on this plot, which model fits the data better?
+
+3. Suppose you have data that is generated from a Normal distribution. That is, 
+
+$$y_1, \ldots, y_n \sim \text{Normal}(\mu, \sigma^2)$$.
+
+You are interested in doing (Bayesian) inference on $\mu$. You decide to use a normal prior distribution for $\mu$,
+
+$$p(\mu) \sim \text{Normal}(\mu_0, \tau^2)$$.
+
+The posterior distribution, $p(\mu \vert y_1, \ldots, y_n )$ is also Normal. What are the mean and variance of the posterior distribution for $\mu$?
