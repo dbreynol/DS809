@@ -2,6 +2,12 @@ course-info
 exploratory-analysis-of-time-series-data
 time-series-data
 time-series-eda
-multiple-time-series
+classical-regression
+noise-processes
+white-noise
+random-walk
+ar-process
 autocorrelation
+stationarity
+multiple-time-series
 lab-1

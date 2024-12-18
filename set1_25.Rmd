@@ -137,8 +137,55 @@ mod_df %>%
 
 This allows us to more clearly see the trend across the date range, removing the effect of the weekly pattern. 
 
-## Classical Regression 
+## Classical Regression for 
 
+## Multiple Time Series
+
+Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database). 
+
+```{r echo=TRUE}
+fred = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv")[,-1]
+fred$date = ymd(fred$date)
+```
+
+
+```{r}
+fred %>% 
+  mutate(gdp_s = (gdp-mean(gdp))/sd(gdp), shiller_s = (shiller - mean(shiller))/sd(shiller))  %>%
+  pivot_longer(-date) %>% 
+  filter(name %in% c("gdp_s", "shiller_s")) %>% 
+  ggplot(aes(x = date, y = value)) + 
+  geom_line(aes(color = name)) + theme_minimal() + 
+  ggtitle("Standardized Case Shiller Index versus GPD per Capita")
+
+```
+
+It looks like these two time series track pretty closely to one another. We could fit a linear regression to this data in order to estimate the expected change in the Case Shiller Index for a unit ($1) change in GDP/ capital
+
+```{r eval=T}
+m0 = lm(shiller ~ gdp, data = fred)
+m0 %>% tidy() %>% kable()
+
+#gdp = 65000
+#predict(m0, newdata = data.frame(gdp), interval = "prediction")
+
+
+#se = 16.22 * sqrt(1 + 1/55 + (gdp - mean(fred$gdp)) / sum( (fred$gdp - mean(fred$gdp))^2 ))
+#coef(m0) %*% c(1, gdp) - 2 * se
+
+```
+
+Further, we could also examine the residuals to gain insight into what is missing from this model.
+
+```{r}
+fred$res = residuals(m0)
+ggplot(fred, aes(x = date, y = res)) + geom_line() + theme_minimal() + 
+  ggtitle("Residuals from Shiller ~ GDP/Capita linear regression")
+```
+
+The model severely underestimates the house index starting during the pandemic. There is a clear pattern to these residuals. Is this a problem?
+
+## Autocorrelation
 
 One of the assumptions of the linear regression model is that the errors are independent and identically distributed. That is, for the model,
 
@@ -146,61 +193,7 @@ One of the assumptions of the linear regression model is that the errors are ind
 y = X \beta + \epsilon,
 \end{align}
 
-The error vector, $\epsilon \sim N(0, \sigma^2)$. This implies that there is no correlation structure to the residuals. One way to check that this is true is to check for the absence of correlation in the observed residuals.
-
-## Noise Processes
-
-
-Thus far, we have explored time series data to better understand their properties. These exploration methods can also be used to generate forecasts for future values. However, they are not able to quantify the uncertainty inherent in those forecasts, nor do they model the dependency structure inherent in the time series data. We will begin with a very simple model that does both of these things.
-
-
-### White noise
-
-Now let us define a new time series, $z_t = y_t - y_{t-1}$.
-
-Define the same properties as 1-5 above. These two simple models are important in finance. If a time series follows a random walk, then its first difference is white noise. Let's see if this is the case with GOOG. 
-
-```{r echo=TRUE, eval=FALSE}
-goog = getSymbols('GOOG', from='2020-12-22', to='2023-12-22',auto.assign = FALSE)
-googdf = data.frame(ymd(index(goog)), goog$GOOG.Close)
-names(googdf) = c("date", "price")
-
-ggplot(googdf, aes(x = date, y = price)) + 
-  geom_line() + 
-  theme_minimal() + 
-  ggtitle("GOOG Closing Price")
-```
-
-### Random Walk
-
-Let us consider a simple model to describe time series data,
-
-$y_t = y_{t-1}+e_t$,
-
-where $e_t \sim N(0, \sigma^2)$ and all elements of the error vector are mutually independent.
-
-Let's derive some important properties of this model:
-
-1. What is the mean, $E(y_t)$?
-2. What is the variance, $Var(y_t)$?
-3. What is the covariance between successive observations, $\text{cov}(y_t, y_{t-1})$?
-4. What is the correlation between successive observations, $\text{cor}(y_t, y_{t-1})$?
-5. Which properties depend on time?
-
-```{r echo=FALSE, eval=FALSE}
-# simulate from each model type in class
-t = 100
-acf_rw = function(k) {sqrt( (t-k)/ t )}
-curve(acf_rw, from = 1, to = 9)
-```
-
-### AR Process
-
-## Autocorrelation
-
-compute autocorrelation of ar process
-
-To review this concept, we'll start with a definition for covariance. For two vectors of data, $x$ and $y$, the covariance between the two is,
+The error vector, $\epsilon \sim N(0, \sigma^2)$. This implies that there is no correlation structure to the residuals. One way to check that this is true is to check for the absence of correlation in the observed residuals. To review this concept, we'll start with a definition for covariance. For two vectors of data, $x$ and $y$, the covariance between the two is,
 
 \begin{align}
 \text{cov}(x,y) &= \frac{ \sum_i (x_i - \bar{x})(y_i - \bar{y})}{n-1}
@@ -253,68 +246,28 @@ sum( (a1 - mean(a)) * (a2 - mean(a))) / (sum( (a - mean(a))^2 ) )  # by hand
 ```
 
 
+## Lab 1
 
-## Stationarity 
-
-Stationarity is a convenient assumption that allows us to describe the statistical properties of a time series. A time series is said to be stationary if there is:
-
-1. Constant mean. $E(X_t) = \mu$.
-2. Constant variance. $Var(X_t) = \sigma^2$.
-3. Constant Autocorrelation. $Cor(X_t, X_{t-h}) = \rho_h$.
-
-compute mean/ variance under stationarity
-
-## Multiple Time Series
-
-Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database). 
+1. Starting from the code chunk in [Time Series Data], extend the simulated training data to a full week (5 days, eight hours each day). Using the data frame representation, <code>plot(trading_dat\$hr, trading_dat\$pr)</code>. Using the time series data, <code>plot(trading_ts)</code>. What are the differences between these two plots? Include both plots in your submission.
 
 ```{r echo=TRUE}
-fred = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv")[,-1]
-fred$date = ymd(fred$date)
+set.seed(1)
+
+# option 1: represent time series data within a data frame
+
+hr = seq(mdy_hm("12-11-2023 09:30"), mdy_hm("12-15-2023 16:30"), 'hour') # 8 hours
+pr = rnorm(length(hr)) # generate fake trading data
+
+trading_dat = data.frame(hr, pr) %>% filter(hour(hr) > 9, hour(hr)<17)
+
+# option 2: represent time series data using a time series object
+
+trading_ts = ts(data = trading_dat$pr, start = 1, frequency = 8)
+
+par(mfrow = c(1,2))
+plot(x = trading_dat$hr, trading_dat$pr, type = "l")
+plot(trading_ts)
 ```
-
-
-```{r}
-fred %>% 
-  mutate(gdp_s = (gdp-mean(gdp))/sd(gdp), shiller_s = (shiller - mean(shiller))/sd(shiller))  %>%
-  pivot_longer(-date) %>% 
-  filter(name %in% c("gdp_s", "shiller_s")) %>% 
-  ggplot(aes(x = date, y = value)) + 
-  geom_line(aes(color = name)) + theme_minimal() + 
-  ggtitle("Standardized Case Shiller Index versus GPD per Capita")
-
-```
-
-It looks like these two time series track pretty closely to one another. We could fit a linear regression to this data in order to estimate the expected change in the Case Shiller Index for a unit ($1) change in GDP/ capital
-
-```{r eval=T}
-m0 = lm(shiller ~ gdp, data = fred)
-m0 %>% tidy() %>% kable()
-
-#gdp = 65000
-#predict(m0, newdata = data.frame(gdp), interval = "prediction")
-
-
-#se = 16.22 * sqrt(1 + 1/55 + (gdp - mean(fred$gdp)) / sum( (fred$gdp - mean(fred$gdp))^2 ))
-#coef(m0) %*% c(1, gdp) - 2 * se
-
-```
-
-Further, we could also examine the residuals to gain insight into what is missing from this model.
-
-```{r}
-fred$res = residuals(m0)
-ggplot(fred, aes(x = date, y = res)) + geom_line() + theme_minimal() + 
-  ggtitle("Residuals from Shiller ~ GDP/Capita linear regression")
-```
-
-The model severely underestimates the house index starting during the pandemic. There is a clear pattern to these residuals. Is this a problem?
-
-
-
-## Lab 1
-cross correlation/ decomposition/ 
-
 
 2. We can further hone in on the underlying trend of the residuals at the end of [Time Series EDA] by computing and plotting a moving average. For a time series $y_t$, $t = 1, \ldots, T$, a moving average of order $m$ can be written,
 \begin{align}

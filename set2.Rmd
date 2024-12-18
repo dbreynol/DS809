@@ -123,58 +123,7 @@ ggplot(retail_plot, aes(date, value)) +
 
 The trend captures the majority of the change that is observed in this time series, while the relative scale of the monthly seasonality and the random variation is small.
 
-## Statistical Models
 
-Thus far, we have explored time series data to better understand their properties. These exploration methods can also be used to generate forecasts for future values. However, they are not able to quantify the uncertainty inherent in those forecasts, nor do they model the dependency structure inherent in the time series data. We will begin with a very simple model that does both of these things.
-
-### Random Walk
-
-Let us consider a simple model to describe time series data,
-
-$y_t = y_{t-1}+e_t$,
-
-where $e_t \sim N(0, \sigma^2)$ and all elements of the error vector are mutually independent.
-
-Let's derive some important properties of this model:
-
-1. What is the mean, $E(y_t)$?
-2. What is the variance, $Var(y_t)$?
-3. What is the covariance between successive observations, $\text{cov}(y_t, y_{t-1})$?
-4. What is the correlation between successive observations, $\text{cor}(y_t, y_{t-1})$?
-5. Which properties depend on time?
-
-```{r echo=FALSE, eval=FALSE}
-# simulate from each model type in class
-t = 100
-acf_rw = function(k) {sqrt( (t-k)/ t )}
-curve(acf_rw, from = 1, to = 9)
-```
-
-### White noise
-
-Now let us define a new time series, $z_t = y_t - y_{t-1}$.
-
-Define the same properties as 1-5 above. These two simple models are important in finance. If a time series follows a random walk, then its first difference is white noise. Let's see if this is the case with GOOG. 
-
-```{r echo=TRUE}
-goog = getSymbols('GOOG', from='2020-12-22', to='2023-12-22',auto.assign = FALSE)
-googdf = data.frame(ymd(index(goog)), goog$GOOG.Close)
-names(googdf) = c("date", "price")
-
-ggplot(googdf, aes(x = date, y = price)) + 
-  geom_line() + 
-  theme_minimal() + 
-  ggtitle("GOOG Closing Price")
-```
-
-```{r}
-googdf$z = c(NA, diff(googdf$price))
-
-ggplot( drop_na(googdf), aes(x = date, y = z)) + 
-  geom_line() + 
-  theme_minimal() + 
-  ggtitle("GOOG Closing Price - First Difference")
-```
 
 It seems plausible that this is a white noise series. How can we build further evidence of this. One way would be to examine the autocorrelation function. What are we looking for?
 
@@ -197,13 +146,6 @@ Q = n(n+2) \sum_{i=1}^k \frac{\hat{\rho}_i^2}{(n-k)}
 
 follows a chi-squared distribution with $k$ degrees of freedom under the null hypothesis.
 
-## Stationarity 
-
-Stationarity is a convenient assumption that allows us to describe the statistical properties of a time series. A time series is said to be stationary if there is:
-
-1. Constant mean. $E(X_t) = \mu$.
-2. Constant variance. $Var(X_t) = \sigma^2$.
-3. Constant Autocorrelation. $Cor(X_t, X_{t-h}) = \rho_h$.
 
 
 ## Lab 2
