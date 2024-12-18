@@ -19,7 +19,6 @@ demand of a product.
 aelec <- window(elec, start=1980)
 plot(x = time(aelec), y = aelec, type = "l")
 #m0 = lm(aelec ~ time(aelec))
-abline(m0)
 m1 = lm(aelec ~ time(aelec) + cos(2 * pi * time(aelec)))
 
 lines(x = c(time(aelec)), y = predict(m1), col = "red")
