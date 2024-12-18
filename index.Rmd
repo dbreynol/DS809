@@ -17,6 +17,7 @@ knitr::opts_chunk$set(echo = F)
 library(tidyverse)
 library(knitr)
 library(fpp3) # employment dataset
+library(fpp2) # aelec dataset
 library(quantmod) # white noise google
 library(broom) # tidy
 library(forecast) # ma

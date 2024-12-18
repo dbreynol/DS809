@@ -15,6 +15,15 @@ demand of a product.
 
 * Two of the most common ways to represent time series data are using data frames in which one of the variables is a time object (such as POSIXct or Date) or using a time series object. These two representations are shown below with simulated trading data for a single 8-hour trading day.
 
+```{r echo=TRUE}
+aelec <- window(elec, start=1980)
+plot(x = time(aelec), y = aelec, type = "l")
+#m0 = lm(aelec ~ time(aelec))
+abline(m0)
+m1 = lm(aelec ~ time(aelec) + cos(2 * pi * time(aelec)))
+
+lines(x = c(time(aelec)), y = predict(m1), col = "red")
+```
 
 ```{r echo=TRUE}
 set.seed(1)
