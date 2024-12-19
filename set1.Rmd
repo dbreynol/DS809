@@ -13,36 +13,7 @@ demand of a product.
 
 * We will use the <code>tidyverse</code> family of packages extensively in this class. This package includes the <code>lubridate</code> package, which includes functions to work with date-times.
 
-* Two of the most common ways to represent time series data are using data frames in which one of the variables is a time object (such as POSIXct or Date) or using a time series object. These two representations are shown below with simulated trading data for a single 8-hour trading day.
-
-```{r echo=TRUE}
-aelec <- window(elec, start=1980)
-plot(x = time(aelec), y = aelec, type = "l")
-#m0 = lm(aelec ~ time(aelec))
-m1 = lm(aelec ~ time(aelec) + cos(2 * pi * time(aelec)))
-
-lines(x = c(time(aelec)), y = predict(m1), col = "red")
-
-plot(residuals(m1))
-acf(residuals(m1))
-```
-
-```{r echo=TRUE}
-set.seed(1)
-
-# option 1: represent time series data within a data frame
-
-hr = seq(mdy_hm("12-11-2023 09:30"), mdy_hm("12-11-2023 16:30"), 'hour') # 8 hours
-pr = rnorm(8) # generate fake trading data
-
-trading_dat = data.frame(hr, pr)
-
-# option 2: represent time series data using a time series object
-
-trading_ts = ts(data = trading_dat$pr, start = 1, frequency = 8)
-```
-
-
+* Two of the most common ways to represent time series data are using data frames in which one of the variables is a time object (such as POSIXct or Date) or using a time series object. 
 
 ## Time Series EDA
 
@@ -139,6 +110,37 @@ This allows us to more clearly see the trend across the date range, removing the
 
 ## Classical Regression 
 
+Given that regression is already in your tool kit, we will use it to model a time series. Let us assume that we have some output or dependent time series, say, $x_t$ , for $t = 1, \ldots,n$, that is being influenced by a collection of possible inputs, say, $z_{t1}, z_{t2}, \ldots, z_{tq}$, where we regard the inputs as fixed and known. 
+
+We will look at monthly Australian electricity production (the <code>fpp2::elec</code> dataframe). The data is shown below.
+
+```{r echo=F}
+aelec <- window(elec, start=1980)
+plot(x = time(aelec), y = aelec, type = "l", main = "Australian Electricity Production")
+```
+
+Let us fit two models to this data, one where we use time as the independent variable. This estimates a linear trend. In the other, we will try to capture some of the obvious seasonality in the data.
+
+\begin{align}
+y_t &= \beta_0 + \beta_1 t + w_t \\ 
+y_t &= \beta_0 + \beta_1 t + \beta_2 \times ({2\pi \cos(t)}) + w_t
+\end{align}
+
+The fits from these two models are shown below. 
+
+```{r}
+m0 = lm(aelec ~ time(aelec))
+m1 = lm(aelec ~ time(aelec) + cos(2 * pi * time(aelec)))
+plot(x = time(aelec), y = aelec, type = "l", main = "Australian Electricity Production")
+lines(x = c(time(aelec)), y = predict(m0), col = "red")
+lines(x = c(time(aelec)), y = predict(m1), col = "blue")
+```
+
+Clearly, model 2 offers a superior fit as compared with model 1. In fact, this model explains about 95\% of the variation in electricity production. To check the validity of the model, let us examine the residuals across the range of time, $t$.
+
+```{r}
+plot(x = c(time(aelec)), y = residuals(m1), main = "Model 2 Residuals")
+```
 
 One of the assumptions of the linear regression model is that the errors are independent and identically distributed. That is, for the model,
 
