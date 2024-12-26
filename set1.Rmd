@@ -22,7 +22,8 @@ The first thing to do in any data analysis is exploratory data analysis (EDA). G
 R has several systems for making graphs. We will primarily use ggplot2, which is among the set of tidyverse packages and is one of the most versatile systems for plotting. We will use a data set from Kayak to motivate our analysis.
 
 ```{r echo=TRUE}
-conversions = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv")
+conversions = read.csv("data/conversions.csv")
+  #read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv")
 knitr::kable(head(conversions))
 ```
 
@@ -148,34 +149,52 @@ One of the assumptions of the linear regression model is that the errors are ind
 y = X \beta + \epsilon,
 \end{align}
 
-The error vector, $\epsilon \sim N(0, \sigma^2)$. This implies that there is no correlation structure to the residuals. One way to check that this is true is to check for the absence of correlation in the observed residuals.
+The error vector, $\epsilon \sim N(0, \sigma^2)$. This implies that there is no correlation structure to the residuals. One way to check that this is true is to check for the absence of correlation in the observed residuals. What does the figure above indicate about the validity of this assumption for model 2?
 
 ## Noise Processes
 
+What if we re-arrange the model we fit above into a deterministic part and a random part:
 
-Thus far, we have explored time series data to better understand their properties. These exploration methods can also be used to generate forecasts for future values. However, they are not able to quantify the uncertainty inherent in those forecasts, nor do they model the dependency structure inherent in the time series data. We will begin with a very simple model that does both of these things.
+\begin{align}
+y_t - x_t \beta = w_t
+\end{align}
 
+What can we say about the right hand side? Since this is indexed by time, we can consider this our first and simplest time series model. 
 
 ### White noise
 
-Now let us define a new time series, $z_t = y_t - y_{t-1}$.
+Let $w_t$ be a random variable indexed by time, $t \in [1,T]$.
 
-Define the same properties as 1-5 above. These two simple models are important in finance. If a time series follows a random walk, then its first difference is white noise. Let's see if this is the case with GOOG. 
+The following properties characterize white noise:
 
-```{r echo=TRUE, eval=FALSE}
-goog = getSymbols('GOOG', from='2020-12-22', to='2023-12-22',auto.assign = FALSE)
-googdf = data.frame(ymd(index(goog)), goog$GOOG.Close)
-names(googdf) = c("date", "price")
+\begin{align}
+E(w_t) &= 0 \\
+Var(w_t) &= \sigma^2 \\
+Cov(w_t, w_s) &= 0 \text{  } \forall t,s
+\end{align}
 
-ggplot(googdf, aes(x = date, y = price)) + 
-  geom_line() + 
-  theme_minimal() + 
-  ggtitle("GOOG Closing Price")
+Note that Gaussian white noise is a special case where $w_t \sim N(o, \sigma^2)$.
+
+```{r eval = T}
+par(mfrow = c(1,2), mai = c(1,1,0.3,0.1), omi = c(0,0,0,0))
+## loop over orders of p
+set.seed(2)
+n = 100
+wn1 = rnorm(n, sd = 2)
+wn2 = .5 + ifelse((rbinom(n, 1, 1/2) == 0) , -2, 1)
+
+
+plot(wn1, las = 1,
+        ylab = expression(italic(x[t])), main = "Gaussian White Noise")
+
+plot(wn2, las = 1,
+        ylab = expression(italic(y[t])), main = "Bernoulli White Noise")
 ```
+
 
 ### Random Walk
 
-Let us consider a simple model to describe time series data,
+Let us consider a another simple model to describe time series data,
 
 $y_t = y_{t-1}+e_t$,
 
@@ -185,47 +204,97 @@ Let's derive some important properties of this model:
 
 1. What is the mean, $E(y_t)$?
 2. What is the variance, $Var(y_t)$?
-3. What is the covariance between successive observations, $\text{cov}(y_t, y_{t-1})$?
-4. What is the correlation between successive observations, $\text{cor}(y_t, y_{t-1})$?
-5. Which properties depend on time?
 
-```{r echo=FALSE, eval=FALSE}
-# simulate from each model type in class
-t = 100
-acf_rw = function(k) {sqrt( (t-k)/ t )}
-curve(acf_rw, from = 1, to = 9)
+```{r}
+rw = cumsum(rnorm(100))
+last_el = rw[100]
+#par(mfrow = c(1,2))
+plot(1:100, rw, type = "l", ylim = c(-50,50), main = "Random Walks; Sigma = 1", xlab = "t")
+
+for (j in 2:50) {
+  rw = cumsum(rnorm(100))
+  last_el[j] = rw[100]
+  lines(1:100, rw, type = "l", col = rainbow(50)[j])
+}
+
+#hist(last_el, breaks = 10, main = "Histogram of 100th observations")
 ```
 
 ### AR Process
 
-## Autocorrelation
-
-compute autocorrelation of ar process
-
-To review this concept, we'll start with a definition for covariance. For two vectors of data, $x$ and $y$, the covariance between the two is,
+A slightly more general model is the AR model, in which $x_t$ is a linear combination of its past $p$ values,
 
 \begin{align}
-\text{cov}(x,y) &= \frac{ \sum_i (x_i - \bar{x})(y_i - \bar{y})}{n-1}
+x_t = \sum_{i=1}^p \phi_i x_{t-i} + w_t
 \end{align}
 
-Correlation is a dimensionless measure of the linear association between two variables. It is defined as the covariance scaled by the standard deviations. That is,
+Write this as a function of past white noise values and find $E(x_t)$.
+
+## Measures of Dependence
+
+### Autocovariance
+
+In all but the simplest models, there is dependence between adjacent values $x_s$ and $x_t$. This can be assessed using the notions of covariance and correlation. The autocovariance function is defined as the second moment product:
 
 \begin{align}
-\text{cor}(x,y) &= \frac{\text{cov}(x,y)}{\sigma_x \sigma_y} \\
-                &= \frac{ \sum_i (x_i - \bar{x})(y_i - \bar{y})}{ \sqrt{ \sum_i (x_i - \bar{x})^2 \sum_i (y_i - \bar{y})^2 }}
+\gamma(s,t) &= \text{cov}(x_s, x_t) \\
+&= E((x_s - \mu_s) (x_t - \mu_t))
 \end{align}
 
-Let's compute this quantity on some simulated data.
+The autocovariance measures the linear dependence between two points on the same series observed at different times. Very smooth series exhibit autocovariance functions that stay large even when the $t$ and $s$ are far apart, whereas choppy series tend to have autocovariance functions that are nearly zero for large separations.
 
-```{r echo=TRUE, eval=FALSE}
-set.seed(1)
-n = 5
-x = rnorm(n)
-y = rnorm(n)
+### Autocorrelation
 
-sum( (x - mean(x)) * (y - mean(y))) / ( (n-1) * sd(x) * sd(y) )
-cor(x, y)
-```
+The autocorrelation function (ACF) is defined as,
+
+\begin{align}
+\rho(s,t) &= \frac{\gamma(s,t)}{\sqrt{\gamma(s,s) \gamma(t,t)}}
+\end{align}
+
+
+The ACF measures the linear predictability of the series at time $t$, say $x_t$ , using only the value $x_s$. 
+
+### Exercise
+
+Compute the autocorrelation of $\ldots$
+1. The white noise process.
+2. The random walk
+3. $x_t = a + \phi x_{t-1} + w_t$
+
+
+## Stationarity 
+
+A (weakly) stationary time series $x_t$ is a process such that,
+
+1. Constant mean. $E(X_t) = \mu$.
+2. The autocovariance function, $\gamma(s,t)$ depends on $s$ and $t$ only through their difference, $|s-t|$.
+
+Therefore, we can write the autocovariance function of a stationary time series as,
+
+\begin{align}
+\gamma(h) &= \text{cov}(x_{t+h}, x_{t}) \\
+&= E((x_{t+h} - \mu) (x_{t} - \mu))
+\end{align}
+
+And, similarly, the autocorrelation function of a stationary time series can be written,
+
+\begin{align}
+\rho(h) &= \frac{\gamma(t+h,t)}{\sqrt{\gamma(t+h,t+h) \gamma(t,t)}} \\
+&= \frac{\gamma(h)}{\gamma(0)}
+\end{align}
+
+
+
+## Estimation
+
+Although the theoretical autocorrelation and cross-correlation functions are useful for describing the properties of certain hypothesized models, most of the analyses must be performed using sampled data.
+
+### Mean
+
+if a time series is stationary, the mean function (1.22) μt = μ is constant so that we can estimate it by the sample mean,
+
+### Autocorrelation
+
 
 For time series data, there is a closely related concept called autocorrelation. Given a time series, $y_t$, where $t=1,\ldots,T$, autocorrelation is the correlation between $y_t$ and its lagged value, $y_{t-k}$. That is, autocorrelation is the correlation of a time series with a delayed copy of itself, as a function of delay. Just as correlation is a function of covariance, autocorrelation is a function of autocovariance. The (sample) autocovariance, $\hat{\gamma}$ for a time series $y$ at lag $k$ is:
 
@@ -241,37 +310,19 @@ The (sample) autocorrelation function for lag $k$, $\hat{\rho}_k$, is simply the
 &= \frac{ \hat{\gamma_k} }{\hat{\gamma_0}}.
 \end{align}
 
-The second line follows from the linear regression assumption of constant variance. Here is a simple example of computing the lag 1 autocorrelation.
 
-```{r echo=TRUE, eval=FALSE}
-a = c(1,2,3,4,5)
-
-a1 = c(1,2,3,4)
-a2 = c(2,3,4,5)
-
-# lag 1 autocorrelation
-sum( (a1 - mean(a)) * (a2 - mean(a))) / (sum( (a - mean(a))^2 ) )  # by hand
-(acf(a))
-```
+\begin{align}
+\hat{\rho}_k &= \frac{ \hat{\gamma_k} }{\hat{\sigma}_{y_t} \hat{\sigma}_{y_{t-k}}} \\
+&= \frac{ \hat{\gamma_k} }{\hat{\gamma_0}}.
+\end{align}
 
 
-
-## Stationarity 
-
-Stationarity is a convenient assumption that allows us to describe the statistical properties of a time series. A time series is said to be stationary if there is:
-
-1. Constant mean. $E(X_t) = \mu$.
-2. Constant variance. $Var(X_t) = \sigma^2$.
-3. Constant Autocorrelation. $Cor(X_t, X_{t-h}) = \rho_h$.
-
-compute mean/ variance under stationarity
-
-## Multiple Time Series
 
 Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database). 
 
 ```{r echo=TRUE}
-fred = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv")[,-1]
+fred = read.csv("data/fred_dat.csv")
+  #read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv")[,-1]
 fred$date = ymd(fred$date)
 ```
 
@@ -343,7 +394,7 @@ data.frame(date = mod_df$datestamp, resids = mod_df$resids, ma = ma_resids) %>%
 
 3. Join the Kayak visits data (see below) to the conversions data from [Time Series EDA]. Use the <code>inner_join</code> function with the argument, <code>by = c("datestamp", "country_code", "marketing_channel")</code> and then filter to only US observations. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the response variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model.
 
-```{r echo=TRUE}
+```{r echo=TRUE, eval=FALSE}
 visits = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv")
 visits$datestamp = ymd(visits$datestamp)
 

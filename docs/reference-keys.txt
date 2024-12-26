@@ -7,7 +7,12 @@ noise-processes
 white-noise
 random-walk
 ar-process
+measures-of-dependence
+autocovariance
 autocorrelation
+exercise
 stationarity
-multiple-time-series
+estimation
+mean
+autocorrelation-1
 lab-1
