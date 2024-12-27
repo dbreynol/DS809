@@ -299,7 +299,7 @@ Although the theoretical autocorrelation and cross-correlation functions are use
 
 ### Mean
 
-if a time series is stationary, the mean function is constant so that we can estimate it by the sample mean,
+If a time series is stationary, the mean function is constant so that we can estimate it by the sample mean,
 
 \begin{align}
 \hat{\mu} = \frac{1}{T} \sum_{t=1}^T x_t 
@@ -396,41 +396,3 @@ acf_fun = function(y, k) {
 acf_fun(y,2)
 (acf(y, plot = F))$acf[3]
 ```
-
-
-5. The partial autocorrelation function, $\phi_k$, measures the correlation between a time series $y_t$ and a lagged copy $y_{t-k}$, with the linear dependence of $\{ y_{t-1}, y_{t-2}, \ldots,y_{t-k-1} \}$ removed. When $k=1$, $\hat{\phi}_k = \hat{\rho}_k$. When $k>1$,
-\begin{align}
-\hat{\phi}_k = \text{cor}(y_1 - \hat{y_1}|\{ y_2, \ldots, y_{k-1} \} , y_k - \hat{y_k}|\{ y_2, \ldots, y_{k-1} \} ),
-\end{align}
-where $\hat{y_1}|\{ y_2, \ldots, y_{k-1} \}$ is the predicted $y_1$ using the linear regression where $\{ y_2, \ldots, y_{k-1} \}$ are explanatory variables.
-Compute the lag 1 and 2 partial autocorrelations for the following simulated time series. Show your code and validate your answers using the <code>pacf</code> function. The <code>window</code> function may be useful to extract subsets of the time series vector.
-
-
-```{r echo=T, eval=T}
-set.seed(1)
-ysim = arima.sim(n=1000, list(ar=c(.5)))
-(pacf(ysim, plot = F))
-```
-
-```{r echo=T, eval=T}
-# lag 1 - same as the lag 1 acf
-y1 = as.numeric( window(ysim,1,999))
-y2 = as.numeric( window(ysim,2,1000) )
-lag1 = (sum( (y1-mean(ysim)) * ( y2 - mean(ysim) )) )/ sum( (ysim - mean(ysim))^2)
-
-# lag 2
-y1 = as.numeric( window(ysim, 1, 998))
-y2 = as.numeric( window(ysim, 2, 999))
-y3 = as.numeric( window(ysim, 3, 1000))
-y1t = residuals( lm(y1 ~ y2))
-y3t = residuals( lm(y3 ~ y2))
-
-cor(y1t, y3t) # manual lag 2 pacf
-
-(pacf(ysim, plot = F))$acf[2] # function lag 2 pacf
-
-```
-
-
-
-
