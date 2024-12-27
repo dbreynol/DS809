@@ -27,7 +27,7 @@ conversions = read.csv("data/conversions.csv")
 knitr::kable(head(conversions))
 ```
 
-This dataset contains information on the total number of daily conversions by country and marketing channel. Let us focus our analysis on the US and fist visualize the number of conversions by day. 
+This dataset contains information on the total number of daily conversions by country and marketing channel. Let us focus our analysis on the US and first visualize the number of conversions by day. 
 
 ```{r}
 conversions$datestamp = ymd(conversions$datestamp)
@@ -111,7 +111,7 @@ This allows us to more clearly see the trend across the date range, removing the
 
 ## Classical Regression 
 
-Given that regression is already in your tool kit, we will use it to model a time series. Let us assume that we have some output or dependent time series, say, $x_t$ , for $t = 1, \ldots,n$, that is being influenced by a collection of possible inputs, say, $z_{t1}, z_{t2}, \ldots, z_{tq}$, where we regard the inputs as fixed and known. 
+Given that regression is already in our tool kit, we will use it as our first method to model a time series. Let us assume that we have some output or dependent time series, say, $x_t$ , for $t = 1, \ldots,n$, that is being influenced by a collection of possible inputs, say, $z_{t1}, z_{t2}, \ldots, z_{tq}$, where we regard the inputs as fixed and known. 
 
 We will look at monthly Australian electricity production (the <code>fpp2::elec</code> dataframe). The data is shown below.
 
@@ -149,7 +149,7 @@ One of the assumptions of the linear regression model is that the errors are ind
 y = X \beta + \epsilon,
 \end{align}
 
-The error vector, $\epsilon \sim N(0, \sigma^2)$. This implies that there is no correlation structure to the residuals. One way to check that this is true is to check for the absence of correlation in the observed residuals. What does the figure above indicate about the validity of this assumption for model 2?
+The error vector, $\epsilon \sim N(0, \sigma^2)$, consists of independent and identically distributed random variables. This implies that there is no correlation structure to the residuals. One way to check that this is true is to check for the absence of correlation in the observed residuals. What does the figure above indicate about the validity of this assumption for model 2?
 
 ## Noise Processes
 
@@ -159,7 +159,7 @@ What if we re-arrange the model we fit above into a deterministic part and a ran
 y_t - x_t \beta = w_t
 \end{align}
 
-What can we say about the right hand side? Since this is indexed by time, we can consider this our first and simplest time series model. 
+What can we say about the right hand side? Since it is a random variable that is indexed by time, we can consider this our first and simplest time series model. 
 
 ### White noise
 
@@ -173,7 +173,7 @@ Var(w_t) &= \sigma^2 \\
 Cov(w_t, w_s) &= 0 \text{  } \forall t,s
 \end{align}
 
-Note that Gaussian white noise is a special case where $w_t \sim N(o, \sigma^2)$.
+Note that Gaussian white noise is a special case where $w_t \sim N(o, \sigma^2)$. White noise can come in different flavors. In the right hand plot below, $w_t = 2e_t - 1$, where $e_t \sim \text{Bernoulli(.5)}$. In the left plot, $w_t \sim N(0,2)$.
 
 ```{r eval = T}
 par(mfrow = c(1,2), mai = c(1,1,0.3,0.1), omi = c(0,0,0,0))
@@ -181,7 +181,7 @@ par(mfrow = c(1,2), mai = c(1,1,0.3,0.1), omi = c(0,0,0,0))
 set.seed(2)
 n = 100
 wn1 = rnorm(n, sd = 2)
-wn2 = .5 + ifelse((rbinom(n, 1, 1/2) == 0) , -2, 1)
+wn2 = ifelse((rbinom(n, 1, 1/2) == 1) , 2, 0) - 1
 
 
 plot(wn1, las = 1,
@@ -192,13 +192,14 @@ plot(wn2, las = 1,
 ```
 
 
+
 ### Random Walk
 
-Let us consider a another simple model to describe time series data,
+Let us consider another simple model to describe time series data,
 
-$y_t = y_{t-1}+e_t$,
+$y_t = y_{t-1}+w_t$,
 
-where $e_t \sim N(0, \sigma^2)$ and all elements of the error vector are mutually independent.
+where $w_t \sim N(0, \sigma^2)$ and all elements of the error vector are mutually independent.
 
 Let's derive some important properties of this model:
 
@@ -216,19 +217,25 @@ for (j in 2:50) {
   last_el[j] = rw[100]
   lines(1:100, rw, type = "l", col = rainbow(50)[j])
 }
-
-#hist(last_el, breaks = 10, main = "Histogram of 100th observations")
 ```
 
 ### AR Process
 
-A slightly more general model is the AR model, in which $x_t$ is a linear combination of its past $p$ values,
+A slightly more general model is the AR model, in which $x_t$ is a linear combination of its past $p$ values plus gaussian white noise, $w_t$. That is,
 
 \begin{align}
-x_t = \sum_{i=1}^p \phi_i x_{t-i} + w_t
+x_t = \sum_{i=1}^p \phi_i x_{t-i} + w_t.
 \end{align}
 
-Write this as a function of past white noise values and find $E(x_t)$.
+### Exercise
+
+Consider the AR(1) process with a drift: 
+
+\begin{align}
+x_t &= a + \phi x_t + w_t
+\end{align}
+
+Write $x_t$ as a function of past white noise values and find $E(x_t)$ and $Var(x_t)$.
 
 ## Measures of Dependence
 
@@ -256,7 +263,8 @@ The ACF measures the linear predictability of the series at time $t$, say $x_t$ 
 
 ### Exercise
 
-Compute the autocorrelation of $\ldots$
+Compute the autocorrelation of:
+
 1. The white noise process.
 2. The random walk
 3. $x_t = a + \phi x_{t-1} + w_t$
@@ -291,25 +299,22 @@ Although the theoretical autocorrelation and cross-correlation functions are use
 
 ### Mean
 
-if a time series is stationary, the mean function (1.22) μt = μ is constant so that we can estimate it by the sample mean,
+if a time series is stationary, the mean function is constant so that we can estimate it by the sample mean,
+
+\begin{align}
+\hat{\mu} = \frac{1}{T} \sum_{t=1}^T x_t 
+\end{align}
 
 ### Autocorrelation
 
-
-For time series data, there is a closely related concept called autocorrelation. Given a time series, $y_t$, where $t=1,\ldots,T$, autocorrelation is the correlation between $y_t$ and its lagged value, $y_{t-k}$. That is, autocorrelation is the correlation of a time series with a delayed copy of itself, as a function of delay. Just as correlation is a function of covariance, autocorrelation is a function of autocovariance. The (sample) autocovariance, $\hat{\gamma}$ for a time series $y$ at lag $k$ is:
-
-\begin{align}
-\hat{\gamma}_k &= \text{cov}(y_t, y_{t-k}) \\
-&=  \frac{1}{T} \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y})
-\end{align}
-
-The (sample) autocorrelation function for lag $k$, $\hat{\rho}_k$, is simply the lag $k$ autocovariance, $\hat{\gamma_k}$ , scaled by the standard deviations.
+Autocorrelation is the correlation of a time series with a delayed copy of itself, as a function of delay. The sample autocovariance, $\hat{\gamma}$, for a time series $x$ at lag $k$ is:
 
 \begin{align}
-\hat{\rho}_k &= \frac{ \hat{\gamma_k} }{\hat{\sigma}_{y_t} \hat{\sigma}_{y_{t-k}}} \\
-&= \frac{ \hat{\gamma_k} }{\hat{\gamma_0}}.
+\hat{\gamma}_k &= \text{cov}(x_t, x_{t-k}) \\
+&=  \frac{1}{T} \sum_{t = k + 1}^{T} (x_t - \bar{x})(x_{t-k} - \bar{x})
 \end{align}
 
+The sample autocorrelation function for lag $k$, $\hat{\rho}_k$, is simply the lag $k$ autocovariance, $\hat{\gamma_k}$, scaled by the standard deviation.
 
 \begin{align}
 \hat{\rho}_k &= \frac{ \hat{\gamma_k} }{\hat{\sigma}_{y_t} \hat{\sigma}_{y_{t-k}}} \\
@@ -318,55 +323,18 @@ The (sample) autocorrelation function for lag $k$, $\hat{\rho}_k$, is simply the
 
 
 
-Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database). 
+
+## Lab 1
+
+1. cross correlation/ decomposition/ 
+
+2. Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database). 
 
 ```{r echo=TRUE}
 fred = read.csv("data/fred_dat.csv")
   #read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv")[,-1]
 fred$date = ymd(fred$date)
 ```
-
-
-```{r}
-fred %>% 
-  mutate(gdp_s = (gdp-mean(gdp))/sd(gdp), shiller_s = (shiller - mean(shiller))/sd(shiller))  %>%
-  pivot_longer(-date) %>% 
-  filter(name %in% c("gdp_s", "shiller_s")) %>% 
-  ggplot(aes(x = date, y = value)) + 
-  geom_line(aes(color = name)) + theme_minimal() + 
-  ggtitle("Standardized Case Shiller Index versus GPD per Capita")
-
-```
-
-It looks like these two time series track pretty closely to one another. We could fit a linear regression to this data in order to estimate the expected change in the Case Shiller Index for a unit ($1) change in GDP/ capital
-
-```{r eval=T}
-m0 = lm(shiller ~ gdp, data = fred)
-m0 %>% tidy() %>% kable()
-
-#gdp = 65000
-#predict(m0, newdata = data.frame(gdp), interval = "prediction")
-
-
-#se = 16.22 * sqrt(1 + 1/55 + (gdp - mean(fred$gdp)) / sum( (fred$gdp - mean(fred$gdp))^2 ))
-#coef(m0) %*% c(1, gdp) - 2 * se
-
-```
-
-Further, we could also examine the residuals to gain insight into what is missing from this model.
-
-```{r}
-fred$res = residuals(m0)
-ggplot(fred, aes(x = date, y = res)) + geom_line() + theme_minimal() + 
-  ggtitle("Residuals from Shiller ~ GDP/Capita linear regression")
-```
-
-The model severely underestimates the house index starting during the pandemic. There is a clear pattern to these residuals. Is this a problem?
-
-
-
-## Lab 1
-cross correlation/ decomposition/ 
 
 
 2. We can further hone in on the underlying trend of the residuals at the end of [Time Series EDA] by computing and plotting a moving average. For a time series $y_t$, $t = 1, \ldots, T$, a moving average of order $m$ can be written,

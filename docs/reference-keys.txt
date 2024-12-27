@@ -7,10 +7,11 @@ noise-processes
 white-noise
 random-walk
 ar-process
+exercise
 measures-of-dependence
 autocovariance
 autocorrelation
-exercise
+exercise-1
 stationarity
 estimation
 mean

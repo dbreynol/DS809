@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-12-26" />
+<meta name="date" content="2024-12-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -149,12 +149,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4.1" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#white-noise"><i class="fa fa-check"></i><b>2.4.1</b> White noise</a></li>
 <li class="chapter" data-level="2.4.2" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#random-walk"><i class="fa fa-check"></i><b>2.4.2</b> Random Walk</a></li>
 <li class="chapter" data-level="2.4.3" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#ar-process"><i class="fa fa-check"></i><b>2.4.3</b> AR Process</a></li>
+<li class="chapter" data-level="2.4.4" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#exercise"><i class="fa fa-check"></i><b>2.4.4</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#measures-of-dependence"><i class="fa fa-check"></i><b>2.5</b> Measures of Dependence</a>
 <ul>
 <li class="chapter" data-level="2.5.1" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocovariance"><i class="fa fa-check"></i><b>2.5.1</b> Autocovariance</a></li>
 <li class="chapter" data-level="2.5.2" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocorrelation"><i class="fa fa-check"></i><b>2.5.2</b> Autocorrelation</a></li>
-<li class="chapter" data-level="2.5.3" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#exercise"><i class="fa fa-check"></i><b>2.5.3</b> Exercise</a></li>
+<li class="chapter" data-level="2.5.3" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#exercise-1"><i class="fa fa-check"></i><b>2.5.3</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="2.6" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#stationarity"><i class="fa fa-check"></i><b>2.6</b> Stationarity</a></li>
 <li class="chapter" data-level="2.7" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#estimation"><i class="fa fa-check"></i><b>2.7</b> Estimation</a>
@@ -253,7 +254,7 @@ demand of a product.</li>
 </tr>
 </tbody>
 </table>
-<p>This dataset contains information on the total number of daily conversions by country and marketing channel. Let us focus our analysis on the US and fist visualize the number of conversions by day.</p>
+<p>This dataset contains information on the total number of daily conversions by country and marketing channel. Let us focus our analysis on the US and first visualize the number of conversions by day.</p>
 <p><img src="series_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>This plot contains a lot of useful information. To gain insight into how conversions depend on marketing channel, we can use facets. Facets are subplots that display a time series for each marketing channel.</p>
 <p><img src="series_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
@@ -269,7 +270,7 @@ demand of a product.</li>
 </div>
 <div id="classical-regression" class="section level2 hasAnchor" number="2.3">
 <h2><span class="header-section-number">2.3</span> Classical Regression<a href="exploratory-analysis-of-time-series-data.html#classical-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Given that regression is already in your tool kit, we will use it to model a time series. Let us assume that we have some output or dependent time series, say, <span class="math inline">\(x_t\)</span> , for <span class="math inline">\(t = 1, \ldots,n\)</span>, that is being influenced by a collection of possible inputs, say, <span class="math inline">\(z_{t1}, z_{t2}, \ldots, z_{tq}\)</span>, where we regard the inputs as fixed and known.</p>
+<p>Given that regression is already in our tool kit, we will use it as our first method to model a time series. Let us assume that we have some output or dependent time series, say, <span class="math inline">\(x_t\)</span> , for <span class="math inline">\(t = 1, \ldots,n\)</span>, that is being influenced by a collection of possible inputs, say, <span class="math inline">\(z_{t1}, z_{t2}, \ldots, z_{tq}\)</span>, where we regard the inputs as fixed and known.</p>
 <p>We will look at monthly Australian electricity production (the <code>fpp2::elec</code> dataframe). The data is shown below.</p>
 <p><img src="series_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>Let us fit two models to this data, one where we use time as the independent variable. This estimates a linear trend. In the other, we will try to capture some of the obvious seasonality in the data.</p>
@@ -285,7 +286,7 @@ y_t &amp;= \beta_0 + \beta_1 t + \beta_2 \times ({2\pi \cos(t)}) + w_t
 <p><span class="math display">\[\begin{align}
 y = X \beta + \epsilon,
 \end{align}\]</span></p>
-<p>The error vector, <span class="math inline">\(\epsilon \sim N(0, \sigma^2)\)</span>. This implies that there is no correlation structure to the residuals. One way to check that this is true is to check for the absence of correlation in the observed residuals. What does the figure above indicate about the validity of this assumption for model 2?</p>
+<p>The error vector, <span class="math inline">\(\epsilon \sim N(0, \sigma^2)\)</span>, consists of independent and identically distributed random variables. This implies that there is no correlation structure to the residuals. One way to check that this is true is to check for the absence of correlation in the observed residuals. What does the figure above indicate about the validity of this assumption for model 2?</p>
 </div>
 <div id="noise-processes" class="section level2 hasAnchor" number="2.4">
 <h2><span class="header-section-number">2.4</span> Noise Processes<a href="exploratory-analysis-of-time-series-data.html#noise-processes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -293,7 +294,7 @@ y = X \beta + \epsilon,
 <p><span class="math display">\[\begin{align}
 y_t - x_t \beta = w_t
 \end{align}\]</span></p>
-<p>What can we say about the right hand side? Since this is indexed by time, we can consider this our first and simplest time series model.</p>
+<p>What can we say about the right hand side? Since it is a random variable that is indexed by time, we can consider this our first and simplest time series model.</p>
 <div id="white-noise" class="section level3 hasAnchor" number="2.4.1">
 <h3><span class="header-section-number">2.4.1</span> White noise<a href="exploratory-analysis-of-time-series-data.html#white-noise" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Let <span class="math inline">\(w_t\)</span> be a random variable indexed by time, <span class="math inline">\(t \in [1,T]\)</span>.</p>
@@ -303,14 +304,14 @@ E(w_t) &amp;= 0 \\
 Var(w_t) &amp;= \sigma^2 \\
 Cov(w_t, w_s) &amp;= 0 \text{  } \forall t,s
 \end{align}\]</span></p>
-<p>Note that Gaussian white noise is a special case where <span class="math inline">\(w_t \sim N(o, \sigma^2)\)</span>.</p>
+<p>Note that Gaussian white noise is a special case where <span class="math inline">\(w_t \sim N(o, \sigma^2)\)</span>. White noise can come in different flavors. In the right hand plot below, <span class="math inline">\(w_t = 2e_t - 1\)</span>, where <span class="math inline">\(e_t \sim \text{Bernoulli(.5)}\)</span>. In the left plot, <span class="math inline">\(w_t \sim N(0,2)\)</span>.</p>
 <p><img src="series_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 <div id="random-walk" class="section level3 hasAnchor" number="2.4.2">
 <h3><span class="header-section-number">2.4.2</span> Random Walk<a href="exploratory-analysis-of-time-series-data.html#random-walk" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Let us consider a another simple model to describe time series data,</p>
-<p><span class="math inline">\(y_t = y_{t-1}+e_t\)</span>,</p>
-<p>where <span class="math inline">\(e_t \sim N(0, \sigma^2)\)</span> and all elements of the error vector are mutually independent.</p>
+<p>Let us consider another simple model to describe time series data,</p>
+<p><span class="math inline">\(y_t = y_{t-1}+w_t\)</span>,</p>
+<p>where <span class="math inline">\(w_t \sim N(0, \sigma^2)\)</span> and all elements of the error vector are mutually independent.</p>
 <p>Let’s derive some important properties of this model:</p>
 <ol style="list-style-type: decimal">
 <li>What is the mean, <span class="math inline">\(E(y_t)\)</span>?</li>
@@ -320,11 +321,18 @@ Cov(w_t, w_s) &amp;= 0 \text{  } \forall t,s
 </div>
 <div id="ar-process" class="section level3 hasAnchor" number="2.4.3">
 <h3><span class="header-section-number">2.4.3</span> AR Process<a href="exploratory-analysis-of-time-series-data.html#ar-process" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>A slightly more general model is the AR model, in which <span class="math inline">\(x_t\)</span> is a linear combination of its past <span class="math inline">\(p\)</span> values,</p>
+<p>A slightly more general model is the AR model, in which <span class="math inline">\(x_t\)</span> is a linear combination of its past <span class="math inline">\(p\)</span> values plus gaussian white noise, <span class="math inline">\(w_t\)</span>. That is,</p>
 <p><span class="math display">\[\begin{align}
-x_t = \sum_{i=1}^p \phi_i x_{t-i} + w_t
+x_t = \sum_{i=1}^p \phi_i x_{t-i} + w_t.
 \end{align}\]</span></p>
-<p>Write this as a function of past white noise values and find <span class="math inline">\(E(x_t)\)</span>.</p>
+</div>
+<div id="exercise" class="section level3 hasAnchor" number="2.4.4">
+<h3><span class="header-section-number">2.4.4</span> Exercise<a href="exploratory-analysis-of-time-series-data.html#exercise" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider the AR(1) process with a drift:</p>
+<p><span class="math display">\[\begin{align}
+x_t &amp;= a + \phi x_t + w_t
+\end{align}\]</span></p>
+<p>Write <span class="math inline">\(x_t\)</span> as a function of past white noise values and find <span class="math inline">\(E(x_t)\)</span> and <span class="math inline">\(Var(x_t)\)</span>.</p>
 </div>
 </div>
 <div id="measures-of-dependence" class="section level2 hasAnchor" number="2.5">
@@ -346,12 +354,14 @@ x_t = \sum_{i=1}^p \phi_i x_{t-i} + w_t
 \end{align}\]</span></p>
 <p>The ACF measures the linear predictability of the series at time <span class="math inline">\(t\)</span>, say <span class="math inline">\(x_t\)</span> , using only the value <span class="math inline">\(x_s\)</span>.</p>
 </div>
-<div id="exercise" class="section level3 hasAnchor" number="2.5.3">
-<h3><span class="header-section-number">2.5.3</span> Exercise<a href="exploratory-analysis-of-time-series-data.html#exercise" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Compute the autocorrelation of <span class="math inline">\(\ldots\)</span>
-1. The white noise process.
-2. The random walk
-3. <span class="math inline">\(x_t = a + \phi x_{t-1} + w_t\)</span></p>
+<div id="exercise-1" class="section level3 hasAnchor" number="2.5.3">
+<h3><span class="header-section-number">2.5.3</span> Exercise<a href="exploratory-analysis-of-time-series-data.html#exercise-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Compute the autocorrelation of:</p>
+<ol style="list-style-type: decimal">
+<li>The white noise process.</li>
+<li>The random walk</li>
+<li><span class="math inline">\(x_t = a + \phi x_{t-1} + w_t\)</span></li>
+</ol>
 </div>
 </div>
 <div id="stationarity" class="section level2 hasAnchor" number="2.6">
@@ -377,65 +387,34 @@ x_t = \sum_{i=1}^p \phi_i x_{t-i} + w_t
 <p>Although the theoretical autocorrelation and cross-correlation functions are useful for describing the properties of certain hypothesized models, most of the analyses must be performed using sampled data.</p>
 <div id="mean" class="section level3 hasAnchor" number="2.7.1">
 <h3><span class="header-section-number">2.7.1</span> Mean<a href="exploratory-analysis-of-time-series-data.html#mean" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>if a time series is stationary, the mean function (1.22) μt = μ is constant so that we can estimate it by the sample mean,</p>
+<p>if a time series is stationary, the mean function is constant so that we can estimate it by the sample mean,</p>
+<p><span class="math display">\[\begin{align}
+\hat{\mu} = \frac{1}{T} \sum_{t=1}^T x_t
+\end{align}\]</span></p>
 </div>
 <div id="autocorrelation-1" class="section level3 hasAnchor" number="2.7.2">
 <h3><span class="header-section-number">2.7.2</span> Autocorrelation<a href="exploratory-analysis-of-time-series-data.html#autocorrelation-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For time series data, there is a closely related concept called autocorrelation. Given a time series, <span class="math inline">\(y_t\)</span>, where <span class="math inline">\(t=1,\ldots,T\)</span>, autocorrelation is the correlation between <span class="math inline">\(y_t\)</span> and its lagged value, <span class="math inline">\(y_{t-k}\)</span>. That is, autocorrelation is the correlation of a time series with a delayed copy of itself, as a function of delay. Just as correlation is a function of covariance, autocorrelation is a function of autocovariance. The (sample) autocovariance, <span class="math inline">\(\hat{\gamma}\)</span> for a time series <span class="math inline">\(y\)</span> at lag <span class="math inline">\(k\)</span> is:</p>
+<p>Autocorrelation is the correlation of a time series with a delayed copy of itself, as a function of delay. The sample autocovariance, <span class="math inline">\(\hat{\gamma}\)</span>, for a time series <span class="math inline">\(x\)</span> at lag <span class="math inline">\(k\)</span> is:</p>
 <p><span class="math display">\[\begin{align}
-\hat{\gamma}_k &amp;= \text{cov}(y_t, y_{t-k}) \\
-&amp;=  \frac{1}{T} \sum_{t = k + 1}^{T} (y_t - \bar{y})(y_{t-k} - \bar{y})
+\hat{\gamma}_k &amp;= \text{cov}(x_t, x_{t-k}) \\
+&amp;=  \frac{1}{T} \sum_{t = k + 1}^{T} (x_t - \bar{x})(x_{t-k} - \bar{x})
 \end{align}\]</span></p>
-<p>The (sample) autocorrelation function for lag <span class="math inline">\(k\)</span>, <span class="math inline">\(\hat{\rho}_k\)</span>, is simply the lag <span class="math inline">\(k\)</span> autocovariance, <span class="math inline">\(\hat{\gamma_k}\)</span> , scaled by the standard deviations.</p>
-<p><span class="math display">\[\begin{align}
-\hat{\rho}_k &amp;= \frac{ \hat{\gamma_k} }{\hat{\sigma}_{y_t} \hat{\sigma}_{y_{t-k}}} \\
-&amp;= \frac{ \hat{\gamma_k} }{\hat{\gamma_0}}.
-\end{align}\]</span></p>
+<p>The sample autocorrelation function for lag <span class="math inline">\(k\)</span>, <span class="math inline">\(\hat{\rho}_k\)</span>, is simply the lag <span class="math inline">\(k\)</span> autocovariance, <span class="math inline">\(\hat{\gamma_k}\)</span>, scaled by the standard deviation.</p>
 <p><span class="math display">\[\begin{align}
 \hat{\rho}_k &amp;= \frac{ \hat{\gamma_k} }{\hat{\sigma}_{y_t} \hat{\sigma}_{y_{t-k}}} \\
 &amp;= \frac{ \hat{\gamma_k} }{\hat{\gamma_0}}.
 \end{align}\]</span></p>
-<p>Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="exploratory-analysis-of-time-series-data.html#cb2-1" tabindex="-1"></a>fred <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/fred_dat.csv&quot;</span>)</span>
-<span id="cb2-2"><a href="exploratory-analysis-of-time-series-data.html#cb2-2" tabindex="-1"></a>  <span class="co">#read.csv(&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv&quot;)[,-1]</span></span>
-<span id="cb2-3"><a href="exploratory-analysis-of-time-series-data.html#cb2-3" tabindex="-1"></a>fred<span class="sc">$</span>date <span class="ot">=</span> <span class="fu">ymd</span>(fred<span class="sc">$</span>date)</span></code></pre></div>
-<p><img src="series_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
-<p>It looks like these two time series track pretty closely to one another. We could fit a linear regression to this data in order to estimate the expected change in the Case Shiller Index for a unit ($1) change in GDP/ capital</p>
-<table>
-<thead>
-<tr class="header">
-<th align="left">term</th>
-<th align="right">estimate</th>
-<th align="right">std.error</th>
-<th align="right">statistic</th>
-<th align="right">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">(Intercept)</td>
-<td align="right">-556.2290146</td>
-<td align="right">33.8244315</td>
-<td align="right">-16.44459</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">gdp</td>
-<td align="right">0.0126208</td>
-<td align="right">0.0005663</td>
-<td align="right">22.28669</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-<p>Further, we could also examine the residuals to gain insight into what is missing from this model.</p>
-<p><img src="series_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-<p>The model severely underestimates the house index starting during the pandemic. There is a clear pattern to these residuals. Is this a problem?</p>
 </div>
 </div>
 <div id="lab-1" class="section level2 hasAnchor" number="2.8">
 <h2><span class="header-section-number">2.8</span> Lab 1<a href="exploratory-analysis-of-time-series-data.html#lab-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>cross correlation/ decomposition/</p>
+<ol style="list-style-type: decimal">
+<li><p>cross correlation/ decomposition/</p></li>
+<li><p>Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database).</p></li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="exploratory-analysis-of-time-series-data.html#cb2-1" tabindex="-1"></a>fred <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/fred_dat.csv&quot;</span>)</span>
+<span id="cb2-2"><a href="exploratory-analysis-of-time-series-data.html#cb2-2" tabindex="-1"></a>  <span class="co">#read.csv(&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv&quot;)[,-1]</span></span>
+<span id="cb2-3"><a href="exploratory-analysis-of-time-series-data.html#cb2-3" tabindex="-1"></a>fred<span class="sc">$</span>date <span class="ot">=</span> <span class="fu">ymd</span>(fred<span class="sc">$</span>date)</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>We can further hone in on the underlying trend of the residuals at the end of <a href="exploratory-analysis-of-time-series-data.html#time-series-eda">Time Series EDA</a> by computing and plotting a moving average. For a time series <span class="math inline">\(y_t\)</span>, <span class="math inline">\(t = 1, \ldots, T\)</span>, a moving average of order <span class="math inline">\(m\)</span> can be written,
 <span class="math display">\[\begin{align}
@@ -455,7 +434,7 @@ where <span class="math inline">\(m=2k+1\)</span>. The concept behind this techn
 <span id="cb3-10"><a href="exploratory-analysis-of-time-series-data.html#cb3-10" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(date, value)) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> name)) <span class="sc">+</span> </span>
 <span id="cb3-11"><a href="exploratory-analysis-of-time-series-data.html#cb3-11" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
 <span id="cb3-12"><a href="exploratory-analysis-of-time-series-data.html#cb3-12" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Plot of Residuals and their order 7 moving average&quot;</span>)</span></code></pre></div>
-<p><img src="series_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="series_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <ol start="3" style="list-style-type: decimal">
 <li>Join the Kayak visits data (see below) to the conversions data from <a href="exploratory-analysis-of-time-series-data.html#time-series-eda">Time Series EDA</a>. Use the <code>inner_join</code> function with the argument, <code>by = c(“datestamp”, “country_code”, “marketing_channel”)</code> and then filter to only US observations. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the response variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model.</li>
 </ol>
