@@ -15,5 +15,6 @@ exercise-1
 stationarity
 estimation
 mean
+autocovariance-1
 autocorrelation-1
 lab-1

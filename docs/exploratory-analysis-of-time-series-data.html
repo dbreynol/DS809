@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-12-27" />
+<meta name="date" content="2024-12-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -161,7 +161,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.7" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#estimation"><i class="fa fa-check"></i><b>2.7</b> Estimation</a>
 <ul>
 <li class="chapter" data-level="2.7.1" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#mean"><i class="fa fa-check"></i><b>2.7.1</b> Mean</a></li>
-<li class="chapter" data-level="2.7.2" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocorrelation-1"><i class="fa fa-check"></i><b>2.7.2</b> Autocorrelation</a></li>
+<li class="chapter" data-level="2.7.2" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocovariance-1"><i class="fa fa-check"></i><b>2.7.2</b> Autocovariance</a></li>
+<li class="chapter" data-level="2.7.3" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocorrelation-1"><i class="fa fa-check"></i><b>2.7.3</b> Autocorrelation</a></li>
 </ul></li>
 <li class="chapter" data-level="2.8" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#lab-1"><i class="fa fa-check"></i><b>2.8</b> Lab 1</a></li>
 </ul></li>
@@ -358,7 +359,7 @@ x_t &amp;= a + \phi x_t + w_t
 <h3><span class="header-section-number">2.5.3</span> Exercise<a href="exploratory-analysis-of-time-series-data.html#exercise-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Compute the autocorrelation of:</p>
 <ol style="list-style-type: decimal">
-<li>The white noise process.</li>
+<li>The white noise process</li>
 <li>The random walk</li>
 <li><span class="math inline">\(x_t = a + \phi x_{t-1} + w_t\)</span></li>
 </ol>
@@ -368,7 +369,7 @@ x_t &amp;= a + \phi x_t + w_t
 <h2><span class="header-section-number">2.6</span> Stationarity<a href="exploratory-analysis-of-time-series-data.html#stationarity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>A (weakly) stationary time series <span class="math inline">\(x_t\)</span> is a process such that,</p>
 <ol style="list-style-type: decimal">
-<li>Constant mean. <span class="math inline">\(E(X_t) = \mu\)</span>.</li>
+<li>The mean is constant: <span class="math inline">\(E(X_t) = \mu\)</span>.</li>
 <li>The autocovariance function, <span class="math inline">\(\gamma(s,t)\)</span> depends on <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span> only through their difference, <span class="math inline">\(|s-t|\)</span>.</li>
 </ol>
 <p>Therefore, we can write the autocovariance function of a stationary time series as,</p>
@@ -384,22 +385,26 @@ x_t &amp;= a + \phi x_t + w_t
 </div>
 <div id="estimation" class="section level2 hasAnchor" number="2.7">
 <h2><span class="header-section-number">2.7</span> Estimation<a href="exploratory-analysis-of-time-series-data.html#estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Although the theoretical autocorrelation and cross-correlation functions are useful for describing the properties of certain hypothesized models, most of the analyses must be performed using sampled data.</p>
+<p>Although the theoretical mean, autocovariance, and autocorrelation functions are useful for describing the properties of certain hypothesized models, we also need to estimate these quantities using sampled data.</p>
 <div id="mean" class="section level3 hasAnchor" number="2.7.1">
 <h3><span class="header-section-number">2.7.1</span> Mean<a href="exploratory-analysis-of-time-series-data.html#mean" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>If a time series is stationary, the mean function is constant so that we can estimate it by the sample mean,</p>
 <p><span class="math display">\[\begin{align}
 \hat{\mu} = \frac{1}{T} \sum_{t=1}^T x_t
 \end{align}\]</span></p>
+<p><strong>What is the variance of the mean in a stationary time series context?</strong></p>
 </div>
-<div id="autocorrelation-1" class="section level3 hasAnchor" number="2.7.2">
-<h3><span class="header-section-number">2.7.2</span> Autocorrelation<a href="exploratory-analysis-of-time-series-data.html#autocorrelation-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Autocorrelation is the correlation of a time series with a delayed copy of itself, as a function of delay. The sample autocovariance, <span class="math inline">\(\hat{\gamma}\)</span>, for a time series <span class="math inline">\(x\)</span> at lag <span class="math inline">\(k\)</span> is:</p>
+<div id="autocovariance-1" class="section level3 hasAnchor" number="2.7.2">
+<h3><span class="header-section-number">2.7.2</span> Autocovariance<a href="exploratory-analysis-of-time-series-data.html#autocovariance-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The sample autocovariance, <span class="math inline">\(\hat{\gamma}\)</span>, for a time series <span class="math inline">\(x\)</span> at lag <span class="math inline">\(k\)</span> is:</p>
 <p><span class="math display">\[\begin{align}
 \hat{\gamma}_k &amp;= \text{cov}(x_t, x_{t-k}) \\
 &amp;=  \frac{1}{T} \sum_{t = k + 1}^{T} (x_t - \bar{x})(x_{t-k} - \bar{x})
 \end{align}\]</span></p>
-<p>The sample autocorrelation function for lag <span class="math inline">\(k\)</span>, <span class="math inline">\(\hat{\rho}_k\)</span>, is simply the lag <span class="math inline">\(k\)</span> autocovariance, <span class="math inline">\(\hat{\gamma_k}\)</span>, scaled by the standard deviation.</p>
+</div>
+<div id="autocorrelation-1" class="section level3 hasAnchor" number="2.7.3">
+<h3><span class="header-section-number">2.7.3</span> Autocorrelation<a href="exploratory-analysis-of-time-series-data.html#autocorrelation-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The sample autocorrelation function for lag <span class="math inline">\(k\)</span>, <span class="math inline">\(\hat{\rho}_k\)</span>, is simply the lag <span class="math inline">\(k\)</span> autocovariance, <span class="math inline">\(\hat{\gamma_k}\)</span>, scaled by the sample variance.</p>
 <p><span class="math display">\[\begin{align}
 \hat{\rho}_k &amp;= \frac{ \hat{\gamma_k} }{\hat{\sigma}_{y_t} \hat{\sigma}_{y_{t-k}}} \\
 &amp;= \frac{ \hat{\gamma_k} }{\hat{\gamma_0}}.
@@ -409,12 +414,33 @@ x_t &amp;= a + \phi x_t + w_t
 <div id="lab-1" class="section level2 hasAnchor" number="2.8">
 <h2><span class="header-section-number">2.8</span> Lab 1<a href="exploratory-analysis-of-time-series-data.html#lab-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
+<li>Join the Kayak visits data (see below) to the conversions data from <a href="exploratory-analysis-of-time-series-data.html#time-series-eda">Time Series EDA</a>. Use the <code>inner_join</code> function with the argument, <code>by = c(“datestamp”, “country_code”, “marketing_channel”)</code> and then filter to only US observations. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the response variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model. Do the residuals validate standard linear regression model assumptions?</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="exploratory-analysis-of-time-series-data.html#cb2-1" tabindex="-1"></a>visits <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv&quot;</span>)</span>
+<span id="cb2-2"><a href="exploratory-analysis-of-time-series-data.html#cb2-2" tabindex="-1"></a>visits<span class="sc">$</span>datestamp <span class="ot">=</span> <span class="fu">ymd</span>(visits<span class="sc">$</span>datestamp)</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Smoothing a time series offers a way of visualizing the underlying trend of a process, which can often be obscured by seasonal as well as random fluctuations. One relatively simple method of smoothing a time series is by computing a moving average. For a time series <span class="math inline">\(y_t\)</span>, <span class="math inline">\(t = 1, \ldots, T\)</span>, a moving average of order <span class="math inline">\(m\)</span> can be written,
+<span class="math display">\[\begin{align}
+\hat{y_t} = \frac{1}{m} \sum_{j=-k}^{k} y_{t+j},
+\end{align}\]</span>
+where <span class="math inline">\(m=2k+1\)</span>. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order <span class="math inline">\(m=13\)</span> for the <code>fpp2::elec</code> dataframe used in <a href="exploratory-analysis-of-time-series-data.html#classical-regression">Classical Regression</a>. Plot the smoothed series along with the raw data in a single plot.</p></li>
+<li><p>Time series data can exhibit a variety of patterns, and it is often helpful to decompose a time series into components, each representing an underlying pattern category. In this question, you will decompose a time series into three parts: a trend component (<span class="math inline">\(T\)</span>), a seasonality component (<span class="math inline">\(S\)</span>), and a random component (<span class="math inline">\(R\)</span>). That is, for each observation <span class="math inline">\(Y_t\)</span>, we want to break it down into three parts:</p></li>
+</ol>
+<p><span class="math display">\[Y_T = T_t + S_t + R_t\]</span>
+You will again use the <code>fpp2::elec</code> dataframe and proceed in 3 steps:</p>
+<ul>
+<li><p><em>Step 1</em>: Compute the trend component using an order 13 moving average (good news: you did exactly this in the last question, so use the output from the prior question as the trend component, <span class="math inline">\(\hat{T}\)</span>).</p></li>
+<li><p><em>Step 2</em>: Compute the detrended series: <span class="math inline">\(Y-\hat{T}\)</span></p></li>
+<li><p><em>Step 3</em>: To estimate the seasonal component for each month, simply average the detrended values for each month. For example, the seasonal component for March is the average of all the detrended March values in the data. Then adjust the seasonal component values to ensure that they add to zero. The seasonal component is obtained by stringing together these monthly values, and then replicating the sequence for each year of data. This gives <span class="math inline">\(\hat{S}\)</span>.</p></li>
+<li><p><em>Step 4</em>: The remainder component is calculated by subtracting the estimated seasonal and trend-cycle components. That is <span class="math inline">\(\hat{R} = Y - \hat{T} - \hat{S}\)</span>.</p></li>
+</ul>
+<p>Provide your code that is clearly commented for each step as well as a plot that shows each of the three component series in three separate plots (<code>par(mfrow = c(1,3))</code>).</p>
+<ol style="list-style-type: decimal">
 <li><p>cross correlation/ decomposition/</p></li>
 <li><p>Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database).</p></li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="exploratory-analysis-of-time-series-data.html#cb2-1" tabindex="-1"></a>fred <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/fred_dat.csv&quot;</span>)</span>
-<span id="cb2-2"><a href="exploratory-analysis-of-time-series-data.html#cb2-2" tabindex="-1"></a>  <span class="co">#read.csv(&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv&quot;)[,-1]</span></span>
-<span id="cb2-3"><a href="exploratory-analysis-of-time-series-data.html#cb2-3" tabindex="-1"></a>fred<span class="sc">$</span>date <span class="ot">=</span> <span class="fu">ymd</span>(fred<span class="sc">$</span>date)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="exploratory-analysis-of-time-series-data.html#cb3-1" tabindex="-1"></a>fred <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv&quot;</span>)[,<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb3-2"><a href="exploratory-analysis-of-time-series-data.html#cb3-2" tabindex="-1"></a>fred<span class="sc">$</span>date <span class="ot">=</span> <span class="fu">ymd</span>(fred<span class="sc">$</span>date)</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>We can further hone in on the underlying trend of the residuals at the end of <a href="exploratory-analysis-of-time-series-data.html#time-series-eda">Time Series EDA</a> by computing and plotting a moving average. For a time series <span class="math inline">\(y_t\)</span>, <span class="math inline">\(t = 1, \ldots, T\)</span>, a moving average of order <span class="math inline">\(m\)</span> can be written,
 <span class="math display">\[\begin{align}
@@ -422,52 +448,19 @@ x_t &amp;= a + \phi x_t + w_t
 \end{align}\]</span>
 where <span class="math inline">\(m=2k+1\)</span>. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order <span class="math inline">\(m=7\)</span> for the residual time series and plot it along with the residuals in a single plot.</li>
 </ol>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="exploratory-analysis-of-time-series-data.html#cb3-1" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">length</span>(mod_df<span class="sc">$</span>resids)</span>
-<span id="cb3-2"><a href="exploratory-analysis-of-time-series-data.html#cb3-2" tabindex="-1"></a>ma_resids <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>, <span class="at">dim =</span> n) <span class="co"># initialize residuals vector</span></span>
-<span id="cb3-3"><a href="exploratory-analysis-of-time-series-data.html#cb3-3" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">4</span><span class="sc">:</span>(n<span class="dv">-3</span>)) { </span>
-<span id="cb3-4"><a href="exploratory-analysis-of-time-series-data.html#cb3-4" tabindex="-1"></a>  ma_resids[i] <span class="ot">=</span> <span class="fu">mean</span>(mod_df<span class="sc">$</span>resids[(i<span class="dv">-3</span>)<span class="sc">:</span>(i<span class="sc">+</span><span class="dv">3</span>)])</span>
-<span id="cb3-5"><a href="exploratory-analysis-of-time-series-data.html#cb3-5" tabindex="-1"></a>}</span>
-<span id="cb3-6"><a href="exploratory-analysis-of-time-series-data.html#cb3-6" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="exploratory-analysis-of-time-series-data.html#cb3-7" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">date =</span> mod_df<span class="sc">$</span>datestamp, <span class="at">resids =</span> mod_df<span class="sc">$</span>resids, <span class="at">ma =</span> ma_resids) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-8"><a href="exploratory-analysis-of-time-series-data.html#cb3-8" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb3-9"><a href="exploratory-analysis-of-time-series-data.html#cb3-9" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>date) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-10"><a href="exploratory-analysis-of-time-series-data.html#cb3-10" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(date, value)) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> name)) <span class="sc">+</span> </span>
-<span id="cb3-11"><a href="exploratory-analysis-of-time-series-data.html#cb3-11" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
-<span id="cb3-12"><a href="exploratory-analysis-of-time-series-data.html#cb3-12" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Plot of Residuals and their order 7 moving average&quot;</span>)</span></code></pre></div>
-<p><img src="series_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
-<ol start="3" style="list-style-type: decimal">
-<li>Join the Kayak visits data (see below) to the conversions data from <a href="exploratory-analysis-of-time-series-data.html#time-series-eda">Time Series EDA</a>. Use the <code>inner_join</code> function with the argument, <code>by = c(“datestamp”, “country_code”, “marketing_channel”)</code> and then filter to only US observations. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the response variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model.</li>
-</ol>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="exploratory-analysis-of-time-series-data.html#cb4-1" tabindex="-1"></a>visits <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv&quot;</span>)</span>
-<span id="cb4-2"><a href="exploratory-analysis-of-time-series-data.html#cb4-2" tabindex="-1"></a>visits<span class="sc">$</span>datestamp <span class="ot">=</span> <span class="fu">ymd</span>(visits<span class="sc">$</span>datestamp)</span>
-<span id="cb4-3"><a href="exploratory-analysis-of-time-series-data.html#cb4-3" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="exploratory-analysis-of-time-series-data.html#cb4-4" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">inner_join</span>(visits, conversions, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;datestamp&quot;</span>, <span class="st">&quot;country_code&quot;</span>, <span class="st">&quot;marketing_channel&quot;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-5"><a href="exploratory-analysis-of-time-series-data.html#cb4-5" tabindex="-1"></a>  <span class="fu">filter</span>(country_code <span class="sc">==</span> <span class="st">&quot;us&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-6"><a href="exploratory-analysis-of-time-series-data.html#cb4-6" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb4-7"><a href="exploratory-analysis-of-time-series-data.html#cb4-7" tabindex="-1"></a>  <span class="fu">group_by</span>(datestamp) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-8"><a href="exploratory-analysis-of-time-series-data.html#cb4-8" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">visits =</span> <span class="fu">sum</span>(user_visits), <span class="at">conv =</span> <span class="fu">sum</span>(conversions))</span>
-<span id="cb4-9"><a href="exploratory-analysis-of-time-series-data.html#cb4-9" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="exploratory-analysis-of-time-series-data.html#cb4-10" tabindex="-1"></a>conv_lm <span class="ot">=</span> <span class="fu">lm</span>(conv <span class="sc">~</span> visits, <span class="at">data =</span> df) <span class="co"># conversions = 2752.13 + .31 * visits</span></span>
-<span id="cb4-11"><a href="exploratory-analysis-of-time-series-data.html#cb4-11" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="exploratory-analysis-of-time-series-data.html#cb4-12" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">std_visits =</span> (visits <span class="sc">-</span> <span class="fu">mean</span>(visits))<span class="sc">/</span><span class="fu">sd</span>(visits), <span class="at">std_conv =</span> (conv <span class="sc">-</span> <span class="fu">mean</span>(conv))<span class="sc">/</span><span class="fu">sd</span>(conv)) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-13"><a href="exploratory-analysis-of-time-series-data.html#cb4-13" tabindex="-1"></a>  <span class="fu">select</span>(datestamp, std_visits, std_conv) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-14"><a href="exploratory-analysis-of-time-series-data.html#cb4-14" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>datestamp) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-15"><a href="exploratory-analysis-of-time-series-data.html#cb4-15" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(datestamp, value)) <span class="sc">+</span> </span>
-<span id="cb4-16"><a href="exploratory-analysis-of-time-series-data.html#cb4-16" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> name)) <span class="sc">+</span> </span>
-<span id="cb4-17"><a href="exploratory-analysis-of-time-series-data.html#cb4-17" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
-<span id="cb4-18"><a href="exploratory-analysis-of-time-series-data.html#cb4-18" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Standardized Visits and Conversions&quot;</span>)</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <ol start="4" style="list-style-type: decimal">
 <li>Wrtie a function in R that takes two arguments: a time series (<span class="math inline">\(y\)</span>) formatted as a vector and an integer (<span class="math inline">\(k\)</span>) specifying a lag. The output for this function is the lag <span class="math inline">\(k\)</span> autocorrelation for <span class="math inline">\(y\)</span>, using the formula in <a href="exploratory-analysis-of-time-series-data.html#autocorrelation">Autocorrelation</a>. Compare the output of your function to the output from <code>(acf(y))</code>. An extra challenge is to allow <span class="math inline">\(k\)</span> to be a vector of lags, in which case your function should return a vector of autocorrelation values.</li>
 </ol>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="exploratory-analysis-of-time-series-data.html#cb5-1" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="fl">1e5</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> <span class="fu">c</span>(.<span class="dv">1</span>,.<span class="dv">2</span>)))</span>
-<span id="cb5-2"><a href="exploratory-analysis-of-time-series-data.html#cb5-2" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="exploratory-analysis-of-time-series-data.html#cb5-3" tabindex="-1"></a>acf_fun <span class="ot">=</span> <span class="cf">function</span>(y, k) {</span>
-<span id="cb5-4"><a href="exploratory-analysis-of-time-series-data.html#cb5-4" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">cor</span>( <span class="fu">window</span>(y, <span class="at">end =</span> <span class="fu">length</span>(y)<span class="sc">-</span>k ), <span class="fu">window</span>(y,<span class="at">start =</span> k<span class="sc">+</span><span class="dv">1</span>)))</span>
-<span id="cb5-5"><a href="exploratory-analysis-of-time-series-data.html#cb5-5" tabindex="-1"></a>}</span>
-<span id="cb5-6"><a href="exploratory-analysis-of-time-series-data.html#cb5-6" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="exploratory-analysis-of-time-series-data.html#cb5-7" tabindex="-1"></a><span class="fu">acf_fun</span>(y,<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="exploratory-analysis-of-time-series-data.html#cb4-1" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="fl">1e5</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> <span class="fu">c</span>(.<span class="dv">1</span>,.<span class="dv">2</span>)))</span>
+<span id="cb4-2"><a href="exploratory-analysis-of-time-series-data.html#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="exploratory-analysis-of-time-series-data.html#cb4-3" tabindex="-1"></a>acf_fun <span class="ot">=</span> <span class="cf">function</span>(y, k) {</span>
+<span id="cb4-4"><a href="exploratory-analysis-of-time-series-data.html#cb4-4" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">cor</span>( <span class="fu">window</span>(y, <span class="at">end =</span> <span class="fu">length</span>(y)<span class="sc">-</span>k ), <span class="fu">window</span>(y,<span class="at">start =</span> k<span class="sc">+</span><span class="dv">1</span>)))</span>
+<span id="cb4-5"><a href="exploratory-analysis-of-time-series-data.html#cb4-5" tabindex="-1"></a>}</span>
+<span id="cb4-6"><a href="exploratory-analysis-of-time-series-data.html#cb4-6" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="exploratory-analysis-of-time-series-data.html#cb4-7" tabindex="-1"></a><span class="fu">acf_fun</span>(y,<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## [1] 0.2160751</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="exploratory-analysis-of-time-series-data.html#cb7-1" tabindex="-1"></a>(<span class="fu">acf</span>(y, <span class="at">plot =</span> F))<span class="sc">$</span>acf[<span class="dv">3</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="exploratory-analysis-of-time-series-data.html#cb6-1" tabindex="-1"></a>(<span class="fu">acf</span>(y, <span class="at">plot =</span> F))<span class="sc">$</span>acf[<span class="dv">3</span>]</span></code></pre></div>
 <pre><code>## [1] 0.2160726</code></pre>
 
 </div>

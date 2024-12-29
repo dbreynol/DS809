@@ -258,14 +258,13 @@ The autocorrelation function (ACF) is defined as,
 \rho(s,t) &= \frac{\gamma(s,t)}{\sqrt{\gamma(s,s) \gamma(t,t)}}
 \end{align}
 
-
 The ACF measures the linear predictability of the series at time $t$, say $x_t$ , using only the value $x_s$. 
 
 ### Exercise
 
 Compute the autocorrelation of:
 
-1. The white noise process.
+1. The white noise process
 2. The random walk
 3. $x_t = a + \phi x_{t-1} + w_t$
 
@@ -274,7 +273,7 @@ Compute the autocorrelation of:
 
 A (weakly) stationary time series $x_t$ is a process such that,
 
-1. Constant mean. $E(X_t) = \mu$.
+1. The mean is constant: $E(X_t) = \mu$.
 2. The autocovariance function, $\gamma(s,t)$ depends on $s$ and $t$ only through their difference, $|s-t|$.
 
 Therefore, we can write the autocovariance function of a stationary time series as,
@@ -295,7 +294,7 @@ And, similarly, the autocorrelation function of a stationary time series can be 
 
 ## Estimation
 
-Although the theoretical autocorrelation and cross-correlation functions are useful for describing the properties of certain hypothesized models, most of the analyses must be performed using sampled data.
+Although the theoretical mean, autocovariance, and autocorrelation functions are useful for describing the properties of certain hypothesized models, we also need to estimate these quantities using sampled data.
 
 ### Mean
 
@@ -305,16 +304,20 @@ If a time series is stationary, the mean function is constant so that we can est
 \hat{\mu} = \frac{1}{T} \sum_{t=1}^T x_t 
 \end{align}
 
-### Autocorrelation
+**What is the variance of the mean in a stationary time series context?**
 
-Autocorrelation is the correlation of a time series with a delayed copy of itself, as a function of delay. The sample autocovariance, $\hat{\gamma}$, for a time series $x$ at lag $k$ is:
+### Autocovariance
+
+The sample autocovariance, $\hat{\gamma}$, for a time series $x$ at lag $k$ is:
 
 \begin{align}
 \hat{\gamma}_k &= \text{cov}(x_t, x_{t-k}) \\
 &=  \frac{1}{T} \sum_{t = k + 1}^{T} (x_t - \bar{x})(x_{t-k} - \bar{x})
 \end{align}
 
-The sample autocorrelation function for lag $k$, $\hat{\rho}_k$, is simply the lag $k$ autocovariance, $\hat{\gamma_k}$, scaled by the standard deviation.
+### Autocorrelation
+
+The sample autocorrelation function for lag $k$, $\hat{\rho}_k$, is simply the lag $k$ autocovariance, $\hat{\gamma_k}$, scaled by the sample variance.
 
 \begin{align}
 \hat{\rho}_k &= \frac{ \hat{\gamma_k} }{\hat{\sigma}_{y_t} \hat{\sigma}_{y_{t-k}}} \\
@@ -322,17 +325,45 @@ The sample autocorrelation function for lag $k$, $\hat{\rho}_k$, is simply the l
 \end{align}
 
 
-
-
 ## Lab 1
+
+1. Join the Kayak visits data (see below) to the conversions data from [Time Series EDA]. Use the <code>inner_join</code> function with the argument, <code>by = c("datestamp", "country_code", "marketing_channel")</code> and then filter to only US observations. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the response variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model. Do the residuals validate standard linear regression model assumptions?
+
+```{r echo=TRUE, eval=FALSE}
+visits = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv")
+visits$datestamp = ymd(visits$datestamp)
+```
+
+2. Smoothing a time series offers a way of visualizing the underlying trend of a process, which can often be obscured by seasonal as well as random fluctuations. One relatively simple method of smoothing a time series is by computing a moving average. For a time series $y_t$, $t = 1, \ldots, T$, a moving average of order $m$ can be written,
+\begin{align}
+\hat{y_t} = \frac{1}{m} \sum_{j=-k}^{k} y_{t+j},
+\end{align}
+where $m=2k+1$. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order $m=13$ for the <code>fpp2::elec</code> dataframe used in [Classical Regression]. Plot the smoothed series along with the raw data in a single plot. 
+
+
+3. Time series data can exhibit a variety of patterns, and it is often helpful to decompose a time series into components, each representing an underlying pattern category. In this question, you will decompose a time series into three parts: a trend component ($T$), a seasonality component ($S$), and a random component ($R$). That is, for each observation $Y_t$, we want to break it down into three parts:
+
+$$Y_T = T_t + S_t + R_t$$
+You will again use the <code>fpp2::elec</code> dataframe and proceed in 3 steps:
+
+* *Step 1*: Compute the trend component using an order 13 moving average (good news: you did exactly this in the last question, so use the output from the prior question as the trend component, $\hat{T}$).
+
+* *Step 2*: Compute the detrended series: $Y-\hat{T}$
+
+* *Step 3*: To estimate the seasonal component for each month, simply average the detrended values for each month. For example, the seasonal component for March is the average of all the detrended March values in the data. Then adjust the seasonal component values to ensure that they add to zero. The seasonal component is obtained by stringing together these monthly values, and then replicating the sequence for each year of data. This gives $\hat{S}$.
+
+* *Step 4*: The remainder component is calculated by subtracting the estimated seasonal and trend-cycle components. That is $\hat{R} = Y - \hat{T} - \hat{S}$.
+
+Provide your code that is clearly commented for each step as well as a plot that shows each of the three component series in three separate plots (<code>par(mfrow = c(1,3))</code>).
+
+
 
 1. cross correlation/ decomposition/ 
 
 2. Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database). 
 
 ```{r echo=TRUE}
-fred = read.csv("data/fred_dat.csv")
-  #read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv")[,-1]
+fred = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv")[,-1]
 fred$date = ymd(fred$date)
 ```
 
@@ -343,7 +374,7 @@ fred$date = ymd(fred$date)
 \end{align}
 where $m=2k+1$. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order $m=7$ for the residual time series and plot it along with the residuals in a single plot.
 
-```{r echo=TRUE}
+```{r echo=F}
 n = length(mod_df$resids)
 ma_resids = array(NA, dim = n) # initialize residuals vector
 for(i in 4:(n-3)) { 
@@ -360,11 +391,8 @@ data.frame(date = mod_df$datestamp, resids = mod_df$resids, ma = ma_resids) %>%
 
 
 
-3. Join the Kayak visits data (see below) to the conversions data from [Time Series EDA]. Use the <code>inner_join</code> function with the argument, <code>by = c("datestamp", "country_code", "marketing_channel")</code> and then filter to only US observations. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the response variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model.
 
-```{r echo=TRUE, eval=FALSE}
-visits = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv")
-visits$datestamp = ymd(visits$datestamp)
+```{r eval=FALSE, echo=FALSE}
 
 df = inner_join(visits, conversions, by = c("datestamp", "country_code", "marketing_channel")) %>% 
   filter(country_code == "us") %>% 
