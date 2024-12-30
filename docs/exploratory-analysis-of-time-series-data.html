@@ -434,34 +434,15 @@ You will again use the <code>fpp2::elec</code> dataframe and proceed in 3 steps:
 <li><p><em>Step 3</em>: To estimate the seasonal component for each month, simply average the detrended values for each month. For example, the seasonal component for March is the average of all the detrended March values in the data. Then adjust the seasonal component values to ensure that they add to zero. The seasonal component is obtained by stringing together these monthly values, and then replicating the sequence for each year of data. This gives <span class="math inline">\(\hat{S}\)</span>.</p></li>
 <li><p><em>Step 4</em>: The remainder component is calculated by subtracting the estimated seasonal and trend-cycle components. That is <span class="math inline">\(\hat{R} = Y - \hat{T} - \hat{S}\)</span>.</p></li>
 </ul>
-<p>Provide your code that is clearly commented for each step as well as a plot that shows each of the three component series in three separate plots (<code>par(mfrow = c(1,3))</code>).</p>
-<ol style="list-style-type: decimal">
-<li><p>cross correlation/ decomposition/</p></li>
-<li><p>Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database).</p></li>
+<p>Provide your code that is clearly commented for each step as well as a plot that shows each of the three component series in three separate plots (hint: use <code>par(mfrow = c(1,3))</code> to make three plots in a row).</p>
+<ol start="4" style="list-style-type: decimal">
+<li>See chapter 1 of TSA (page 18) for a definition of cross correlation. This is a measure of the linear dependence of one time series on another. In other words, this is a multivariate version of the autocorrelation. Compute the cross correlation between GDP per capita and the Case Shiller Home Price Index (both from the FRED database), using the following data:</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="exploratory-analysis-of-time-series-data.html#cb3-1" tabindex="-1"></a>fred <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv&quot;</span>)[,<span class="sc">-</span><span class="dv">1</span>]</span>
 <span id="cb3-2"><a href="exploratory-analysis-of-time-series-data.html#cb3-2" tabindex="-1"></a>fred<span class="sc">$</span>date <span class="ot">=</span> <span class="fu">ymd</span>(fred<span class="sc">$</span>date)</span></code></pre></div>
-<ol start="2" style="list-style-type: decimal">
-<li>We can further hone in on the underlying trend of the residuals at the end of <a href="exploratory-analysis-of-time-series-data.html#time-series-eda">Time Series EDA</a> by computing and plotting a moving average. For a time series <span class="math inline">\(y_t\)</span>, <span class="math inline">\(t = 1, \ldots, T\)</span>, a moving average of order <span class="math inline">\(m\)</span> can be written,
-<span class="math display">\[\begin{align}
-\hat{y_t} = \frac{1}{m} \sum_{j=-k}^{k} y_{t+j},
-\end{align}\]</span>
-where <span class="math inline">\(m=2k+1\)</span>. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order <span class="math inline">\(m=7\)</span> for the residual time series and plot it along with the residuals in a single plot.</li>
+<ol start="5" style="list-style-type: decimal">
+<li>Write a function in R that takes two arguments: a time series (<span class="math inline">\(y\)</span>) formatted as a vector and a vector (<span class="math inline">\(k\)</span>) specifying a set of lags. The output for this function is the autocorrelation of <span class="math inline">\(y\)</span> for each lag in <span class="math inline">\(k\)</span>, using the formula in <a href="exploratory-analysis-of-time-series-data.html#autocorrelation">Autocorrelation</a>. Compare the output of your function to the output from <code>(acf(y))</code>.</li>
 </ol>
-<p><img src="series_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
-<ol start="4" style="list-style-type: decimal">
-<li>Wrtie a function in R that takes two arguments: a time series (<span class="math inline">\(y\)</span>) formatted as a vector and an integer (<span class="math inline">\(k\)</span>) specifying a lag. The output for this function is the lag <span class="math inline">\(k\)</span> autocorrelation for <span class="math inline">\(y\)</span>, using the formula in <a href="exploratory-analysis-of-time-series-data.html#autocorrelation">Autocorrelation</a>. Compare the output of your function to the output from <code>(acf(y))</code>. An extra challenge is to allow <span class="math inline">\(k\)</span> to be a vector of lags, in which case your function should return a vector of autocorrelation values.</li>
-</ol>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="exploratory-analysis-of-time-series-data.html#cb4-1" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="fl">1e5</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> <span class="fu">c</span>(.<span class="dv">1</span>,.<span class="dv">2</span>)))</span>
-<span id="cb4-2"><a href="exploratory-analysis-of-time-series-data.html#cb4-2" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="exploratory-analysis-of-time-series-data.html#cb4-3" tabindex="-1"></a>acf_fun <span class="ot">=</span> <span class="cf">function</span>(y, k) {</span>
-<span id="cb4-4"><a href="exploratory-analysis-of-time-series-data.html#cb4-4" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">cor</span>( <span class="fu">window</span>(y, <span class="at">end =</span> <span class="fu">length</span>(y)<span class="sc">-</span>k ), <span class="fu">window</span>(y,<span class="at">start =</span> k<span class="sc">+</span><span class="dv">1</span>)))</span>
-<span id="cb4-5"><a href="exploratory-analysis-of-time-series-data.html#cb4-5" tabindex="-1"></a>}</span>
-<span id="cb4-6"><a href="exploratory-analysis-of-time-series-data.html#cb4-6" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="exploratory-analysis-of-time-series-data.html#cb4-7" tabindex="-1"></a><span class="fu">acf_fun</span>(y,<span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 0.2160751</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="exploratory-analysis-of-time-series-data.html#cb6-1" tabindex="-1"></a>(<span class="fu">acf</span>(y, <span class="at">plot =</span> F))<span class="sc">$</span>acf[<span class="dv">3</span>]</span></code></pre></div>
-<pre><code>## [1] 0.2160726</code></pre>
 
 </div>
 </div>

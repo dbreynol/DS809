@@ -354,40 +354,16 @@ You will again use the <code>fpp2::elec</code> dataframe and proceed in 3 steps:
 
 * *Step 4*: The remainder component is calculated by subtracting the estimated seasonal and trend-cycle components. That is $\hat{R} = Y - \hat{T} - \hat{S}$.
 
-Provide your code that is clearly commented for each step as well as a plot that shows each of the three component series in three separate plots (<code>par(mfrow = c(1,3))</code>).
+Provide your code that is clearly commented for each step as well as a plot that shows each of the three component series in three separate plots (hint: use <code>par(mfrow = c(1,3))</code> to make three plots in a row).
 
-
-
-1. cross correlation/ decomposition/ 
-
-2. Often we will want to develop insight into the relationship between several variables. To illustrate, we will use quarterly data on GDP per capita and the Case Shiller Home Price Index (both from the FRED database). 
+4. See chapter 1 of TSA (page 18) for a definition of cross correlation. This is a measure of the linear dependence of one time series on another. In other words, this is a multivariate version of the autocorrelation. Compute the cross correlation between GDP per capita and the Case Shiller Home Price Index (both from the FRED database), using the following data: 
 
 ```{r echo=TRUE}
 fred = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv")[,-1]
 fred$date = ymd(fred$date)
 ```
 
-
-2. We can further hone in on the underlying trend of the residuals at the end of [Time Series EDA] by computing and plotting a moving average. For a time series $y_t$, $t = 1, \ldots, T$, a moving average of order $m$ can be written,
-\begin{align}
-\hat{y_t} = \frac{1}{m} \sum_{j=-k}^{k} y_{t+j},
-\end{align}
-where $m=2k+1$. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order $m=7$ for the residual time series and plot it along with the residuals in a single plot.
-
-```{r echo=F}
-n = length(mod_df$resids)
-ma_resids = array(NA, dim = n) # initialize residuals vector
-for(i in 4:(n-3)) { 
-  ma_resids[i] = mean(mod_df$resids[(i-3):(i+3)])
-}
-
-data.frame(date = mod_df$datestamp, resids = mod_df$resids, ma = ma_resids) %>% 
-  drop_na() %>% 
-  pivot_longer(-date) %>% 
-  ggplot(aes(date, value)) + geom_line(aes(color = name)) + 
-  theme_minimal() + 
-  ggtitle("Plot of Residuals and their order 7 moving average")
-```
+5. Write a function in R that takes two arguments: a time series ($y$) formatted as a vector and a vector ($k$) specifying a set of lags. The output for this function is the autocorrelation of $y$ for each lag in $k$, using the formula in [Autocorrelation]. Compare the output of your function to the output from <code>(acf(y))</code>.
 
 
 
@@ -411,9 +387,8 @@ df %>% mutate(std_visits = (visits - mean(visits))/sd(visits), std_conv = (conv 
   ggtitle("Standardized Visits and Conversions")
 ```
 
-4. Wrtie a function in R that takes two arguments: a time series ($y$) formatted as a vector and an integer ($k$) specifying a lag. The output for this function is the lag $k$ autocorrelation for $y$, using the formula in [Autocorrelation]. Compare the output of your function to the output from <code>(acf(y))</code>. An extra challenge is to allow $k$ to be a vector of lags, in which case your function should return a vector of autocorrelation values.
 
-```{r echo=TRUE}
+```{r echo=F, eval=FALSE}
 
 y = arima.sim(n = 1e5, model = list(ar = c(.1,.2)))
 
