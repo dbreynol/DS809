@@ -1,0 +1,299 @@
+# ARMA
+
+## Operators
+
+### Backshift operator
+
+The _backshift shift operator_ ($\mathbf{B}$) is an important function in time series analysis, which we define as
+
+$$ \mathbf{B} x_t = x_{t-1} $$
+
+or more generally as
+
+$$ \mathbf{B}^k x_t = x_{t-k} $$
+
+<span style="color:red">For example, express a random walk, $x_t = x_{t-1} + w_t$, using $\mathbf{B}$.</span>
+
+### The difference operator
+
+The _difference operator_ ($\nabla$) is another important function in time series analysis, which we define as
+
+$$ \nabla x_t = x_t - x_{t-1} $$
+
+<span style="color:red">For example, what does first-differencing a random walk yield?</span>
+
+The difference operator and the backshift operator are related
+
+$$ \nabla^k = (1 - \mathbf{B})^k $$
+Differencing is a simple means for removing a trend
+
+The 1st-difference removes a linear trend
+
+A 2nd-difference will remove a quadratic trend
+
+```{r diff_linear, fig.align="center"}
+## create biased RW
+rr <- ww <- rnorm(50)
+for(t in 2:50) {
+  rr[t] <- 0.3 + rr[t-1] + ww[t]
+}
+
+par(mfrow = c(1,2), mai = c(0.5,0.8,0.1,0), omi=c(0,0,0,0))
+
+## raw data
+plot.ts(rr, las = 1,
+        ylab = expression(italic(x[t])))
+## first difference
+plot.ts(diff(rr), las = 1,
+        ylab = expression(nabla~italic(x[t])))
+```
+
+## Autoregressive (AR) models
+
+An _autoregressive_ model of order _p_, or AR(_p_), is defined as
+
+$$x_t = \phi_1 x_{t-1} + \phi_2 x_{t-2} + \dots + \phi_p x_{t-p} + w_t$$
+
+where we assume
+
+1. $w_t$ is white noise
+
+2. $\phi_p \neq 0$ for an order-_p_ process
+
+```{r ex_AR_models}
+## the 4 AR coefficients
+ARp <- c(0.7, 0.2, -0.1, -0.3)
+## empty list for storing models
+AR_mods <- vector("list", 4L)
+
+par(mfrow = c(2,2), mai = c(0.7,0.7,0.3,0.1), omi = c(0,0,0,0))
+## loop over orders of p
+for(p in 1:4) {
+  ## assume SD=1, so not specified
+  AR_mods[[p]] <- arima.sim(n=50, list(ar=ARp[1:p]))
+  plot.ts(AR_mods[[p]], las = 1,
+          ylab = expression(italic(x[t])))
+  mtext(side = 3, paste0("AR(",p,")"),
+        line = 0.5, adj = 0)
+}
+```
+
+### AR(1) Model
+
+Let's start by figuring out some properties of the simplest AR model, the AR(1) model:
+
+$$x_t = \phi_0 + \phi_1 x_{t-1} + w_t$$
+
+We start by assuming that $x_t$ is a stationary time series. Under this assumption, we can show:
+
+\begin{align}
+E(x_t) &= \frac{\phi_0}{1-\phi_1} \\
+Var(x_t) &= \frac{\sigma^2_w}{1-\phi_1^2} \\
+\rho(h) &= \phi_1^h
+\end{align}
+
+For this to work, $|\phi_1| < 1$. 
+
+### Stationarity
+
+We seek a means for identifying whether our AR(_p_) models are also stationary. We can write out an AR(_p_) model using the backshift operator:
+
+$$
+  x_t = \phi_1 x_{t-1} + \phi_2 x_{t-2} + \dots + \phi_p x_{t-p} + w_t \\
+  \Downarrow \\
+\begin{align}
+  x_t - \phi_1 x_{t-1} - \phi_2 x_{t-2} - \dots - \phi_p x_{t-p} &= w_t \\
+  (1 - \phi_1 \mathbf{B} - \phi_2 \mathbf{B}^2 - \dots - \phi_p \mathbf{B}^p) x_t &= w_t \\
+  \phi_p (\mathbf{B}^p) x_t &= w_t \\
+\end{align}
+$$
+
+If we treat $\mathbf{B}$ as a number (or numbers), we can out write the _characteristic equation_ as $\phi_p (\mathbf{B}^p)$.
+
+To be stationary, __all roots__ of the characteristic equation __must exceed 1 in absolute value__
+
+<span style="color:red">Example, for what value of $\phi_1$ is AR(1) model stationary?</span>
+
+```{r ar_comp_pos_neg, fig.height=4}
+## list description for AR(1) model with small coef
+AR_pos <- list(order=c(1,0,0), ar=0.7, sd=0.1)
+## list description for AR(1) model with large coef
+AR_neg <- list(order=c(1,0,0), ar=-0.7, sd=0.1)
+## simulate AR(1)
+AR1_pos <- arima.sim(n=500, model=AR_pos)
+AR1_neg <- arima.sim(n=500, model=AR_neg)
+
+## get y-limits for common plots
+ylm1 <- c(min(AR1_pos[1:50],AR1_neg[1:50]), max(AR1_pos[1:50],AR1_neg[1:50]))
+
+## set the margins & text size
+par(mfrow=c(1,2), mai=c(0.8,0.8,0.3,0.2), oma=c(0,0,0,0))
+## plot the ts
+plot.ts(AR1_pos[1:50], ylim=ylm1, las = 1,
+        ylab=expression(italic(x)[italic(t)]),
+        main = "")
+mtext(side = 3, expression(paste(phi[1]," = 0.7")),
+      line = 0.4, adj = 0)
+plot.ts(AR1_neg[1:50], ylim=ylm1, las = 1,
+        ylab=expression(italic(x)[italic(t)]),
+        main = "")
+mtext(side = 3, expression(paste(phi[1]," = -0.7")),
+      line = 0.4, adj = 0)
+```
+
+### Autocorrelation
+
+```{r ex_acf_AR}
+## set the margins & text size
+par(mfrow=c(2,2), mai=c(0.8,0.8,0.3,0.2), oma=c(0,0,0,0))
+## plot the ts
+plot.ts(AR1_pos[1:50], ylim=ylm1, las = 1,
+        ylab=expression(italic(x)[italic(t)]),
+        main = "")
+mtext(side = 3, expression(paste(phi[1]," = 0.7")),
+      line = 0.4, adj = 0)
+acf(AR1_pos, lag.max = 20, las = 1)
+plot.ts(AR1_neg[1:50], ylim=ylm1, las = 1,
+        ylab=expression(italic(x)[italic(t)]),
+        main = "")
+mtext(side = 3, expression(paste(phi[1]," = -0.7")),
+      line = 0.4, adj = 0)
+acf(AR1_neg, lag.max = 20, las = 1)
+```
+
+
+## Moving Average (MA) models
+
+A moving average model of order _q_, or MA(_q_), is defined as
+
+$$ x_t = w_t + \theta_1 w_{t-1} + \theta_2 w_{t-2} + \dots + \theta_q w_{t-q}$$
+where $w_t$ is white noise
+
+Each of the $x_t$ is a sum of the most recent error terms
+
+Thus, _all_ MA processes are stationary because they are finite sums of stationary WN processes
+
+
+### Examples of MA(_q_) models
+
+```{r ex_acf_MA}
+## compare MA(1) & MA(2) with similar structure
+MA1 <- arima.sim(n=50, list(ma=c(0.7)))
+MA2 <- arima.sim(n=50, list(ma=c(-1, 0.7)))
+
+par(mfrow = c(1,2), mai = c(1,1,0.3,0.1), omi = c(0,0,0,0))
+## loop over orders of p
+plot.ts(MA1, las = 1,
+        ylab = expression(italic(x[t])))
+mtext(side = 3,
+      expression(MA(1):~italic(x[t])==~italic(w[t])+0.7~italic(w[t-1])),
+      line = 0.5, adj = 0)
+plot.ts(MA2, las = 1,
+        ylab = expression(italic(x[t])))
+mtext(side = 3,
+      expression(MA(2):~italic(x[t])==~italic(w[t])-~italic(w[t-1])+0.7~italic(w[t-2])),
+      line = 0.5, adj = 0)
+
+```
+
+### Autocorrelation
+
+Work out the autocorrelation function for the MA(1) model.
+
+### Invertibility
+
+For MA models, we need invertibility in order to identify model paramters. An MA(_q_) process is *invertible* if it can be written as a stationary autoregressive process of infinite order without an error term
+
+$$
+x_t = w_t + \theta_1 w_{t-1} + \theta_2 w_{t-2} + \dots + \theta_q w_{t-q} \\
+\Downarrow ? \\
+w_t = x_t + \sum_{k=1}^\infty(-\theta)^k x_{t-k}
+$$
+
+
+For example, these MA(1) models are equivalent
+
+$$
+x_t = w_t + \frac{1}{5} w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,25) \\
+\Updownarrow \\
+x_t = w_t + 5 w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,1)
+$$
+
+
+The variance of $x_t$ is given by
+
+$$
+x_t = w_t + \frac{1}{5} w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,25) \\
+\Downarrow \\
+\begin{align}
+\text{Var}(x_t) &= \text{Var}(w_t) + \left( \frac{1}{25} \right) \text{Var}(w_{t-1}) \\
+  &= 25 + \left( \frac{1}{25} \right) 25 \\
+  &= 25 + 1 \\
+  &= 26
+\end{align}
+$$
+
+
+The variance of $x_t$ is given by
+
+$$
+x_t = w_t + 5 w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,1) \\
+\Downarrow \\
+\begin{align}
+\text{Var}(x_t) &= \text{Var}(w_t) + (25) \text{Var}(w_{t-1}) \\
+  &= 1 + (25) 1 \\
+  &= 1 + 25 \\
+  &= 26
+\end{align}
+$$
+
+
+We can rewrite an MA(1) model in terms of $x$
+
+$$
+  x_t = w_t + \theta w_{t-1} \\
+   \Downarrow \\
+  w_t = x_t - \theta w_{t-1} \\
+$$
+
+
+And now we can substitute in previous expressions for $w_t$
+
+$$
+\begin{align}
+  w_t &= x_t - \theta w_{t-1} \\
+  & \Downarrow \\
+  w_{t-1} &= x_{t-1} - \theta w_{t-2} \\
+  & \Downarrow \\
+  w_t &= x_t - \theta (x_{t-1} - \theta w_{t-2}) \\
+  w_t &= x_t - \theta x_{t-1} - \theta^2 w_{t-2} \\
+  & ~~\vdots \\
+  w_t &= x_t - \theta x_{t-1} - \dots -\theta^k x_{t-k}  -\theta^{k+1} w_{t-k-1} \\
+\end{align}
+$$
+
+
+If we constrain $\lvert \theta \rvert < 1$, then
+
+$$
+\lim_{k \to \infty} (-\theta)^{k+1} w_{t-k-1} = 0
+$$
+
+and
+
+$$
+\begin{align}
+  w_t &= x_t - \theta x_{t-1} - \dots -\theta^k x_{t-k}  -\theta^{k+1} w_{t-k-1} \\
+  & \Downarrow \\
+  w_t &= x_t - \theta x_{t-1} - \dots -\theta^k x_{t-k} \\
+  w_t &= x_t + \sum_{k=1}^\infty(-\theta)^k x_{t-k}
+\end{align}
+$$
+
+## PACF
+
+## AR Estimation
+
+## ARMA
+
+### ARMA(1,1) ACF

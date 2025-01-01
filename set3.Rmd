@@ -85,7 +85,7 @@ Each of the $x_t$ is a sum of the most recent error terms
 
 Thus, _all_ MA processes are stationary because they are finite sums of stationary WN processes.
 
-```{r ex_acf_MA}
+```{r ex_acf_MA, eval = F}
 ## compare MA(1) & MA(2) with similar structure
 MA1 <- arima.sim(n=50, list(ma=c(0.7)))
 MA2 <- arima.sim(n=50, list(ma=c(-1, 0.7)))
@@ -147,7 +147,7 @@ $$
 x_t = \phi_1 x_{t-1} + \dots + \phi_p x_{t-p} + w_t + \theta_1 w_{t-1} + \dots + \theta_q w_{t-q} 
 $$
 
-```{r ex_ARMA}
+```{r ex_ARMA eval = F}
 arma_mods <- vector("list", 4L)
 
 ## ARMA(3,1): phi[1] = 0.7, phi[2] = 0.2, phi[3] = -0.1, theta[1]= 0.5

@@ -363,6 +363,8 @@ fred = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred
 fred$date = ymd(fred$date)
 ```
 
+Provide your code and validate it using the <code>ccf</code> function. 
+
 5. Write a function in R that takes two arguments: a time series ($y$) formatted as a vector and a vector ($k$) specifying a set of lags. The output for this function is the autocorrelation of $y$ for each lag in $k$, using the formula in [Autocorrelation]. Compare the output of your function to the output from <code>(acf(y))</code>.
 
 
