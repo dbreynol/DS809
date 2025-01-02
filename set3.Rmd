@@ -121,16 +121,15 @@ Var(x_t) &= \sigma^2_w(1+\theta_1^2) \\
 \rho(h) &= \frac{\theta_1}{1+\theta_1^2} \text{ for } h=1 \text{ and 0 otherwise. }
 \end{align}
 
-Now let's simulate some data from an MA1 model and compare theoretical and observed quantities.
 
-```{r echo=TRUE}
+
+
+```{r echo=F, eval=FALSE}
 set.seed(1)
 theta_1 = 0.5
 sigsq_w = 1
 z = arima.sim(n = 10000, model = list(ma=c(theta_1)), sd = sigsq_w)
-```
 
-```{r}
 quantity = c("mean", "variance", "ACF, k=2")
 theory = c(0, sigsq_w * (1+theta_1^2), theta_1 / (1+theta_1^2))
 empirical = c(mean(z), var(z), acf(z, plot = F)$acf[2] )

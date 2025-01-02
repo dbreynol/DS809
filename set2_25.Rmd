@@ -110,9 +110,17 @@ $$
 
 If we treat $\mathbf{B}$ as a number (or numbers), we can out write the _characteristic equation_ as $\phi_p (\mathbf{B}^p)$.
 
-To be stationary, __all roots__ of the characteristic equation __must exceed 1 in absolute value__
+To be stationary, __all roots__ of the characteristic equation __must exceed 1 in absolute value__ As a bonus, when this condition is met, then the model is also *causal.*
 
-<span style="color:red">Example, for what value of $\phi_1$ is AR(1) model stationary?</span>
+<span style="color:red"> Example, for what value of $\phi_1$ is AR(1) model stationary? </span>
+
+Are the following AR processes stationary?
+
+1. $x_t = 0.5 x_{t-1} + w_t$
+2. $x_t = -0.2 x_{t-1} + 0.4 x_{t-2} +  w_t$
+3. $x_t = x_{t-1} + w_t$
+
+
 
 ```{r ar_comp_pos_neg, fig.height=4}
 ## list description for AR(1) model with small coef
@@ -142,6 +150,8 @@ mtext(side = 3, expression(paste(phi[1]," = -0.7")),
 ```
 
 ### Autocorrelation
+
+The exponential decay observed in autocorrelation function for the the AR(1) model holds in general for AR(p). This decay may oscillate, as shown below.
 
 ```{r ex_acf_AR}
 ## set the margins & text size
@@ -196,9 +206,21 @@ mtext(side = 3,
 
 ```
 
-### Autocorrelation
+### MA(1) Model
 
-Work out the autocorrelation function for the MA(1) model.
+Let's start by figuring out some properties of the simplest MA model, the MA(1) model:
+
+$$
+x_t = \theta_0 + \theta_1 w_{t-1} + w_t
+$$
+
+We start by assuming that $x_t$ is a stationary time series. Under this assumption, we can show:
+
+\begin{align}
+E(x_t) &= \theta_0 \\
+Var(x_t) &= \sigma^2_w(1+\theta_1^2) \\
+\rho(h) &= \frac{\theta_1}{1+\theta_1^2} \text{ for } h=1 \text{ and 0 otherwise. }
+\end{align}
 
 ### Invertibility
 
@@ -220,56 +242,12 @@ x_t = w_t + 5 w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,1)
 $$
 
 
-The variance of $x_t$ is given by
-
-$$
-x_t = w_t + \frac{1}{5} w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,25) \\
-\Downarrow \\
-\begin{align}
-\text{Var}(x_t) &= \text{Var}(w_t) + \left( \frac{1}{25} \right) \text{Var}(w_{t-1}) \\
-  &= 25 + \left( \frac{1}{25} \right) 25 \\
-  &= 25 + 1 \\
-  &= 26
-\end{align}
-$$
-
-
-The variance of $x_t$ is given by
-
-$$
-x_t = w_t + 5 w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,1) \\
-\Downarrow \\
-\begin{align}
-\text{Var}(x_t) &= \text{Var}(w_t) + (25) \text{Var}(w_{t-1}) \\
-  &= 1 + (25) 1 \\
-  &= 1 + 25 \\
-  &= 26
-\end{align}
-$$
-
-
-We can rewrite an MA(1) model in terms of $x$
+Rewrite an MA(1) model in terms of $w_t$
 
 $$
   x_t = w_t + \theta w_{t-1} \\
    \Downarrow \\
   w_t = x_t - \theta w_{t-1} \\
-$$
-
-
-And now we can substitute in previous expressions for $w_t$
-
-$$
-\begin{align}
-  w_t &= x_t - \theta w_{t-1} \\
-  & \Downarrow \\
-  w_{t-1} &= x_{t-1} - \theta w_{t-2} \\
-  & \Downarrow \\
-  w_t &= x_t - \theta (x_{t-1} - \theta w_{t-2}) \\
-  w_t &= x_t - \theta x_{t-1} - \theta^2 w_{t-2} \\
-  & ~~\vdots \\
-  w_t &= x_t - \theta x_{t-1} - \dots -\theta^k x_{t-k}  -\theta^{k+1} w_{t-k-1} \\
-\end{align}
 $$
 
 
@@ -284,11 +262,50 @@ and
 $$
 \begin{align}
   w_t &= x_t - \theta x_{t-1} - \dots -\theta^k x_{t-k}  -\theta^{k+1} w_{t-k-1} \\
-  & \Downarrow \\
   w_t &= x_t - \theta x_{t-1} - \dots -\theta^k x_{t-k} \\
   w_t &= x_t + \sum_{k=1}^\infty(-\theta)^k x_{t-k}
 \end{align}
 $$
+
+
+### Autocorrelation
+
+For the MA(q) model, the autocorrelation function cuts off for $h >q$. That is,
+
+\begin{align}
+\gamma(h) &= \sigma^2 \sum_{j=0}^{q-h} \theta_j \theta_{j-h}~\text{for }h=0,\ldots,q \\
+\gamma(h) &= 0~h>q
+\end{align}
+
+```{r}
+ma_mods <- vector("list", 2L)
+
+## MA(2): phi[1] = 0.7, phi[2] = 0.2, phi[3] = -0.1, theta[1]= 0.5
+ma_mods[[1]] <- arima.sim(list(ma=c(0.5, 0.3)), n=5000)
+## MA(3): phi[1] = -0.7, phi[2] = 0.2, theta[1] = 0.7, theta[2]= 0.2
+ma_mods[[2]] <- arima.sim(list(ma=c(0.7, 0.4, 0.6)), n=5000)
+
+par(mfrow = c(2,2), mai = c(0.7,0.7,0.3,0.1), omi = c(0,0,0,0))
+
+titles <- list(
+  expression("MA(2)"),
+  expression("MA(3)"))
+
+
+## loop over orders of p
+for(i in 1:2) {
+  plot.ts(ma_mods[[i]][1:50], las = 1,
+          main = "", ylab = expression(italic(x[t])))
+  mtext(side = 3, titles[[i]],
+        line = 0.5, adj = 0, cex = 0.8)
+
+  acf(ma_mods[[i]])
+  
+}
+
+```
+
+Therefore, the sample ACF is useful for model identification when our data comes from a moving average process, but not so useful for data that comes from an AR process. For this, we introduce the partial autocorrelation (PACF).
 
 ## PACF
 
@@ -296,4 +313,11 @@ $$
 
 ## ARMA
 
-### ARMA(1,1) ACF
+## Lab 2
+
+1. Simulate data from an AR(1) process in which $\phi_1 = 0.6$. For sample sizes $n=10,10^3,10^5$, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 20. What do you observe?
+
+2. Simulate data from the MA(3) model: $x_t = w_t+\theta_1w_{t-1}+\theta_2w_{t-2}+\theta_3w_{t-3}$ in which $\theta = (0.7,0.6,0.2)$. For sample sizes $n=10,10^3,10^5$, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 20. What do you observe?
+
+3. PACF for MA model
+

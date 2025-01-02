@@ -28,9 +28,10 @@ stationarity-1
 autocorrelation-2
 moving-average-ma-models
 examples-of-maq-models
-autocorrelation-3
+ma1-model
 invertibility
+autocorrelation-3
 pacf
 ar-estimation
 arma-1
-arma11-acf
+lab-2

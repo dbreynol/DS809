@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2025-01-01" />
+<meta name="date" content="2025-01-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -182,15 +182,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3" data-path="arma.html"><a href="arma.html#moving-average-ma-models"><i class="fa fa-check"></i><b>3.3</b> Moving Average (MA) models</a>
 <ul>
 <li class="chapter" data-level="3.3.1" data-path="arma.html"><a href="arma.html#examples-of-maq-models"><i class="fa fa-check"></i><b>3.3.1</b> Examples of MA(<em>q</em>) models</a></li>
-<li class="chapter" data-level="3.3.2" data-path="arma.html"><a href="arma.html#autocorrelation-3"><i class="fa fa-check"></i><b>3.3.2</b> Autocorrelation</a></li>
+<li class="chapter" data-level="3.3.2" data-path="arma.html"><a href="arma.html#ma1-model"><i class="fa fa-check"></i><b>3.3.2</b> MA(1) Model</a></li>
 <li class="chapter" data-level="3.3.3" data-path="arma.html"><a href="arma.html#invertibility"><i class="fa fa-check"></i><b>3.3.3</b> Invertibility</a></li>
+<li class="chapter" data-level="3.3.4" data-path="arma.html"><a href="arma.html#autocorrelation-3"><i class="fa fa-check"></i><b>3.3.4</b> Autocorrelation</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="arma.html"><a href="arma.html#pacf"><i class="fa fa-check"></i><b>3.4</b> PACF</a></li>
 <li class="chapter" data-level="3.5" data-path="arma.html"><a href="arma.html#ar-estimation"><i class="fa fa-check"></i><b>3.5</b> AR Estimation</a></li>
-<li class="chapter" data-level="3.6" data-path="arma.html"><a href="arma.html#arma-1"><i class="fa fa-check"></i><b>3.6</b> ARMA</a>
-<ul>
-<li class="chapter" data-level="3.6.1" data-path="arma.html"><a href="arma.html#arma11-acf"><i class="fa fa-check"></i><b>3.6.1</b> ARMA(1,1) ACF</a></li>
-</ul></li>
+<li class="chapter" data-level="3.6" data-path="arma.html"><a href="arma.html#arma-1"><i class="fa fa-check"></i><b>3.6</b> ARMA</a></li>
+<li class="chapter" data-level="3.7" data-path="arma.html"><a href="arma.html#lab-2"><i class="fa fa-check"></i><b>3.7</b> Lab 2</a></li>
 </ul></li>
 </ul>
 
@@ -269,12 +268,19 @@ Var(x_t) &amp;= \frac{\sigma^2_w}{1-\phi_1^2} \\
 \end{align}
 \]</span></p>
 <p>If we treat <span class="math inline">\(\mathbf{B}\)</span> as a number (or numbers), we can out write the <em>characteristic equation</em> as <span class="math inline">\(\phi_p (\mathbf{B}^p)\)</span>.</p>
-<p>To be stationary, <strong>all roots</strong> of the characteristic equation <strong>must exceed 1 in absolute value</strong></p>
-<p><span style="color:red">Example, for what value of <span class="math inline">\(\phi_1\)</span> is AR(1) model stationary?</span></p>
+<p>To be stationary, <strong>all roots</strong> of the characteristic equation <strong>must exceed 1 in absolute value</strong> As a bonus, when this condition is met, then the model is also <em>causal.</em></p>
+<p><span style="color:red"> Example, for what value of <span class="math inline">\(\phi_1\)</span> is AR(1) model stationary? </span></p>
+<p>Are the following AR processes stationary?</p>
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\(x_t = 0.5 x_{t-1} + w_t\)</span></li>
+<li><span class="math inline">\(x_t = -0.2 x_{t-1} + 0.4 x_{t-2} + w_t\)</span></li>
+<li><span class="math inline">\(x_t = x_{t-1} + w_t\)</span></li>
+</ol>
 <p><img src="series_files/figure-html/ar_comp_pos_neg-1.png" width="672" /></p>
 </div>
 <div id="autocorrelation-2" class="section level3 hasAnchor" number="3.2.3">
 <h3><span class="header-section-number">3.2.3</span> Autocorrelation<a href="arma.html#autocorrelation-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The exponential decay observed in autocorrelation function for the the AR(1) model holds in general for AR(p). This decay may oscillate, as shown below.</p>
 <p><img src="series_files/figure-html/ex_acf_AR-1.png" width="672" /></p>
 </div>
 </div>
@@ -289,9 +295,18 @@ where <span class="math inline">\(w_t\)</span> is white noise</p>
 <h3><span class="header-section-number">3.3.1</span> Examples of MA(<em>q</em>) models<a href="arma.html#examples-of-maq-models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><img src="series_files/figure-html/ex_acf_MA-1.png" width="672" /></p>
 </div>
-<div id="autocorrelation-3" class="section level3 hasAnchor" number="3.3.2">
-<h3><span class="header-section-number">3.3.2</span> Autocorrelation<a href="arma.html#autocorrelation-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Work out the autocorrelation function for the MA(1) model.</p>
+<div id="ma1-model" class="section level3 hasAnchor" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> MA(1) Model<a href="arma.html#ma1-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let’s start by figuring out some properties of the simplest MA model, the MA(1) model:</p>
+<p><span class="math display">\[
+x_t = \theta_0 + \theta_1 w_{t-1} + w_t
+\]</span></p>
+<p>We start by assuming that <span class="math inline">\(x_t\)</span> is a stationary time series. Under this assumption, we can show:</p>
+<p><span class="math display">\[\begin{align}
+E(x_t) &amp;= \theta_0 \\
+Var(x_t) &amp;= \sigma^2_w(1+\theta_1^2) \\
+\rho(h) &amp;= \frac{\theta_1}{1+\theta_1^2} \text{ for } h=1 \text{ and 0 otherwise. }
+\end{align}\]</span></p>
 </div>
 <div id="invertibility" class="section level3 hasAnchor" number="3.3.3">
 <h3><span class="header-section-number">3.3.3</span> Invertibility<a href="arma.html#invertibility" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -307,46 +322,11 @@ x_t = w_t + \frac{1}{5} w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,25) \\
 \Updownarrow \\
 x_t = w_t + 5 w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,1)
 \]</span></p>
-<p>The variance of <span class="math inline">\(x_t\)</span> is given by</p>
-<p><span class="math display">\[
-x_t = w_t + \frac{1}{5} w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,25) \\
-\Downarrow \\
-\begin{align}
-\text{Var}(x_t) &amp;= \text{Var}(w_t) + \left( \frac{1}{25} \right) \text{Var}(w_{t-1}) \\
-  &amp;= 25 + \left( \frac{1}{25} \right) 25 \\
-  &amp;= 25 + 1 \\
-  &amp;= 26
-\end{align}
-\]</span></p>
-<p>The variance of <span class="math inline">\(x_t\)</span> is given by</p>
-<p><span class="math display">\[
-x_t = w_t + 5 w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,1) \\
-\Downarrow \\
-\begin{align}
-\text{Var}(x_t) &amp;= \text{Var}(w_t) + (25) \text{Var}(w_{t-1}) \\
-  &amp;= 1 + (25) 1 \\
-  &amp;= 1 + 25 \\
-  &amp;= 26
-\end{align}
-\]</span></p>
-<p>We can rewrite an MA(1) model in terms of <span class="math inline">\(x\)</span></p>
+<p>Rewrite an MA(1) model in terms of <span class="math inline">\(w_t\)</span></p>
 <p><span class="math display">\[
   x_t = w_t + \theta w_{t-1} \\
    \Downarrow \\
   w_t = x_t - \theta w_{t-1} \\
-\]</span></p>
-<p>And now we can substitute in previous expressions for <span class="math inline">\(w_t\)</span></p>
-<p><span class="math display">\[
-\begin{align}
-  w_t &amp;= x_t - \theta w_{t-1} \\
-  &amp; \Downarrow \\
-  w_{t-1} &amp;= x_{t-1} - \theta w_{t-2} \\
-  &amp; \Downarrow \\
-  w_t &amp;= x_t - \theta (x_{t-1} - \theta w_{t-2}) \\
-  w_t &amp;= x_t - \theta x_{t-1} - \theta^2 w_{t-2} \\
-  &amp; ~~\vdots \\
-  w_t &amp;= x_t - \theta x_{t-1} - \dots -\theta^k x_{t-k}  -\theta^{k+1} w_{t-k-1} \\
-\end{align}
 \]</span></p>
 <p>If we constrain <span class="math inline">\(\lvert \theta \rvert &lt; 1\)</span>, then</p>
 <p><span class="math display">\[
@@ -356,11 +336,20 @@ x_t = w_t + 5 w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,1) \\
 <p><span class="math display">\[
 \begin{align}
   w_t &amp;= x_t - \theta x_{t-1} - \dots -\theta^k x_{t-k}  -\theta^{k+1} w_{t-k-1} \\
-  &amp; \Downarrow \\
   w_t &amp;= x_t - \theta x_{t-1} - \dots -\theta^k x_{t-k} \\
   w_t &amp;= x_t + \sum_{k=1}^\infty(-\theta)^k x_{t-k}
 \end{align}
 \]</span></p>
+</div>
+<div id="autocorrelation-3" class="section level3 hasAnchor" number="3.3.4">
+<h3><span class="header-section-number">3.3.4</span> Autocorrelation<a href="arma.html#autocorrelation-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For the MA(q) model, the autocorrelation function cuts off for <span class="math inline">\(h &gt;q\)</span>. That is,</p>
+<p><span class="math display">\[\begin{align}
+\gamma(h) &amp;= \sigma^2 \sum_{j=0}^{q-h} \theta_j \theta_{j-h}~\text{for }h=0,\ldots,q \\
+\gamma(h) &amp;= 0~h&gt;q
+\end{align}\]</span></p>
+<p><img src="series_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>Therefore, the sample ACF is useful for model identification when our data comes from a moving average process, but not so useful for data that comes from an AR process. For this, we introduce the partial autocorrelation (PACF).</p>
 </div>
 </div>
 <div id="pacf" class="section level2 hasAnchor" number="3.4">
@@ -371,10 +360,15 @@ x_t = w_t + 5 w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,1) \\
 </div>
 <div id="arma-1" class="section level2 hasAnchor" number="3.6">
 <h2><span class="header-section-number">3.6</span> ARMA<a href="arma.html#arma-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div id="arma11-acf" class="section level3 hasAnchor" number="3.6.1">
-<h3><span class="header-section-number">3.6.1</span> ARMA(1,1) ACF<a href="arma.html#arma11-acf" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-
 </div>
+<div id="lab-2" class="section level2 hasAnchor" number="3.7">
+<h2><span class="header-section-number">3.7</span> Lab 2<a href="arma.html#lab-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li><p>Simulate data from an AR(1) process in which <span class="math inline">\(\phi_1 = 0.6\)</span>. For sample sizes <span class="math inline">\(n=10,10^3,10^5\)</span>, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 20. What do you observe?</p></li>
+<li><p>Simulate data from the MA(3) model: <span class="math inline">\(x_t = w_t+\theta_1w_{t-1}+\theta_2w_{t-2}+\theta_3w_{t-3}\)</span> in which <span class="math inline">\(\theta = (0.7,0.6,0.2)\)</span>. For sample sizes <span class="math inline">\(n=10,10^3,10^5\)</span>, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 20. What do you observe?</p></li>
+<li><p>PACF for MA model</p></li>
+</ol>
+
 </div>
 </div>
             </section>
