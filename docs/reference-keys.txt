@@ -32,6 +32,9 @@ ma1-model
 invertibility
 autocorrelation-3
 pacf
+definition
+ar1-pacf
+pacf-for-arp
 ar-estimation
 arma-1
 lab-2

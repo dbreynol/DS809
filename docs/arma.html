@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2025-01-02" />
+<meta name="date" content="2025-01-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -186,7 +186,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3.3" data-path="arma.html"><a href="arma.html#invertibility"><i class="fa fa-check"></i><b>3.3.3</b> Invertibility</a></li>
 <li class="chapter" data-level="3.3.4" data-path="arma.html"><a href="arma.html#autocorrelation-3"><i class="fa fa-check"></i><b>3.3.4</b> Autocorrelation</a></li>
 </ul></li>
-<li class="chapter" data-level="3.4" data-path="arma.html"><a href="arma.html#pacf"><i class="fa fa-check"></i><b>3.4</b> PACF</a></li>
+<li class="chapter" data-level="3.4" data-path="arma.html"><a href="arma.html#pacf"><i class="fa fa-check"></i><b>3.4</b> PACF</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="arma.html"><a href="arma.html#definition"><i class="fa fa-check"></i><b>3.4.1</b> Definition</a></li>
+<li class="chapter" data-level="3.4.2" data-path="arma.html"><a href="arma.html#ar1-pacf"><i class="fa fa-check"></i><b>3.4.2</b> AR(1) PACF</a></li>
+<li class="chapter" data-level="3.4.3" data-path="arma.html"><a href="arma.html#pacf-for-arp"><i class="fa fa-check"></i><b>3.4.3</b> PACF for AR(p)</a></li>
+</ul></li>
 <li class="chapter" data-level="3.5" data-path="arma.html"><a href="arma.html#ar-estimation"><i class="fa fa-check"></i><b>3.5</b> AR Estimation</a></li>
 <li class="chapter" data-level="3.6" data-path="arma.html"><a href="arma.html#arma-1"><i class="fa fa-check"></i><b>3.6</b> ARMA</a></li>
 <li class="chapter" data-level="3.7" data-path="arma.html"><a href="arma.html#lab-2"><i class="fa fa-check"></i><b>3.7</b> Lab 2</a></li>
@@ -345,7 +350,7 @@ x_t = w_t + 5 w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,1)
 <h3><span class="header-section-number">3.3.4</span> Autocorrelation<a href="arma.html#autocorrelation-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For the MA(q) model, the autocorrelation function cuts off for <span class="math inline">\(h &gt;q\)</span>. That is,</p>
 <p><span class="math display">\[\begin{align}
-\gamma(h) &amp;= \sigma^2 \sum_{j=0}^{q-h} \theta_j \theta_{j-h}~\text{for }h=0,\ldots,q \\
+\gamma(h) &amp;= \sigma^2 \sum_{j=0}^{q-h} \theta_j \theta_{j+h}~\text{for }h=0,\ldots,q \\
 \gamma(h) &amp;= 0~h&gt;q
 \end{align}\]</span></p>
 <p><img src="series_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
@@ -354,6 +359,33 @@ x_t = w_t + 5 w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,1)
 </div>
 <div id="pacf" class="section level2 hasAnchor" number="3.4">
 <h2><span class="header-section-number">3.4</span> PACF<a href="arma.html#pacf" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="definition" class="section level3 hasAnchor" number="3.4.1">
+<h3><span class="header-section-number">3.4.1</span> Definition<a href="arma.html#definition" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The partial autocorrelation of a stationary process, <span class="math inline">\(x_t\)</span>, denoted <span class="math inline">\(\phi_{hh}\)</span>, for <span class="math inline">\(h=1,2,\ldots\)</span>, is</p>
+<p><span class="math display">\[\phi_{11}=\text{cor}(x_{t}, x_{t-1}) = \rho_1\]</span>
+and,</p>
+<p><span class="math display">\[\phi_{hh}=\text{cor}(x_{t}-\hat{x}_t, x_{t-h} - \hat{x}_{t-h}),~~h \geq 2\]</span>.</p>
+<p>The PACF, <span class="math inline">\(\phi_{hh}\)</span>, is the correlation between <span class="math inline">\(x_t\)</span> and <span class="math inline">\(x_{t-h}\)</span> with the linear dependence of <span class="math inline">\(\{x_{t-1}, \ldots, x_{t-h+1} \}\)</span> on each, removed.</p>
+</div>
+<div id="ar1-pacf" class="section level3 hasAnchor" number="3.4.2">
+<h3><span class="header-section-number">3.4.2</span> AR(1) PACF<a href="arma.html#ar1-pacf" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let us calculate <span class="math inline">\(\phi_{22}\)</span> for the AR(1) model, <span class="math inline">\(x_t = \phi x_{t-1} + w_t\)</span>.</p>
+<ol style="list-style-type: decimal">
+<li>Consider the regression of <span class="math inline">\(x_t\)</span> on <span class="math inline">\(x_{t-1}\)</span>. Choose <span class="math inline">\(\beta\)</span> to minimize,</li>
+</ol>
+<p><span class="math display">\[\begin{align}
+E(x_t - \beta x_{t-1})^2 &amp;= \gamma(0) - 2\beta \gamma(1) + \beta^2 \gamma(0)
+\end{align}\]</span></p>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Minimize the expression above to find the estimator of <span class="math inline">\(\beta\)</span>.</p></li>
+<li><p>Plug in this estimated quantity to <span class="math inline">\(\text{cor}(x_{t}-\hat{x}_{t-1}, x_{t-2} - \hat{x}_{t-2})\)</span></p></li>
+</ol>
+</div>
+<div id="pacf-for-arp" class="section level3 hasAnchor" number="3.4.3">
+<h3><span class="header-section-number">3.4.3</span> PACF for AR(p)<a href="arma.html#pacf-for-arp" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For an AR(p) model, when <span class="math inline">\(h &gt; p\)</span>, <span class="math inline">\(\phi_{hh} = 0\)</span>. Thus, the PACF is very informative for model identification when data comes from an autoregressive process.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+</div>
 </div>
 <div id="ar-estimation" class="section level2 hasAnchor" number="3.5">
 <h2><span class="header-section-number">3.5</span> AR Estimation<a href="arma.html#ar-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -366,7 +398,7 @@ x_t = w_t + 5 w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,1)
 <ol style="list-style-type: decimal">
 <li><p>Simulate data from an AR(1) process in which <span class="math inline">\(\phi_1 = 0.6\)</span>. For sample sizes <span class="math inline">\(n=10,10^3,10^5\)</span>, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 20. What do you observe?</p></li>
 <li><p>Simulate data from the MA(3) model: <span class="math inline">\(x_t = w_t+\theta_1w_{t-1}+\theta_2w_{t-2}+\theta_3w_{t-3}\)</span> in which <span class="math inline">\(\theta = (0.7,0.6,0.2)\)</span>. For sample sizes <span class="math inline">\(n=10,10^3,10^5\)</span>, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 20. What do you observe?</p></li>
-<li><p>PACF for MA model</p></li>
+<li><p>For an MA(1), <span class="math inline">\(x_t = w_t + \theta w_{t-1}\)</span> with <span class="math inline">\(|\theta|&lt;1\)</span>, derive an expression for <span class="math inline">\(\phi_{22}\)</span>. Simulate data from this process and plot the difference between the theoretical value of <span class="math inline">\(\phi_{22}\)</span> and the sample quantity (which you can compute using <code>pacf</code>).</p></li>
 </ol>
 
 </div>

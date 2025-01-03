@@ -273,7 +273,7 @@ $$
 For the MA(q) model, the autocorrelation function cuts off for $h >q$. That is,
 
 \begin{align}
-\gamma(h) &= \sigma^2 \sum_{j=0}^{q-h} \theta_j \theta_{j-h}~\text{for }h=0,\ldots,q \\
+\gamma(h) &= \sigma^2 \sum_{j=0}^{q-h} \theta_j \theta_{j+h}~\text{for }h=0,\ldots,q \\
 \gamma(h) &= 0~h>q
 \end{align}
 
@@ -309,6 +309,62 @@ Therefore, the sample ACF is useful for model identification when our data comes
 
 ## PACF
 
+### Definition
+
+The partial autocorrelation of a stationary process, $x_t$, denoted $\phi_{hh}$, for $h=1,2,\ldots$, is 
+
+$$\phi_{11}=\text{cor}(x_{t}, x_{t-1}) = \rho_1$$
+and,
+
+$$\phi_{hh}=\text{cor}(x_{t}-\hat{x}_t, x_{t-h} - \hat{x}_{t-h}),~~h \geq 2$$.
+
+The PACF, $\phi_{hh}$, is the correlation between $x_t$ and $x_{t-h}$ with the linear dependence of $\{x_{t-1}, \ldots, x_{t-h+1} \}$ on each, removed.
+
+### AR(1) PACF
+
+Let us calculate $\phi_{22}$ for the AR(1) model, $x_t = \phi x_{t-1} + w_t$. 
+
+1. Consider the regression of $x_t$ on $x_{t-1}$. Choose $\beta$ to minimize,
+
+\begin{align}
+E(x_t - \beta x_{t-1})^2 &= \gamma(0) - 2\beta \gamma(1) + \beta^2 \gamma(0)
+\end{align}
+
+2. Minimize the expression above to find the estimator of $\beta$.
+
+3. Plug in this estimated quantity to $\text{cor}(x_{t}-\hat{x}_{t-1}, x_{t-2} - \hat{x}_{t-2})$
+
+### PACF for AR(p)
+
+For an AR(p) model, when $h > p$, $\phi_{hh} = 0$. Thus, the PACF is very informative for model identification when data comes from an autoregressive process.
+
+```{r}
+ar_mods <- vector("list", 2L)
+
+## MA(2): phi[1] = 0.7, phi[2] = 0.2, phi[3] = -0.1, theta[1]= 0.5
+ar_mods[[1]] <- arima.sim(list(ar=c(0.5, 0.3)), n=5000)
+## MA(3): phi[1] = -0.7, phi[2] = 0.2, theta[1] = 0.7, theta[2]= 0.2
+ar_mods[[2]] <- arima.sim(list(ar=c(0.5, 0.3, 0.1)), n=5000)
+
+par(mfrow = c(2,2), mai = c(0.7,0.7,0.3,0.1), omi = c(0,0,0,0))
+
+titles <- list(
+  expression("AR(2)"),
+  expression("AR(3)"))
+
+
+## loop over orders of p
+for(i in 1:2) {
+  plot.ts(ar_mods[[i]][1:50], las = 1,
+          main = "", ylab = expression(italic(x[t])))
+  mtext(side = 3, titles[[i]],
+        line = 0.5, adj = 0, cex = 0.8)
+
+  pacf(ar_mods[[i]])
+  
+}
+```
+
 ## AR Estimation
 
 ## ARMA
@@ -319,5 +375,5 @@ Therefore, the sample ACF is useful for model identification when our data comes
 
 2. Simulate data from the MA(3) model: $x_t = w_t+\theta_1w_{t-1}+\theta_2w_{t-2}+\theta_3w_{t-3}$ in which $\theta = (0.7,0.6,0.2)$. For sample sizes $n=10,10^3,10^5$, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 20. What do you observe?
 
-3. PACF for MA model
+3. For an MA(1), $x_t = w_t + \theta w_{t-1}$ with $|\theta|<1$, derive an expression for $\phi_{22}$. Simulate data from this process and plot the difference between the theoretical value of $\phi_{22}$ and the sample quantity (which you can compute using <code>pacf</code>).
 
