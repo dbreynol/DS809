@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2025-01-03" />
+<meta name="date" content="2025-01-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -192,7 +192,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.4.2" data-path="arma.html"><a href="arma.html#ar1-pacf"><i class="fa fa-check"></i><b>3.4.2</b> AR(1) PACF</a></li>
 <li class="chapter" data-level="3.4.3" data-path="arma.html"><a href="arma.html#pacf-for-arp"><i class="fa fa-check"></i><b>3.4.3</b> PACF for AR(p)</a></li>
 </ul></li>
-<li class="chapter" data-level="3.5" data-path="arma.html"><a href="arma.html#ar-estimation"><i class="fa fa-check"></i><b>3.5</b> AR Estimation</a></li>
+<li class="chapter" data-level="3.5" data-path="arma.html"><a href="arma.html#ar-estimation"><i class="fa fa-check"></i><b>3.5</b> AR Estimation</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="arma.html"><a href="arma.html#yule-walker-equations"><i class="fa fa-check"></i><b>3.5.1</b> Yule-Walker Equations</a></li>
+<li class="chapter" data-level="3.5.2" data-path="arma.html"><a href="arma.html#example"><i class="fa fa-check"></i><b>3.5.2</b> Example</a></li>
+</ul></li>
 <li class="chapter" data-level="3.6" data-path="arma.html"><a href="arma.html#arma-1"><i class="fa fa-check"></i><b>3.6</b> ARMA</a></li>
 <li class="chapter" data-level="3.7" data-path="arma.html"><a href="arma.html#lab-2"><i class="fa fa-check"></i><b>3.7</b> Lab 2</a></li>
 </ul></li>
@@ -389,9 +393,51 @@ E(x_t - \beta x_{t-1})^2 &amp;= \gamma(0) - 2\beta \gamma(1) + \beta^2 \gamma(0)
 </div>
 <div id="ar-estimation" class="section level2 hasAnchor" number="3.5">
 <h2><span class="header-section-number">3.5</span> AR Estimation<a href="arma.html#ar-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="yule-walker-equations" class="section level3 hasAnchor" number="3.5.1">
+<h3><span class="header-section-number">3.5.1</span> Yule-Walker Equations<a href="arma.html#yule-walker-equations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider the AR(p) model, <span class="math inline">\(x_t =\)</span></p>
+<p>Now, take the following steps,</p>
+<ol style="list-style-type: decimal">
+<li>Multiply both sides by <span class="math inline">\(x_{t-1}\)</span></li>
+<li>Take an expectation</li>
+<li>This leads to,</li>
+</ol>
+<p><span class="math display">\[
+\left[ \begin{array}{c} \gamma(1) \\ \vdots \\ \gamma(p) \end{array} \right] = \begin{pmatrix} \gamma(0) &amp; \ldots &amp; \gamma(p-1) \\ \vdots &amp; \ddots &amp; \vdots \\ \gamma(p-1) &amp; \ldots &amp; \gamma(0) \end{pmatrix} \times \left[ \begin{array}{c} \phi_1 \\ \vdots \\ \phi_p \end{array} \right]
+\]</span>
+Or, succinctly,</p>
+<p><span class="math display">\[\mathbf{\gamma} = \mathbf{\Gamma} \mathbf{\phi}\]</span></p>
+<p>Which can be solved as,</p>
+<p><span class="math display">\[\hat{ \mathbf{\phi} } = \mathbf{\Gamma} ^ {-1}\mathbf{\gamma} \]</span></p>
+</div>
+<div id="example" class="section level3 hasAnchor" number="3.5.2">
+<h3><span class="header-section-number">3.5.2</span> Example<a href="arma.html#example" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Suppose</p>
+<pre><code>## 
+## Call:
+## arima(x = ar_mods, order = c(3, 0, 0), include.mean = F)
+## 
+## Coefficients:
+##          ar1     ar2     ar3
+##       0.5073  0.2954  0.0926
+## s.e.  0.0141  0.0152  0.0141
+## 
+## sigma^2 estimated as 1.058:  log likelihood = -7235.34,  aic = 14478.68</code></pre>
+<p><img src="series_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+</div>
 </div>
 <div id="arma-1" class="section level2 hasAnchor" number="3.6">
 <h2><span class="header-section-number">3.6</span> ARMA<a href="arma.html#arma-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>An autoregressive moving average, or ARMA(<em>p</em>,<em>q</em>), model is written as</p>
+<p><span class="math display">\[
+x_t = \phi_1 x_{t-1} + \dots + \phi_p x_{t-p} + w_t + \theta_1 w_{t-1} + \dots + \theta_q w_{t-q}
+\]</span></p>
+<p>We can write an ARMA(<em>p</em>,<em>q</em>) model using the backshift operator</p>
+<p><span class="math display">\[
+\phi_p (\mathbf{B}^p) x_t=  \theta_q (\mathbf{B}^q) w_t
+\]</span></p>
+<p>ARMA models are <em>stationary</em> if all roots of <span class="math inline">\(\phi_p (\mathbf{B}) &gt; 1\)</span></p>
+<p>ARMA models are <em>invertible</em> if all roots of <span class="math inline">\(\theta_q (\mathbf{B}) &gt; 1\)</span></p>
 </div>
 <div id="lab-2" class="section level2 hasAnchor" number="3.7">
 <h2><span class="header-section-number">3.7</span> Lab 2<a href="arma.html#lab-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -399,7 +445,34 @@ E(x_t - \beta x_{t-1})^2 &amp;= \gamma(0) - 2\beta \gamma(1) + \beta^2 \gamma(0)
 <li><p>Simulate data from an AR(1) process in which <span class="math inline">\(\phi_1 = 0.6\)</span>. For sample sizes <span class="math inline">\(n=10,10^3,10^5\)</span>, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 20. What do you observe?</p></li>
 <li><p>Simulate data from the MA(3) model: <span class="math inline">\(x_t = w_t+\theta_1w_{t-1}+\theta_2w_{t-2}+\theta_3w_{t-3}\)</span> in which <span class="math inline">\(\theta = (0.7,0.6,0.2)\)</span>. For sample sizes <span class="math inline">\(n=10,10^3,10^5\)</span>, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 20. What do you observe?</p></li>
 <li><p>For an MA(1), <span class="math inline">\(x_t = w_t + \theta w_{t-1}\)</span> with <span class="math inline">\(|\theta|&lt;1\)</span>, derive an expression for <span class="math inline">\(\phi_{22}\)</span>. Simulate data from this process and plot the difference between the theoretical value of <span class="math inline">\(\phi_{22}\)</span> and the sample quantity (which you can compute using <code>pacf</code>).</p></li>
+<li><p>Using ACF &amp; PACF for model ID</p></li>
 </ol>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Model</th>
+<th align="center">ACF</th>
+<th align="center">PACF</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">AR(<em>p</em>)</td>
+<td align="center">Tails off slowly</td>
+<td align="center">Cuts off after lag <em>p</em></td>
+</tr>
+<tr class="even">
+<td align="center">MA(<em>q</em>)</td>
+<td align="center">Cuts off after lag <em>q</em></td>
+<td align="center">Tails off slowly</td>
+</tr>
+<tr class="odd">
+<td align="center">ARMA(<em>p</em>,<em>q</em>)</td>
+<td align="center">Tails off slowly</td>
+<td align="center">Tails off slowly</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>

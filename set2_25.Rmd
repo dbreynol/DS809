@@ -367,7 +367,62 @@ for(i in 1:2) {
 
 ## AR Estimation
 
+### Yule-Walker Equations
+
+Consider the AR(p) model, $x_t =$
+
+Now, take the following steps,
+
+1. Multiply both sides by $x_{t-1}$
+2. Take an expectation
+3. This leads to,
+
+$$
+\left[ \begin{array}{c} \gamma(1) \\ \vdots \\ \gamma(p) \end{array} \right] = \begin{pmatrix} \gamma(0) & \ldots & \gamma(p-1) \\ \vdots & \ddots & \vdots \\ \gamma(p-1) & \ldots & \gamma(0) \end{pmatrix} \times \left[ \begin{array}{c} \phi_1 \\ \vdots \\ \phi_p \end{array} \right]
+$$
+Or, succinctly, 
+
+$$\mathbf{\gamma} = \mathbf{\Gamma} \mathbf{\phi}$$
+
+Which can be solved as,
+
+$$\hat{ \mathbf{\phi} } = \mathbf{\Gamma} ^ {-1}\mathbf{\gamma} $$
+
+### Example
+
+Suppose 
+
+```{r echo = F}
+set.seed(1)
+ar_mods <- arima.sim(list(ar=c(0.5, 0.3, 0.1)), n=5000)
+fit = arima(ar_mods, order = c(3, 0, 0))
+gamma = array ( (acf( (ar_mods - mean(ar_mods)), type = "covariance"))$acf ) 
+
+Gmat = matrix(data = c(gamma[1:3], gamma[c(2,1,2)], gamma[c(3,2,1)]) , nrow = 3)
+gvec = gamma[2:4]
+
+phihat = solve(Gmat) %*% gvec
+```
+
+
 ## ARMA
+
+An autoregressive moving average, or ARMA(_p_,_q_), model is written as
+
+$$
+x_t = \phi_1 x_{t-1} + \dots + \phi_p x_{t-p} + w_t + \theta_1 w_{t-1} + \dots + \theta_q w_{t-q} 
+$$
+
+We can write an ARMA(_p_,_q_) model using the backshift operator
+
+$$
+\phi_p (\mathbf{B}^p) x_t=  \theta_q (\mathbf{B}^q) w_t 
+$$
+
+ARMA models are _stationary_ if all roots of $\phi_p (\mathbf{B}) > 1$
+
+ARMA models are _invertible_ if all roots of $\theta_q (\mathbf{B}) > 1$
+
 
 ## Lab 2
 
@@ -377,3 +432,12 @@ for(i in 1:2) {
 
 3. For an MA(1), $x_t = w_t + \theta w_{t-1}$ with $|\theta|<1$, derive an expression for $\phi_{22}$. Simulate data from this process and plot the difference between the theoretical value of $\phi_{22}$ and the sample quantity (which you can compute using <code>pacf</code>).
 
+
+
+4. Using ACF & PACF for model ID
+
+| Model   | ACF               | PACF                    |
+|:-------:|:-----------------:|:-----------------------:|
+| AR(_p_) | Tails off slowly  | Cuts off after lag _p_  |
+| MA(_q_) | Cuts off after lag _q_  | Tails off slowly  |
+| ARMA(_p_,_q_) | Tails off slowly  | Tails off slowly  |
