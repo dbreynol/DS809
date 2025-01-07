@@ -27,6 +27,8 @@ library(bsts)
 library(dynlm)
 library(stochvol) # svsample
 library(latex2exp)
+require(gridExtra)
+
 ```
 
 # Course Info

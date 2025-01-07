@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Set 4 ARIMA | DS809</title>
+  <meta name="description" content="Course materials for DS809, Spring 2024." />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Set 4 ARIMA | DS809" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Course materials for DS809, Spring 2024." />
+  <meta name="github-repo" content="openscapes/series" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Set 4 ARIMA | DS809" />
+  
+  <meta name="twitter:description" content="Course materials for DS809, Spring 2024." />
+  
+
+<meta name="author" content="David Reynolds" />
+
+
+<meta name="date" content="2025-01-07" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="arma.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="lib/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="lib/css/style.css" type="text/css" />
+<link rel="stylesheet" href="lib/css/lesson.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">UNH DS809</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Course Info</a></li>
+<li class="chapter" data-level="2" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html"><i class="fa fa-check"></i><b>2</b> Exploratory Analysis of Time Series Data</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#time-series-data"><i class="fa fa-check"></i><b>2.1</b> Time Series Data</a></li>
+<li class="chapter" data-level="2.2" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#time-series-eda"><i class="fa fa-check"></i><b>2.2</b> Time Series EDA</a></li>
+<li class="chapter" data-level="2.3" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#classical-regression"><i class="fa fa-check"></i><b>2.3</b> Classical Regression</a></li>
+<li class="chapter" data-level="2.4" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#noise-processes"><i class="fa fa-check"></i><b>2.4</b> Noise Processes</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#white-noise"><i class="fa fa-check"></i><b>2.4.1</b> White noise</a></li>
+<li class="chapter" data-level="2.4.2" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#random-walk"><i class="fa fa-check"></i><b>2.4.2</b> Random Walk</a></li>
+<li class="chapter" data-level="2.4.3" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#ar-process"><i class="fa fa-check"></i><b>2.4.3</b> AR Process</a></li>
+<li class="chapter" data-level="2.4.4" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#exercise"><i class="fa fa-check"></i><b>2.4.4</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#measures-of-dependence"><i class="fa fa-check"></i><b>2.5</b> Measures of Dependence</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocovariance"><i class="fa fa-check"></i><b>2.5.1</b> Autocovariance</a></li>
+<li class="chapter" data-level="2.5.2" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocorrelation"><i class="fa fa-check"></i><b>2.5.2</b> Autocorrelation</a></li>
+<li class="chapter" data-level="2.5.3" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#exercise-1"><i class="fa fa-check"></i><b>2.5.3</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#stationarity"><i class="fa fa-check"></i><b>2.6</b> Stationarity</a></li>
+<li class="chapter" data-level="2.7" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#estimation"><i class="fa fa-check"></i><b>2.7</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="2.7.1" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#mean"><i class="fa fa-check"></i><b>2.7.1</b> Mean</a></li>
+<li class="chapter" data-level="2.7.2" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocovariance-1"><i class="fa fa-check"></i><b>2.7.2</b> Autocovariance</a></li>
+<li class="chapter" data-level="2.7.3" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocorrelation-1"><i class="fa fa-check"></i><b>2.7.3</b> Autocorrelation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#lab-1"><i class="fa fa-check"></i><b>2.8</b> Lab 1</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>3</b> ARMA</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="arma.html"><a href="arma.html#operators"><i class="fa fa-check"></i><b>3.1</b> Operators</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="arma.html"><a href="arma.html#backshift-operator"><i class="fa fa-check"></i><b>3.1.1</b> Backshift operator</a></li>
+<li class="chapter" data-level="3.1.2" data-path="arma.html"><a href="arma.html#the-difference-operator"><i class="fa fa-check"></i><b>3.1.2</b> The difference operator</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="arma.html"><a href="arma.html#autoregressive-ar-models"><i class="fa fa-check"></i><b>3.2</b> Autoregressive (AR) models</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="arma.html"><a href="arma.html#ar1-model"><i class="fa fa-check"></i><b>3.2.1</b> AR(1) Model</a></li>
+<li class="chapter" data-level="3.2.2" data-path="arma.html"><a href="arma.html#stationarity-1"><i class="fa fa-check"></i><b>3.2.2</b> Stationarity</a></li>
+<li class="chapter" data-level="3.2.3" data-path="arma.html"><a href="arma.html#autocorrelation-2"><i class="fa fa-check"></i><b>3.2.3</b> Autocorrelation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="arma.html"><a href="arma.html#moving-average-ma-models"><i class="fa fa-check"></i><b>3.3</b> Moving Average (MA) models</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="arma.html"><a href="arma.html#examples-of-maq-models"><i class="fa fa-check"></i><b>3.3.1</b> Examples of MA(<em>q</em>) models</a></li>
+<li class="chapter" data-level="3.3.2" data-path="arma.html"><a href="arma.html#ma1-model"><i class="fa fa-check"></i><b>3.3.2</b> MA(1) Model</a></li>
+<li class="chapter" data-level="3.3.3" data-path="arma.html"><a href="arma.html#invertibility"><i class="fa fa-check"></i><b>3.3.3</b> Invertibility</a></li>
+<li class="chapter" data-level="3.3.4" data-path="arma.html"><a href="arma.html#autocorrelation-3"><i class="fa fa-check"></i><b>3.3.4</b> Autocorrelation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="arma.html"><a href="arma.html#pacf"><i class="fa fa-check"></i><b>3.4</b> PACF</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="arma.html"><a href="arma.html#definition"><i class="fa fa-check"></i><b>3.4.1</b> Definition</a></li>
+<li class="chapter" data-level="3.4.2" data-path="arma.html"><a href="arma.html#ar1-pacf"><i class="fa fa-check"></i><b>3.4.2</b> AR(1) PACF</a></li>
+<li class="chapter" data-level="3.4.3" data-path="arma.html"><a href="arma.html#pacf-for-arp"><i class="fa fa-check"></i><b>3.4.3</b> PACF for AR(p)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="arma.html"><a href="arma.html#ar-estimation"><i class="fa fa-check"></i><b>3.5</b> AR Estimation</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="arma.html"><a href="arma.html#yule-walker-equations"><i class="fa fa-check"></i><b>3.5.1</b> Yule-Walker Equations</a></li>
+<li class="chapter" data-level="3.5.2" data-path="arma.html"><a href="arma.html#example"><i class="fa fa-check"></i><b>3.5.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="arma.html"><a href="arma.html#arma-1"><i class="fa fa-check"></i><b>3.6</b> ARMA</a></li>
+<li class="chapter" data-level="3.7" data-path="arma.html"><a href="arma.html#lab-2"><i class="fa fa-check"></i><b>3.7</b> Lab 2</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="arima.html"><a href="arima.html"><i class="fa fa-check"></i><b>4</b> ARIMA</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="arima.html"><a href="arima.html#stationarity-2"><i class="fa fa-check"></i><b>4.1</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="arima.html"><a href="arima.html#visual-test"><i class="fa fa-check"></i><b>4.1.1</b> Visual Test</a></li>
+<li class="chapter" data-level="4.1.2" data-path="arima.html"><a href="arima.html#unit-root-tests"><i class="fa fa-check"></i><b>4.1.2</b> Unit Root Tests</a></li>
+<li class="chapter" data-level="4.1.3" data-path="arima.html"><a href="arima.html#dickey-fuller-df"><i class="fa fa-check"></i><b>4.1.3</b> Dickey Fuller (DF)</a></li>
+<li class="chapter" data-level="4.1.4" data-path="arima.html"><a href="arima.html#augmented-df"><i class="fa fa-check"></i><b>4.1.4</b> Augmented DF</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="arima.html"><a href="arima.html#adf-test-using-tseriesadf.test"><i class="fa fa-check"></i><b>4.2</b> ADF test using <code>tseries::adf.test()</code></a></li>
+<li class="chapter" data-level="4.3" data-path="arima.html"><a href="arima.html#arima-models"><i class="fa fa-check"></i><b>4.3</b> ARIMA Models</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="arima.html"><a href="arima.html#model-selection-fitting"><i class="fa fa-check"></i><b>4.3.1</b> Model Selection/ Fitting</a></li>
+<li class="chapter" data-level="4.3.2" data-path="arima.html"><a href="arima.html#model-checking"><i class="fa fa-check"></i><b>4.3.2</b> Model Checking</a></li>
+<li class="chapter" data-level="4.3.3" data-path="arima.html"><a href="arima.html#forecasting"><i class="fa fa-check"></i><b>4.3.3</b> Forecasting</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="arima.html"><a href="arima.html#sarima"><i class="fa fa-check"></i><b>4.4</b> SARIMA</a></li>
+<li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#lab-3"><i class="fa fa-check"></i><b>4.5</b> Lab 3</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">DS809</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="arima" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Set 4</span> ARIMA<a href="arima.html#arima" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="stationarity-2" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Stationarity<a href="arima.html#stationarity-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The ARMA model we have seen assumes stationary data. Stationarity means ‘not changing in time’ in the context of time-series models. In a typical data analysis, however, we will not be assured that our data is stationary. Therefore, we need some methods to evaluate stationarity and also to deal with nonstationary data.</p>
+<p>We will discuss 2 common approaches to evaluating stationarity:</p>
+<ol style="list-style-type: decimal">
+<li>Visual test</li>
+<li>Unit Root Test (ADF)</li>
+</ol>
+<div id="visual-test" class="section level3 hasAnchor" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> Visual Test<a href="arima.html#visual-test" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The visual test is simply looking at a plot of the data versus time. Look for:</p>
+<ul>
+<li>Change in the level over time. Is the time series increasing or decreasing? Does it appear to cycle?</li>
+<li>Change in the variance over time. Do deviations away from the mean change over time, increase or decrease?</li>
+</ul>
+</div>
+<div id="unit-root-tests" class="section level3 hasAnchor" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> Unit Root Tests<a href="arima.html#unit-root-tests" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>One of the most common forms of non-stationarity that is tested for is that the process has a random walk component, such as <span class="math inline">\(x_t = x_{t-1} + e_t\)</span>. A random walk is called a ‘unit root’ process in the time series literature since it occurs when one of the roots of the AR polynomial is 1. A test for an underlying random walk is called a ‘unit root’ test.</p>
+</div>
+<div id="dickey-fuller-df" class="section level3 hasAnchor" number="4.1.3">
+<h3><span class="header-section-number">4.1.3</span> Dickey Fuller (DF)<a href="arima.html#dickey-fuller-df" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The DF tests for a unit root in the context of an AR(1) model, which can be written,</p>
+<p><span class="math display">\[\begin{align}
+x_t &amp;= \phi_1 x_{t-1} + w_t \\
+\nabla x_t &amp;= (1-\phi_1) x_{t-1} + w_t \\
+&amp;= \delta x_{t-1} + w_t
+\end{align}\]</span></p>
+<p>This model can be estimated, and testing for a unit root is equivalent to testing:</p>
+<p><span class="math display">\[\begin{align}
+H_0&amp;: \delta = 0 \\
+H_A&amp;: \delta \neq 0
+\end{align}\]</span></p>
+<p>The test statistic has a specific distribution simply known as the Dickey–Fuller table, which is used to find the p-value. We want to reject the null hypothesis of non-stationarity.</p>
+</div>
+<div id="augmented-df" class="section level3 hasAnchor" number="4.1.4">
+<h3><span class="header-section-number">4.1.4</span> Augmented DF<a href="arima.html#augmented-df" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The Augmented Dickey-Fuller test looks for evidence that an AR(p) process has a unit root (an underlying random walk process).</p>
+<p>The <strong>null hypothesis</strong> is that the time series has a unit root, that is, it has a random walk component.</p>
+<p>The <strong>alternative hypothesis</strong> is some variation of stationarity.</p>
+<p>The first difference, <span class="math inline">\(\nabla\)</span>, of the general AR(p) model can be re-written as,</p>
+<p><span class="math display">\[\begin{align}
+\nabla x_t = \phi_1^\prime x_{t-1} + \sum_{i=1}^{p-1} \phi_{i+1}^\prime \nabla x_{t-1} + w_t,
+\end{align}\]</span></p>
+<p>where</p>
+<p><span class="math display">\[\begin{align}
+\phi_1^\prime &amp;= \sum_{i=1}^{p-1} \phi_{i+1}^\prime \nabla x_{t-1} \\
+\phi_j^\prime &amp;= \sum_{j=1}^{p} \phi_{j}~\text{ for} j \geq 2
+\end{align}\]</span></p>
+<p>Our interest is on <span class="math inline">\(\phi_1^\prime\)</span> since it is equal to 0 exactly when 1 is a root of the AR(p) polynomial. Therefore, the hypothesis test is,</p>
+<p><span class="math display">\[\begin{align}
+H_0&amp;: \phi_1^\prime = 0 \\
+H_A&amp;: \phi_1^\prime \neq 0
+\end{align}\]</span></p>
+<pre><code>## 
+## Attaching package: &#39;reshape2&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     smiths</code></pre>
+<p><img src="series_files/figure-html/fig.df-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="adf-test-using-tseriesadf.test" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> ADF test using <code>tseries::adf.test()</code><a href="arima.html#adf-test-using-tseriesadf.test" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><code>adf.test()</code> in the tseries package will apply the Augmented Dickey-Fuller <strong>with a constant and trend</strong> and report the p-value. We want to reject the Dickey=Fuller null hypothesis of non-stationarity. We will set <code>k=0</code> to apply the Dickey-Fuller test which tests for AR(1) stationarity. The Augmented Dickey-Fuller tests for more general lag-p stationarity.</p>
+<pre><code>adf.test(x, alternative = c(&quot;stationary&quot;, &quot;explosive&quot;),
+         k = trunc((length(x)-1)^(1/3)))</code></pre>
+</div>
+<div id="arima-models" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> ARIMA Models<a href="arima.html#arima-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Our data is not always stationary. If the data do not appear stationary, differencing can help. This leads to the class of <em>autoregressive integrated moving average</em> (ARIMA) models. ARIMA models are indexed with orders (<em>p</em>,<em>d</em>,<em>q</em>) where <em>d</em> indicates the order of differencing.</p>
+<p><span class="math inline">\(\{x_t\}\)</span> follows an ARIMA(<em>p</em>,<em>d</em>,<em>q</em>) process if <span class="math inline">\((1-\mathbf{B})^d x_t\)</span> is an ARMA(<em>p</em>,<em>q</em>) process.</p>
+<p>For example, if we look at Japan exports over the time period from 1960 to 2016, we see a clear evolution in the mean of the time series, indicating that the time series is not stationary.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="arima.html#cb7-1" tabindex="-1"></a>je <span class="ot">=</span> global_economy <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="arima.html#cb7-2" tabindex="-1"></a>  <span class="fu">filter</span>(Country <span class="sc">==</span> <span class="st">&quot;Japan&quot;</span>, Year<span class="sc">&lt;</span> <span class="dv">2017</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="arima.html#cb7-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">d =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="fu">diff</span>(Exports)))</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>As we saw in week one, if we instead look at the year over year changes in exports, we see something that more closely resembles a stationary time series.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<div id="model-selection-fitting" class="section level3 hasAnchor" number="4.3.1">
+<h3><span class="header-section-number">4.3.1</span> Model Selection/ Fitting<a href="arima.html#model-selection-fitting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The general sequence of steps involved in fitting an ARIMA model to a given time series are:</p>
+<ol style="list-style-type: decimal">
+<li>Evaluate whether the time series is stationary</li>
+<li>If not, make it stationary - select the differencing level (d)</li>
+<li>Select the AR level (p) and the MA level (q) that optimize the AIC</li>
+</ol>
+<p>Steps two and three are automated with the function <code>forecast::auto.arima</code> function. For instance,</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="arima.html#cb8-1" tabindex="-1"></a>m0 <span class="ot">=</span> <span class="fu">auto.arima</span>(je<span class="sc">$</span>Exports)</span>
+<span id="cb8-2"><a href="arima.html#cb8-2" tabindex="-1"></a><span class="fu">summary</span>(m0)</span></code></pre></div>
+<pre><code>## Series: je$Exports 
+## ARIMA(0,1,0) 
+## 
+## sigma^2 = 1.628:  log likelihood = -93.1
+## AIC=188.21   AICc=188.28   BIC=190.24
+## 
+## Training set error measures:
+##                     ME     RMSE      MAE       MPE     MAPE      MASE
+## Training set 0.0948585 1.264655 0.883942 0.2186117 7.269751 0.9826653
+##                     ACF1
+## Training set -0.04317139</code></pre>
+</div>
+<div id="model-checking" class="section level3 hasAnchor" number="4.3.2">
+<h3><span class="header-section-number">4.3.2</span> Model Checking<a href="arima.html#model-checking" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="check-the-residuals" class="section level4 hasAnchor" number="4.3.2.1">
+<h4><span class="header-section-number">4.3.2.1</span> Check the residuals<a href="arima.html#check-the-residuals" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Residuals = difference between the observations (data), <span class="math inline">\(y\)</span>, and expected (fitted) values, <span class="math inline">\(\hat{y}\)</span>. Thus, the i’th residual is: <span class="math inline">\(y_i-\hat{y}_i\)</span>.</p>
+<p>In R, we can obtain the vector of residuals using the <code>residuals</code> function, as shown below.</p>
+</div>
+<div id="residuals-function-in-r" class="section level4 hasAnchor" number="4.3.2.2">
+<h4><span class="header-section-number">4.3.2.2</span> <code>residuals()</code> function in R<a href="arima.html#residuals-function-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The <code>residuals()</code> function will return the residuals for fitted models.</p>
+<pre><code>## Time Series:
+## Start = 1 
+## End = 57 
+## Frequency = 1 
+##  [1]  0.01072294 -1.44501952  0.15303390 -0.39309669  0.45625211  1.02356255
+##  [7]  0.06053730 -0.92437932  0.45807416  0.44426518 -0.19594755  0.86880508
+## [13] -1.08192227 -0.52480724  3.41625812 -0.76990990  0.72818035 -0.44252813
+## [19] -1.89419993  0.42955074  2.03742971  0.99396401 -0.20034080 -0.62338421
+## [25]  1.09590411 -0.50007152 -2.98081554 -0.97493052 -0.36290393  0.53728879
+## [31]  0.10797014 -0.43368768 -0.09399316 -0.61422391 -0.07420507 -0.03185334
+## [37]  0.50727239  1.06978245 -0.02437143 -0.57272023  0.67272500 -0.39538586
+## [43]  0.78912188  0.62107244  1.33273884  1.04040881  1.86046117  1.62041428
+## [49] -0.06927885 -4.90312357  2.51584283 -0.11176077 -0.38024365  1.37064557
+## [55]  1.62490343  0.04862657 -1.46977556</code></pre>
+<p>To check the fit of our model, we want to check that the residuals are white noise.</p>
+</div>
+</div>
+<div id="forecasting" class="section level3 hasAnchor" number="4.3.3">
+<h3><span class="header-section-number">4.3.3</span> Forecasting<a href="arima.html#forecasting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="point-estimates" class="section level4 hasAnchor" number="4.3.3.1">
+<h4><span class="header-section-number">4.3.3.1</span> Point Estimates<a href="arima.html#point-estimates" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The basic idea of forecasting with an ARIMA model is to estimate the parameters and forecast forward.</p>
+<p>For example, let’s say we want to forecast with a ARIMA(2,1,0) model with drift:
+<span class="math display">\[z_t = \mu + \beta_1 z_{t-1} + \beta_2 z_{t-2} + e_t\]</span>
+where <span class="math inline">\(z_t = x_t - x_{t-1}\)</span>, the first difference.</p>
+<p><code>Arima()</code> would write this model:</p>
+<p><span class="math display">\[(z_t-m) = \beta_1 (z_{t-1}-m) + \beta_2 (z_{t-2}-m) + e_t\]</span>
+The relationship between <span class="math inline">\(\mu\)</span> and <span class="math inline">\(m\)</span> is <span class="math inline">\(\mu = m(1 - \beta_1 - \beta_2)\)</span>.</p>
+<p>Let’s estimate the <span class="math inline">\(\beta\)</span>’s for this model from Japan export.</p>
+<pre><code>##         ar1         ar2       drift 
+## -0.05580519 -0.18850080  0.10736838</code></pre>
+<pre><code>##     drift 
+## 0.1335991</code></pre>
+<p>So we can forecast with this model:</p>
+<p><span class="math display">\[z_t = 0.1335991 -0.05580519 z_{t-1} - 0.18850080 z_{t-2} + e_t\]</span>
+To obtain the <span class="math inline">\(T+1\)</span> forecast value:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="arima.html#cb13-1" tabindex="-1"></a>zt_1 <span class="ot">=</span> <span class="fl">16.119153</span> <span class="sc">-</span> <span class="fl">17.588928</span></span>
+<span id="cb13-2"><a href="arima.html#cb13-2" tabindex="-1"></a>zt_2 <span class="ot">=</span> <span class="fl">17.588928</span> <span class="sc">-</span> <span class="fl">17.540302</span></span>
+<span id="cb13-3"><a href="arima.html#cb13-3" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="arima.html#cb13-4" tabindex="-1"></a><span class="fl">16.119153</span> <span class="sc">+</span> (<span class="fl">0.1335991</span> <span class="sc">-</span> <span class="fl">0.05580519</span> <span class="sc">*</span> zt_1 <span class="sc">-</span> <span class="fl">0.18850080</span> <span class="sc">*</span> zt_2)</span></code></pre></div>
+<pre><code>## [1] 16.32561</code></pre>
+</div>
+<div id="standard-errors" class="section level4 hasAnchor" number="4.3.3.2">
+<h4><span class="header-section-number">4.3.3.2</span> <span style="color: red;"> Standard Errors </span><a href="arima.html#standard-errors" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To obtain the standard errors of the model forecast, it is helpful to reformulate the ARIMA model as an infinite order MA model. Any ARIMA model can be written as an infinite order MA model:</p>
+<p><span class="math display">\[\begin{align}
+x_t - \mu &amp;= w_t + \psi_1 w_{t-1} + \psi_2 w_{t-1} + \ldots + \psi_k w_{t-k} + \ldots \\
+&amp;= \sum_{j=0}^\infty \psi_j w_{t-j} \text{ where } \psi_0=1
+\end{align}\]</span></p>
+<p>For example, the AR(1) model:</p>
+<p><span class="math display">\[\begin{align}
+y_t &amp;= \phi y_{t-1} + w_t \\
+&amp;= \phi ( \phi y_{t-1} + w_{t-1} ) + w_t \\
+&amp;= \phi^2 y_{t-1} + \phi w_{t-1}  + w_t \\
+&amp;= \sum_{j=0}^{\infty} \phi^j w_{t-j}
+\end{align}\]</span></p>
+<p>The standard deviation of the forecast error at time <span class="math inline">\(T+h\)</span> is,</p>
+<p><span class="math display">\[\begin{align}
+\sqrt{ \hat{\sigma}^2_w \sum_{j=0}^{h-1} \psi_j^2 }
+\end{align}\]</span></p>
+<p>With the assumption of normally distributed errors, a 95% prediction interval for <span class="math inline">\(x_{T+h}\)</span> is,</p>
+<p><span class="math display">\[\begin{align}
+\hat{x}_{T+h} \pm 1.96 \sqrt{ \hat{\sigma}^2_w \sum_{j=0}^{h-1} \psi_j^2 }
+\end{align}\]</span></p>
+<p>For example, the one step ahead forecast for the Japan Export model has a 95% prediction interval:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="arima.html#cb15-1" tabindex="-1"></a><span class="fu">c</span>(<span class="fl">16.32561</span> <span class="sc">-</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fl">1.645</span>), <span class="fl">16.32561</span> <span class="sc">+</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fl">1.645</span>))</span></code></pre></div>
+<pre><code>## [1] 13.81181 18.83941</code></pre>
+<p>You can also use the <code>forecast</code> function to obtain point estimates and prediction intervals. For example,</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="arima.html#cb17-1" tabindex="-1"></a>fr <span class="ot">=</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> <span class="dv">5</span>)</span>
+<span id="cb17-2"><a href="arima.html#cb17-2" tabindex="-1"></a><span class="fu">plot</span>(fr) </span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+<div id="sarima" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> SARIMA<a href="arima.html#sarima" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="lab-3" class="section level2 hasAnchor" number="4.5">
+<h2><span class="header-section-number">4.5</span> Lab 3<a href="arima.html#lab-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol start="2" style="list-style-type: decimal">
+<li>Consider <code>fpp3::aus_airpassengers</code>, the total number of passengers (in millions) from Australian air carriers for the period 1970-2011.</li>
+</ol>
+<ul>
+<li>Use <code>forecast::auto.arima()</code> to find an appropriate ARIMA model. What model was selected? Write the model in terms of the backshift operator.</li>
+<li>Check that the residuals look like white noise.</li>
+<li>Plot forecasts for the next 10 periods.</li>
+<li>Plot forecasts from an ARIMA(0,1,0) model with drift and compare these to the automatically selected model.</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Choose an employment type from <code>fpp3::us_employment</code>, the total employment in different industries in the United States.</li>
+</ol>
+<ul>
+<li>Are the data stationary? If not, find an appropriate transformation which yields stationary data.</li>
+<li>Examine ACF and PACF plots of the transformed data (if this was necessary to attain stationarity) to identify a couple of ARIMA models that might be useful in describing the time series. Which of your models is the best according to their AIC values?</li>
+<li>Estimate the parameters of your best model and do diagnostic testing on the residuals. Do the residuals resemble white noise? If not, try to find another ARIMA model which fits better.</li>
+<li>Forecast the next 3 years of data. Get the latest figures from <a href="https://fred.stlouisfed.org/categories/11" class="uri">https://fred.stlouisfed.org/categories/11</a> to check the accuracy of your forecasts.</li>
+<li>Eventually, the prediction intervals are so wide that the forecasts are not particularly useful. How many years of forecasts do you think are sufficiently accurate to be usable?</li>
+</ul>
+<p>Another way that a time series may violate stationarity is with seasonality. For example, the Leisure and Hospitality sector of the economy spikes in the summer and dips in the winter months. We will look at employment (in thousands) in this sector since 2010:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="arima.html#cb18-1" tabindex="-1"></a>leisure <span class="ot">=</span> fpp3<span class="sc">::</span>us_employment <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="arima.html#cb18-2" tabindex="-1"></a>  <span class="fu">filter</span>(Title <span class="sc">==</span> <span class="st">&quot;Leisure and Hospitality&quot;</span>, <span class="fu">year</span>(Month) <span class="sc">&gt;=</span> <span class="dv">2010</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a href="arima.html#cb18-3" tabindex="-1"></a>  <span class="fu">select</span>(Month, Employed)</span></code></pre></div>
+<ol style="list-style-type: decimal">
+<li><p>Make a plot of this time series and comment on the trend and the seasonality.</p></li>
+<li><p>Find appropriate transformation(s) to make the time series stationary. What were the transformations? Provide any necessary plots to validate stationarity.</p></li>
+<li><p>Use <code>auto.arima</code> to fit an ARIMA model to the data. You can use either the original time series or the transformed time series. In either case, you may find it helpful to coerce your input time series into a time series object with frequency 12. This will ensure that the function explores seasonal parameters and transformations in the fitting process. What model was selected?</p></li>
+<li><p>Use <code>forecast</code> to forecast the next twelve months of data. Plot the forecast along with the orginal time series. Does the model capture the trend and seasonality?</p></li>
+</ol>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="arma.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/dbreynol/DS809/edit/master/set3_25.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["series.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
