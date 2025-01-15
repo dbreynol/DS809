@@ -408,7 +408,7 @@ phihat = solve(Gmat) %*% gvec
 ```
 
 
-## ARMA
+## ARMA models
 
 An autoregressive moving average, or ARMA(_p_,_q_), model is written as
 
@@ -426,6 +426,80 @@ ARMA models are _stationary_ if all roots of $\phi_p (\mathbf{B}) > 1$
 
 ARMA models are _invertible_ if all roots of $\theta_q (\mathbf{B}) > 1$
 
+### $\psi$ representation
+
+For a causal ARMA$(p,q)$ model, $\phi_p (\mathbf{B}^p) x_t=  \theta_q (\mathbf{B}^q) w_t$, we may write
+
+\begin{align}
+x_t = \sum_{j=0}^\infty \psi_j w_{t-j}.
+\end{align}
+
+Solving for the $\psi$ weights in general is complicated and can be solved using the <code>ARMAtoMA</code> function in R. 
+
+### ARMA(1,1)
+
+<span style="color:red">Solve for the $\psi$ wieghts in the case of a causal, invertible ARMA(1,1) process. </span>
+
+### Forecasting
+
+To forecast with an ARMA model, we simply use the parameter estimates for future periods. For example, consider the following dataset of 500 observations simulated from an ARMA(1,1) process. 
+
+```{r echo=TRUE}
+set.seed(1)
+ex_ts_arma = arima.sim(n = 500, list(ar = c(.8), ma = c(-.3)))
+arma_fit = Arima(ex_ts_arma, order = c(1,0,1), include.mean = F)
+```
+
+The fitted model is $x_t = 0.7732447 x_{t-1} -0.2942922 w_{t-1}$. To forecast two observations in the future, we simply use the parameter estimates as follows:
+
+```{r echo=TRUE}
+w_vec = abs( fitted(arma_fit) - ex_ts_arma)
+h1 = coefficients(arma_fit)[1] * ex_ts_arma[500] + coefficients(arma_fit)[2] * w_vec[500] # 0.2161869
+h2 = coefficients(arma_fit)[1] * h1
+
+```
+
+Our one step ahead forecast is `r h1` and the two step ahead forecast is `r h2`. The same values can be computed using <code>forecast(arma_fit, h=2)$mean</code>.
+
+### Forecast Errors
+
+In order to compute forecast errors, we will make use of the following two parameters:
+
+\begin{align}
+x_{T+h} &= \sum_{j=0}^\infty \psi_j w_{T+h-j} \\
+\tilde{x}_{T+h} &= E( x_{T+h} | x_1, \ldots, x_T )
+\end{align}
+
+Since $E(w_t | x_1, \ldots, x_T) = w_t$ for $t \leq T$ and 0 for $t > T$,
+
+\begin{align}
+x_{T+h} - \tilde{x}_{T+h}  &= \sum_{j=0}^{h-1} \psi_j w_{T+h-j} \\
+\end{align}
+
+Therefore, the variance of this quantity is:
+
+\begin{align}
+\sigma^2 \sum_{j=0}^{h-1} \psi_j ^2  \\
+\end{align}
+
+With the assumption of normally distributed errors, a 95\% prediction interval for $x_{T+h}$ is,
+
+\begin{align}
+\hat{x}_{T+h} \pm 1.96 \sqrt{ \hat{\sigma}^2_w \sum_{j=0}^{h-1} \psi_j^2 }
+\end{align}
+
+```{r echo=TRUE, eval = F}
+psis = ARMAtoMA(ar = coefficients(arma_fit)[1], ma = coefficients(arma_fit)[2], lag.max = 2)
+
+# confidence interval for one step ahead forecast
+c(h1 - qnorm(.975) * sqrt( arma_fit$sigma2 ) , h1 + qnorm(.975) * sqrt ( arma_fit$sigma2 )) # (-1.8, 2.2)
+
+# confidence interval for 2 step ahead forecast
+h2_se = sqrt( arma_fit$sigma2 * (1 + psis[1]^2 ) )
+c(h2 - qnorm(.975) * h2_se, h2 + qnorm(.975) * h2_se) # (-2.0, 2.4)
+```
+
+Or, use <code>forecast(arma_fit, h = 2)</code>
 
 ## Lab 2
 

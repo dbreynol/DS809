@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2025-01-07" />
+<meta name="date" content="2025-01-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -197,7 +197,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.5.1" data-path="arma.html"><a href="arma.html#yule-walker-equations"><i class="fa fa-check"></i><b>3.5.1</b> Yule-Walker Equations</a></li>
 <li class="chapter" data-level="3.5.2" data-path="arma.html"><a href="arma.html#example"><i class="fa fa-check"></i><b>3.5.2</b> Example</a></li>
 </ul></li>
-<li class="chapter" data-level="3.6" data-path="arma.html"><a href="arma.html#arma-1"><i class="fa fa-check"></i><b>3.6</b> ARMA</a></li>
+<li class="chapter" data-level="3.6" data-path="arma.html"><a href="arma.html#arma-models"><i class="fa fa-check"></i><b>3.6</b> ARMA models</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="arma.html"><a href="arma.html#psi-representation"><i class="fa fa-check"></i><b>3.6.1</b> <span class="math inline">\(\psi\)</span> representation</a></li>
+<li class="chapter" data-level="3.6.2" data-path="arma.html"><a href="arma.html#arma11"><i class="fa fa-check"></i><b>3.6.2</b> ARMA(1,1)</a></li>
+<li class="chapter" data-level="3.6.3" data-path="arma.html"><a href="arma.html#forecasting"><i class="fa fa-check"></i><b>3.6.3</b> Forecasting</a></li>
+<li class="chapter" data-level="3.6.4" data-path="arma.html"><a href="arma.html#forecast-errors"><i class="fa fa-check"></i><b>3.6.4</b> Forecast Errors</a></li>
+</ul></li>
 <li class="chapter" data-level="3.7" data-path="arma.html"><a href="arma.html#lab-2"><i class="fa fa-check"></i><b>3.7</b> Lab 2</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="arima.html"><a href="arima.html"><i class="fa fa-check"></i><b>4</b> ARIMA</a>
@@ -208,13 +214,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.1.2" data-path="arima.html"><a href="arima.html#unit-root-tests"><i class="fa fa-check"></i><b>4.1.2</b> Unit Root Tests</a></li>
 <li class="chapter" data-level="4.1.3" data-path="arima.html"><a href="arima.html#dickey-fuller-df"><i class="fa fa-check"></i><b>4.1.3</b> Dickey Fuller (DF)</a></li>
 <li class="chapter" data-level="4.1.4" data-path="arima.html"><a href="arima.html#augmented-df"><i class="fa fa-check"></i><b>4.1.4</b> Augmented DF</a></li>
+<li class="chapter" data-level="4.1.5" data-path="arima.html"><a href="arima.html#adf-tseriesadf.test"><i class="fa fa-check"></i><b>4.1.5</b> ADF: <code>tseries::adf.test()</code></a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="arima.html"><a href="arima.html#adf-test-using-tseriesadf.test"><i class="fa fa-check"></i><b>4.2</b> ADF test using <code>tseries::adf.test()</code></a></li>
+<li class="chapter" data-level="4.2" data-path="arima.html"><a href="arima.html#differencing-nabla"><i class="fa fa-check"></i><b>4.2</b> Differencing <span class="math inline">\(\nabla\)</span></a></li>
 <li class="chapter" data-level="4.3" data-path="arima.html"><a href="arima.html#arima-models"><i class="fa fa-check"></i><b>4.3</b> ARIMA Models</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="arima.html"><a href="arima.html#model-selection-fitting"><i class="fa fa-check"></i><b>4.3.1</b> Model Selection/ Fitting</a></li>
-<li class="chapter" data-level="4.3.2" data-path="arima.html"><a href="arima.html#model-checking"><i class="fa fa-check"></i><b>4.3.2</b> Model Checking</a></li>
-<li class="chapter" data-level="4.3.3" data-path="arima.html"><a href="arima.html#forecasting"><i class="fa fa-check"></i><b>4.3.3</b> Forecasting</a></li>
+<li class="chapter" data-level="4.3.1" data-path="arima.html"><a href="arima.html#arima111"><i class="fa fa-check"></i><b>4.3.1</b> ARIMA(1,1,1)</a></li>
+<li class="chapter" data-level="4.3.2" data-path="arima.html"><a href="arima.html#example-1"><i class="fa fa-check"></i><b>4.3.2</b> Example</a></li>
+<li class="chapter" data-level="4.3.3" data-path="arima.html"><a href="arima.html#model-selection-fitting"><i class="fa fa-check"></i><b>4.3.3</b> Model Selection/ Fitting</a></li>
+<li class="chapter" data-level="4.3.4" data-path="arima.html"><a href="arima.html#model-selection---automated"><i class="fa fa-check"></i><b>4.3.4</b> Model Selection - automated</a></li>
+<li class="chapter" data-level="4.3.5" data-path="arima.html"><a href="arima.html#model-checking"><i class="fa fa-check"></i><b>4.3.5</b> Model Checking</a></li>
+<li class="chapter" data-level="4.3.6" data-path="arima.html"><a href="arima.html#forecasting-1"><i class="fa fa-check"></i><b>4.3.6</b> Forecasting</a></li>
 </ul></li>
 <li class="chapter" data-level="4.4" data-path="arima.html"><a href="arima.html#sarima"><i class="fa fa-check"></i><b>4.4</b> SARIMA</a></li>
 <li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#lab-3"><i class="fa fa-check"></i><b>4.5</b> Lab 3</a></li>
@@ -239,7 +249,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">DS809</h1>
 <p class="author"><em>David Reynolds</em></p>
-<p class="date"><em>2025-01-07</em></p>
+<p class="date"><em>2025-01-14</em></p>
 </div>
 <div id="course-info" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">Set 1</span> Course Info<a href="index.html#course-info" class="anchor-section" aria-label="Anchor link to header"></a></h1>
