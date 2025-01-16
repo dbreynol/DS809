@@ -63,4 +63,6 @@ residuals-function-in-r
 forecasting-1
 point-estimates
 sarima
+unpacking-notation
+data-example
 lab-3

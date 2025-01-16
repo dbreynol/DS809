@@ -255,10 +255,61 @@ plot(fr)
 
 ## SARIMA
 
-1. Consider the SARIMA model, ARIMA$(0,0,1)(1,0,0)_{12}$.
+So far, we have restricted our attention to non-seasonal data and non-seasonal ARIMA models. However, ARIMA models are also capable of modelling a wide range of seasonal data. A seasonal ARIMA model is formed by including additional seasonal terms in the ARIMA models we have seen so far. It is written as follows:
+
+$$ARIMA(p,d,q)~(P,D,Q)_m$$
+where $m$ is the seasonal period (e.g., number of observations per seasonal period). We use uppercase notation for the seasonal parts of the model, and lowercase notation for the non-seasonal parts of the model.
+
+The seasonal part of the model consists of terms that are similar to the non-seasonal components of the model, but involve backshifts of the seasonal period. The modelling procedure is almost the same as for non-seasonal data, except that we need to select seasonal AR and MA terms as well as the non-seasonal components of the model. Let us start by unpacking some simple SARIMA models.
+
+### Unpacking Notation
+
+Consider the SARIMA model, ARIMA$(0,0,0)(0,0,1)_{12}$
+
 - Write out the model equation
+
 - What is the theoretical variance of the model?
+
 - What is the theoretical autocorrelation function?
+
+- What would you expect to see in the seasonal lags of the PACF?
+
+Consider the SARIMA model, ARIMA$(0,0,0)(1,0,0)_{12}$
+
+- Write out the model equation
+
+- What is the theoretical variance of the model?
+
+- What is the theoretical autocorrelation function?
+
+- What would you expect to see in the seasonal lags of the PACF?
+
+### Data Example
+
+```{r fig.height = 2, fig.width = 5, fig.align = "center", warning=FALSE}
+h02 <- PBS  %>% 
+  filter(ATC2 == "H02") %>% 
+  summarise(Cost = sum(Cost)/1e6) %>% 
+  mutate(lcost = log(Cost)) %>% 
+  mutate(dlcost = c( rep(0,12),diff(lcost, 12)))
+
+ggplot(h02, aes(Month, lcost)) + geom_line() + theme_minimal() + ggtitle("AUS Corticosteroid Drug Sales")
+```
+
+The data are strongly seasonal and obviously non-stationary, so seasonal differencing will be used. The seasonally differenced data are shown below. It is not clear at this point whether we should do another difference or not.
+
+```{r fig.height = 2, fig.width = 5, fig.align = "center", warning=FALSE}
+ggplot(h02, aes(Month, dlcost)) + geom_line() + theme_minimal() + ggtitle("First Difference Drug Sales")
+```
+
+
+```{r}
+par(mfrow = c(1,2))
+acf(h02$dlcost, type = "correlation", main = "Cortico Cost ACF")
+acf(h02$dlcost, type = "partial", main = "Cortico Cost PACF")
+```
+
+In the plots of the seasonally differenced data, there are spikes in the PACF at lags 12 and 24, but nothing at seasonal lags in the ACF. This may be suggestive of a seasonal AR(2) term. In the non-seasonal lags, there are three significant spikes in the PACF, suggesting a possible AR(3) term. The pattern in the ACF is not indicative of any simple model.
 
 ## Lab 3
 

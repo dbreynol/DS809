@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2025-01-14" />
+<meta name="date" content="2025-01-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -226,7 +226,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3.5" data-path="arima.html"><a href="arima.html#model-checking"><i class="fa fa-check"></i><b>4.3.5</b> Model Checking</a></li>
 <li class="chapter" data-level="4.3.6" data-path="arima.html"><a href="arima.html#forecasting-1"><i class="fa fa-check"></i><b>4.3.6</b> Forecasting</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="arima.html"><a href="arima.html#sarima"><i class="fa fa-check"></i><b>4.4</b> SARIMA</a></li>
+<li class="chapter" data-level="4.4" data-path="arima.html"><a href="arima.html#sarima"><i class="fa fa-check"></i><b>4.4</b> SARIMA</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="arima.html"><a href="arima.html#unpacking-notation"><i class="fa fa-check"></i><b>4.4.1</b> Unpacking Notation</a></li>
+<li class="chapter" data-level="4.4.2" data-path="arima.html"><a href="arima.html#data-example"><i class="fa fa-check"></i><b>4.4.2</b> Data Example</a></li>
+</ul></li>
 <li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#lab-3"><i class="fa fa-check"></i><b>4.5</b> Lab 3</a></li>
 </ul></li>
 </ul>
@@ -451,14 +455,35 @@ To obtain the <span class="math inline">\(T+1\)</span> forecast value:</p>
 </div>
 <div id="sarima" class="section level2 hasAnchor" number="4.4">
 <h2><span class="header-section-number">4.4</span> SARIMA<a href="arima.html#sarima" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<ol style="list-style-type: decimal">
-<li>Consider the SARIMA model, ARIMA<span class="math inline">\((0,0,1)(1,0,0)_{12}\)</span>.</li>
-</ol>
+<p>So far, we have restricted our attention to non-seasonal data and non-seasonal ARIMA models. However, ARIMA models are also capable of modelling a wide range of seasonal data. A seasonal ARIMA model is formed by including additional seasonal terms in the ARIMA models we have seen so far. It is written as follows:</p>
+<p><span class="math display">\[ARIMA(p,d,q)~(P,D,Q)_m\]</span>
+where <span class="math inline">\(m\)</span> is the seasonal period (e.g., number of observations per seasonal period). We use uppercase notation for the seasonal parts of the model, and lowercase notation for the non-seasonal parts of the model.</p>
+<p>The seasonal part of the model consists of terms that are similar to the non-seasonal components of the model, but involve backshifts of the seasonal period. The modelling procedure is almost the same as for non-seasonal data, except that we need to select seasonal AR and MA terms as well as the non-seasonal components of the model. Let us start by unpacking some simple SARIMA models.</p>
+<div id="unpacking-notation" class="section level3 hasAnchor" number="4.4.1">
+<h3><span class="header-section-number">4.4.1</span> Unpacking Notation<a href="arima.html#unpacking-notation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider the SARIMA model, ARIMA<span class="math inline">\((0,0,0)(0,0,1)_{12}\)</span></p>
 <ul>
-<li>Write out the model equation</li>
-<li>What is the theoretical variance of the model?</li>
-<li>What is the theoretical autocorrelation function?</li>
+<li><p>Write out the model equation</p></li>
+<li><p>What is the theoretical variance of the model?</p></li>
+<li><p>What is the theoretical autocorrelation function?</p></li>
+<li><p>What would you expect to see in the seasonal lags of the PACF?</p></li>
 </ul>
+<p>Consider the SARIMA model, ARIMA<span class="math inline">\((0,0,0)(1,0,0)_{12}\)</span></p>
+<ul>
+<li><p>Write out the model equation</p></li>
+<li><p>What is the theoretical variance of the model?</p></li>
+<li><p>What is the theoretical autocorrelation function?</p></li>
+<li><p>What would you expect to see in the seasonal lags of the PACF?</p></li>
+</ul>
+</div>
+<div id="data-example" class="section level3 hasAnchor" number="4.4.2">
+<h3><span class="header-section-number">4.4.2</span> Data Example<a href="arima.html#data-example" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="series_files/figure-html/unnamed-chunk-37-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>The data are strongly seasonal and obviously non-stationary, so seasonal differencing will be used. The seasonally differenced data are shown below. It is not clear at this point whether we should do another difference or not.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-38-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="series_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
+<p>In the plots of the seasonally differenced data, there are spikes in the PACF at lags 12 and 24, but nothing at seasonal lags in the ACF. This may be suggestive of a seasonal AR(2) term. In the non-seasonal lags, there are three significant spikes in the PACF, suggesting a possible AR(3) term. The pattern in the ACF is not indicative of any simple model.</p>
+</div>
 </div>
 <div id="lab-3" class="section level2 hasAnchor" number="4.5">
 <h2><span class="header-section-number">4.5</span> Lab 3<a href="arima.html#lab-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
