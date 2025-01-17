@@ -286,6 +286,8 @@ Consider the SARIMA model, ARIMA$(0,0,0)(1,0,0)_{12}$
 
 ### Data Example
 
+To see how this looks with real data, we will try to forecast monthly corticosteroid drug sales in Australia. These are known as H02 drugs under the Anatomical Therapeutic Chemical classification scheme. Their primary application is the treatment of allergic reactions, and are therefore highly seasonal.
+
 ```{r fig.height = 2, fig.width = 5, fig.align = "center", warning=FALSE}
 h02 <- PBS  %>% 
   filter(ATC2 == "H02") %>% 
@@ -296,31 +298,55 @@ h02 <- PBS  %>%
 ggplot(h02, aes(Month, lcost)) + geom_line() + theme_minimal() + ggtitle("AUS Corticosteroid Drug Sales")
 ```
 
-The data are strongly seasonal and obviously non-stationary, so seasonal differencing will be used. The seasonally differenced data are shown below. It is not clear at this point whether we should do another difference or not.
+The data are strongly seasonal and obviously non-stationary, so seasonal differencing will be used. The seasonally differenced data are shown below. The differenced data appear somewhat stationary and the null hypothesis is rejected in the ADF test, so our response variable will be: $z_t = x_t - x_{t-12}$. 
 
 ```{r fig.height = 2, fig.width = 5, fig.align = "center", warning=FALSE}
 ggplot(h02, aes(Month, dlcost)) + geom_line() + theme_minimal() + ggtitle("First Difference Drug Sales")
 ```
 
+Below we examine the ACF and PACF of $z_t$.
 
-```{r}
+```{r fig.height = 3, fig.width = 6, fig.align = "center"}
 par(mfrow = c(1,2))
-acf(h02$dlcost, type = "correlation", main = "Cortico Cost ACF")
-acf(h02$dlcost, type = "partial", main = "Cortico Cost PACF")
+acf(h02$dlcost, type = "correlation", main = "Cortico Cost ACF", lag.max = 24)
+acf(h02$dlcost, type = "partial", main = "Cortico Cost PACF", lag.max = 24)
 ```
 
-In the plots of the seasonally differenced data, there are spikes in the PACF at lags 12 and 24, but nothing at seasonal lags in the ACF. This may be suggestive of a seasonal AR(2) term. In the non-seasonal lags, there are three significant spikes in the PACF, suggesting a possible AR(3) term. The pattern in the ACF is not indicative of any simple model.
+In the plots of the seasonally differenced data, there are spikes in the PACF at lags 12 and 24, but nothing at seasonal lags in the ACF. This may be suggestive of a seasonal AR(2) term. In the non-seasonal lags, there are three significant spikes in the PACF, suggesting a possible AR(3) term. The pattern in the ACF is not indicative of any simple model. This initial analysis suggests that a possible model for these data is an ARIMA$(3,0,0)(2,1,0)_{12}$. We fit this model below:
+
+```{r echo=TRUE}
+Cost = ts(h02$Cost, frequency = 12, start = c(1991, 7)) 
+m0 = Arima(Cost, order = c(3,0,0), seasonal = c(2,1,0))
+summary(m0)
+```
+
+Let's quickly examine the residuals from the model,
+
+```{r fig.height = 3, fig.width = 6, fig.align = "center"}
+par(mfrow = c(1,2))
+plot(residuals(m0))
+hist(residuals(m0))
+```
+
+And then we can produce forecasts for the next 12 months.
+
+```{r}
+plot( forecast(m0, h=12) )
+```
+
 
 ## Lab 3
 
-2. Consider `fpp3::aus_airpassengers`, the total number of passengers (in millions) from Australian air carriers for the period 1970-2011.
+1. Consider `fpp3::aus_airpassengers`, the total number of passengers (in millions) from Australian air carriers for the period 1970-2011.
 
 - Use `forecast::auto.arima()` to find an appropriate ARIMA model. What model was selected? Write the model in terms of the backshift operator.
 - Check that the residuals look like white noise.
 - Plot forecasts for the next 10 periods.
 - Plot forecasts from an ARIMA(0,1,0) model with drift and compare these to the automatically selected model.
 
-3. Choose an employment type from `fpp3::us_employment`, the total employment in different industries in the United States.
+2. Simulate data from both models in the [Unpacking Notation] section and validate each of the properties we discussed.
+
+4. Choose an employment type from `fpp3::us_employment`, the total employment in different industries in the United States.
 
 - Are the data stationary? If not, find an appropriate transformation which yields stationary data.
 - Examine ACF and PACF plots of the transformed data (if this was necessary to attain stationarity) to identify a couple of ARIMA models that might be useful in describing the time series. Which of your models is the best according to their AIC values?
@@ -336,6 +362,7 @@ home = getSymbols('CSUSHPINSA', src = 'FRED') # S&P/Case-Shiller U.S. National H
 gdp = getSymbols('A939RX0Q048SBEA', src = 'FRED')
 ```
 
+3. Fit a model to the h02 data using auto.arima. What model is selected? How does the AIC compare with the .... mode. We will compare some of the models fitted so far using a test set consisting of the last two years of data. Thus, we fit the models using data from July 1991 to June 2006, and forecast the script sales for July 2006 – June 2008. 
 
 Another way that a time series may violate stationarity is with seasonality. For example, the Leisure and Hospitality sector of the economy spikes in the summer and dips in the winter months. We will look at employment (in thousands) in this sector since 2010:
 

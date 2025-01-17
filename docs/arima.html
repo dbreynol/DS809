@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2025-01-15" />
+<meta name="date" content="2025-01-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -478,16 +478,41 @@ where <span class="math inline">\(m\)</span> is the seasonal period (e.g., numbe
 </div>
 <div id="data-example" class="section level3 hasAnchor" number="4.4.2">
 <h3><span class="header-section-number">4.4.2</span> Data Example<a href="arima.html#data-example" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To see how this looks with real data, we will try to forecast monthly corticosteroid drug sales in Australia. These are known as H02 drugs under the Anatomical Therapeutic Chemical classification scheme. Their primary application is the treatment of allergic reactions, and are therefore highly seasonal.</p>
 <p><img src="series_files/figure-html/unnamed-chunk-37-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p>The data are strongly seasonal and obviously non-stationary, so seasonal differencing will be used. The seasonally differenced data are shown below. It is not clear at this point whether we should do another difference or not.</p>
+<p>The data are strongly seasonal and obviously non-stationary, so seasonal differencing will be used. The seasonally differenced data are shown below. The differenced data appear somewhat stationary and the null hypothesis is rejected in the ADF test, so our response variable will be: <span class="math inline">\(z_t = x_t - x_{t-12}\)</span>.</p>
 <p><img src="series_files/figure-html/unnamed-chunk-38-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p><img src="series_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
-<p>In the plots of the seasonally differenced data, there are spikes in the PACF at lags 12 and 24, but nothing at seasonal lags in the ACF. This may be suggestive of a seasonal AR(2) term. In the non-seasonal lags, there are three significant spikes in the PACF, suggesting a possible AR(3) term. The pattern in the ACF is not indicative of any simple model.</p>
+<p>Below we examine the ACF and PACF of <span class="math inline">\(z_t\)</span>.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-39-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>In the plots of the seasonally differenced data, there are spikes in the PACF at lags 12 and 24, but nothing at seasonal lags in the ACF. This may be suggestive of a seasonal AR(2) term. In the non-seasonal lags, there are three significant spikes in the PACF, suggesting a possible AR(3) term. The pattern in the ACF is not indicative of any simple model. This initial analysis suggests that a possible model for these data is an ARIMA<span class="math inline">\((3,0,0)(2,1,0)_{12}\)</span>. We fit this model below:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="arima.html#cb24-1" tabindex="-1"></a>Cost <span class="ot">=</span> <span class="fu">ts</span>(h02<span class="sc">$</span>Cost, <span class="at">frequency =</span> <span class="dv">12</span>, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1991</span>, <span class="dv">7</span>)) </span>
+<span id="cb24-2"><a href="arima.html#cb24-2" tabindex="-1"></a>m0 <span class="ot">=</span> <span class="fu">Arima</span>(Cost, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb24-3"><a href="arima.html#cb24-3" tabindex="-1"></a><span class="fu">summary</span>(m0)</span></code></pre></div>
+<pre><code>## Series: Cost 
+## ARIMA(3,0,0)(2,1,0)[12] 
+## 
+## Coefficients:
+##          ar1     ar2     ar3     sar1     sar2
+##       0.0986  0.3980  0.3898  -0.4378  -0.3047
+## s.e.  0.0702  0.0622  0.0724   0.0788   0.0782
+## 
+## sigma^2 = 0.002926:  log likelihood = 287.76
+## AIC=-563.53   AICc=-563.07   BIC=-543.98
+## 
+## Training set error measures:
+##                      ME       RMSE        MAE       MPE     MAPE      MASE
+## Training set 0.00604684 0.05179146 0.03829679 0.4907999 5.052465 0.6317696
+##                    ACF1
+## Training set 0.02958681</code></pre>
+<p>Let’s quickly examine the residuals from the model,</p>
+<p><img src="series_files/figure-html/unnamed-chunk-41-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>And then we can produce forecasts for the next 12 months.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
 </div>
 </div>
 <div id="lab-3" class="section level2 hasAnchor" number="4.5">
 <h2><span class="header-section-number">4.5</span> Lab 3<a href="arima.html#lab-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<ol start="2" style="list-style-type: decimal">
+<ol style="list-style-type: decimal">
 <li>Consider <code>fpp3::aus_airpassengers</code>, the total number of passengers (in millions) from Australian air carriers for the period 1970-2011.</li>
 </ol>
 <ul>
@@ -496,8 +521,9 @@ where <span class="math inline">\(m\)</span> is the seasonal period (e.g., numbe
 <li>Plot forecasts for the next 10 periods.</li>
 <li>Plot forecasts from an ARIMA(0,1,0) model with drift and compare these to the automatically selected model.</li>
 </ul>
-<ol start="3" style="list-style-type: decimal">
-<li>Choose an employment type from <code>fpp3::us_employment</code>, the total employment in different industries in the United States.</li>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Simulate data from both models in the <a href="arima.html#unpacking-notation">Unpacking Notation</a> section and validate each of the properties we discussed.</p></li>
+<li><p>Choose an employment type from <code>fpp3::us_employment</code>, the total employment in different industries in the United States.</p></li>
 </ol>
 <ul>
 <li>Are the data stationary? If not, find an appropriate transformation which yields stationary data.</li>
@@ -506,10 +532,13 @@ where <span class="math inline">\(m\)</span> is the seasonal period (e.g., numbe
 <li>Forecast the next 3 years of data. Get the latest figures from <a href="https://fred.stlouisfed.org/categories/11" class="uri">https://fred.stlouisfed.org/categories/11</a> to check the accuracy of your forecasts.</li>
 <li>Eventually, the prediction intervals are so wide that the forecasts are not particularly useful. How many years of forecasts do you think are sufficiently accurate to be usable?</li>
 </ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Fit a model to the h02 data using auto.arima. What model is selected? How does the AIC compare with the …. mode. We will compare some of the models fitted so far using a test set consisting of the last two years of data. Thus, we fit the models using data from July 1991 to June 2006, and forecast the script sales for July 2006 – June 2008.</li>
+</ol>
 <p>Another way that a time series may violate stationarity is with seasonality. For example, the Leisure and Hospitality sector of the economy spikes in the summer and dips in the winter months. We will look at employment (in thousands) in this sector since 2010:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="arima.html#cb24-1" tabindex="-1"></a>leisure <span class="ot">=</span> fpp3<span class="sc">::</span>us_employment <span class="sc">%&gt;%</span> </span>
-<span id="cb24-2"><a href="arima.html#cb24-2" tabindex="-1"></a>  <span class="fu">filter</span>(Title <span class="sc">==</span> <span class="st">&quot;Leisure and Hospitality&quot;</span>, <span class="fu">year</span>(Month) <span class="sc">&gt;=</span> <span class="dv">2010</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-3"><a href="arima.html#cb24-3" tabindex="-1"></a>  <span class="fu">select</span>(Month, Employed)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="arima.html#cb26-1" tabindex="-1"></a>leisure <span class="ot">=</span> fpp3<span class="sc">::</span>us_employment <span class="sc">%&gt;%</span> </span>
+<span id="cb26-2"><a href="arima.html#cb26-2" tabindex="-1"></a>  <span class="fu">filter</span>(Title <span class="sc">==</span> <span class="st">&quot;Leisure and Hospitality&quot;</span>, <span class="fu">year</span>(Month) <span class="sc">&gt;=</span> <span class="dv">2010</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-3"><a href="arima.html#cb26-3" tabindex="-1"></a>  <span class="fu">select</span>(Month, Employed)</span></code></pre></div>
 <ol style="list-style-type: decimal">
 <li><p>Make a plot of this time series and comment on the trend and the seasonality.</p></li>
 <li><p>Find appropriate transformation(s) to make the time series stationary. What were the transformations? Provide any necessary plots to validate stationarity.</p></li>
