@@ -348,7 +348,7 @@ demand of a product.</li>
 <div id="classical-regression" class="section level2 hasAnchor" number="2.3">
 <h2><span class="header-section-number">2.3</span> Classical Regression<a href="exploratory-analysis-of-time-series-data.html#classical-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Given that regression is already in our tool kit, we will use it as our first method to model a time series. Let us assume that we have some output or dependent time series, say, <span class="math inline">\(x_t\)</span> , for <span class="math inline">\(t = 1, \ldots,n\)</span>, that is being influenced by a collection of possible inputs, say, <span class="math inline">\(z_{t1}, z_{t2}, \ldots, z_{tq}\)</span>, where we regard the inputs as fixed and known.</p>
-<p>We will look at monthly Australian electricity production (the <code>fpp2::elec</code> dataframe). The data is shown below.</p>
+<p>We will look at monthly Australian electricity production (the <code>fma::elec</code> dataframe). The data is shown below.</p>
 <p><img src="series_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>Let us fit two models to this data, one where we use time as the independent variable. This estimates a linear trend. In the other, we will try to capture some of the obvious seasonality in the data.</p>
 <p><span class="math display">\[\begin{align}
@@ -398,7 +398,7 @@ Cov(w_t, w_s) &amp;= 0 \text{  } \forall t,s
 </div>
 <div id="ar-process" class="section level3 hasAnchor" number="2.4.3">
 <h3><span class="header-section-number">2.4.3</span> AR Process<a href="exploratory-analysis-of-time-series-data.html#ar-process" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>A slightly more general model is the AR model, in which <span class="math inline">\(x_t\)</span> is a linear combination of its past <span class="math inline">\(p\)</span> values plus gaussian white noise, <span class="math inline">\(w_t\)</span>. That is,</p>
+<p>A slightly more general model is the autoregressive (AR) model, in which <span class="math inline">\(x_t\)</span> is a linear combination of its past <span class="math inline">\(p\)</span> values plus gaussian white noise, <span class="math inline">\(w_t\)</span>. That is,</p>
 <p><span class="math display">\[\begin{align}
 x_t = \sum_{i=1}^p \phi_i x_{t-i} + w_t.
 \end{align}\]</span></p>

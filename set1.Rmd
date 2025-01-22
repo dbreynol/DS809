@@ -113,7 +113,7 @@ This allows us to more clearly see the trend across the date range, removing the
 
 Given that regression is already in our tool kit, we will use it as our first method to model a time series. Let us assume that we have some output or dependent time series, say, $x_t$ , for $t = 1, \ldots,n$, that is being influenced by a collection of possible inputs, say, $z_{t1}, z_{t2}, \ldots, z_{tq}$, where we regard the inputs as fixed and known. 
 
-We will look at monthly Australian electricity production (the <code>fpp2::elec</code> dataframe). The data is shown below.
+We will look at monthly Australian electricity production (the <code>fma::elec</code> dataframe). The data is shown below.
 
 ```{r echo=F}
 aelec <- window(elec, start=1980)
@@ -221,7 +221,7 @@ for (j in 2:50) {
 
 ### AR Process
 
-A slightly more general model is the AR model, in which $x_t$ is a linear combination of its past $p$ values plus gaussian white noise, $w_t$. That is,
+A slightly more general model is the autoregressive (AR) model, in which $x_t$ is a linear combination of its past $p$ values plus gaussian white noise, $w_t$. That is,
 
 \begin{align}
 x_t = \sum_{i=1}^p \phi_i x_{t-i} + w_t.
@@ -338,13 +338,13 @@ visits$datestamp = ymd(visits$datestamp)
 \begin{align}
 \hat{y_t} = \frac{1}{m} \sum_{j=-k}^{k} y_{t+j},
 \end{align}
-where $m=2k+1$. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order $m=13$ for the <code>fpp2::elec</code> dataframe used in [Classical Regression]. Plot the smoothed series along with the raw data in a single plot. 
+where $m=2k+1$. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order $m=13$ for the <code>fma::elec</code> dataframe used in [Classical Regression]. Plot the smoothed series along with the raw data in a single plot. 
 
 
 3. Time series data can exhibit a variety of patterns, and it is often helpful to decompose a time series into components, each representing an underlying pattern category. In this question, you will decompose a time series into three parts: a trend component ($T$), a seasonality component ($S$), and a random component ($R$). That is, for each observation $Y_t$, we want to break it down into three parts:
 
 $$Y_T = T_t + S_t + R_t$$
-You will again use the <code>fpp2::elec</code> dataframe and proceed in 3 steps:
+You will again use the <code>fma::elec</code> dataframe and proceed in 3 steps:
 
 * *Step 1*: Compute the trend component using an order 13 moving average (good news: you did exactly this in the last question, so use the output from the prior question as the trend component, $\hat{T}$).
 
