@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Set 7 State Space Models | DS809</title>
+  <title>Set 5 State Space Models | DS809</title>
   <meta name="description" content="Course materials for DS809, Spring 2024." />
   <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Set 7 State Space Models | DS809" />
+  <meta property="og:title" content="Set 5 State Space Models | DS809" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Course materials for DS809, Spring 2024." />
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Set 7 State Space Models | DS809" />
+  <meta name="twitter:title" content="Set 5 State Space Models | DS809" />
   
   <meta name="twitter:description" content="Course materials for DS809, Spring 2024." />
   
@@ -23,14 +23,14 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2024-02-18" />
+<meta name="date" content="2025-01-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="covariates.html"/>
+<link rel="prev" href="arima.html"/>
 
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -143,56 +143,104 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#time-series-data"><i class="fa fa-check"></i><b>2.1</b> Time Series Data</a></li>
 <li class="chapter" data-level="2.2" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#time-series-eda"><i class="fa fa-check"></i><b>2.2</b> Time Series EDA</a></li>
-<li class="chapter" data-level="2.3" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#multiple-time-series"><i class="fa fa-check"></i><b>2.3</b> Multiple Time Series</a></li>
-<li class="chapter" data-level="2.4" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocorrelation"><i class="fa fa-check"></i><b>2.4</b> Autocorrelation</a></li>
-<li class="chapter" data-level="2.5" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#lab-1"><i class="fa fa-check"></i><b>2.5</b> Lab 1</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html"><i class="fa fa-check"></i><b>3</b> Smoothing, Decomposition, Noise</a>
+<li class="chapter" data-level="2.3" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#classical-regression"><i class="fa fa-check"></i><b>2.3</b> Classical Regression</a></li>
+<li class="chapter" data-level="2.4" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#noise-processes"><i class="fa fa-check"></i><b>2.4</b> Noise Processes</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#exponential-smoothing"><i class="fa fa-check"></i><b>3.1</b> Exponential Smoothing</a>
-<ul>
-<li class="chapter" data-level="3.1.1" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#optimization"><i class="fa fa-check"></i><b>3.1.1</b> Optimization</a></li>
+<li class="chapter" data-level="2.4.1" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#white-noise"><i class="fa fa-check"></i><b>2.4.1</b> White noise</a></li>
+<li class="chapter" data-level="2.4.2" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#random-walk"><i class="fa fa-check"></i><b>2.4.2</b> Random Walk</a></li>
+<li class="chapter" data-level="2.4.3" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#ar-process"><i class="fa fa-check"></i><b>2.4.3</b> AR Process</a></li>
+<li class="chapter" data-level="2.4.4" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#exercise"><i class="fa fa-check"></i><b>2.4.4</b> Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#decomposition"><i class="fa fa-check"></i><b>3.2</b> Decomposition</a></li>
-<li class="chapter" data-level="3.3" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#statistical-models"><i class="fa fa-check"></i><b>3.3</b> Statistical Models</a>
+<li class="chapter" data-level="2.5" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#measures-of-dependence"><i class="fa fa-check"></i><b>2.5</b> Measures of Dependence</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#random-walk"><i class="fa fa-check"></i><b>3.3.1</b> Random Walk</a></li>
-<li class="chapter" data-level="3.3.2" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#white-noise"><i class="fa fa-check"></i><b>3.3.2</b> White noise</a></li>
+<li class="chapter" data-level="2.5.1" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocovariance"><i class="fa fa-check"></i><b>2.5.1</b> Autocovariance</a></li>
+<li class="chapter" data-level="2.5.2" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocorrelation"><i class="fa fa-check"></i><b>2.5.2</b> Autocorrelation</a></li>
+<li class="chapter" data-level="2.5.3" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#exercise-1"><i class="fa fa-check"></i><b>2.5.3</b> Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="3.4" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#stationarity"><i class="fa fa-check"></i><b>3.4</b> Stationarity</a></li>
-<li class="chapter" data-level="3.5" data-path="smoothing-decomposition-noise.html"><a href="smoothing-decomposition-noise.html#lab-2"><i class="fa fa-check"></i><b>3.5</b> Lab 2</a></li>
-</ul></li>
-<li class="chapter" data-level="4" data-path="arima-models.html"><a href="arima-models.html"><i class="fa fa-check"></i><b>4</b> ARIMA Models</a>
+<li class="chapter" data-level="2.6" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#stationarity"><i class="fa fa-check"></i><b>2.6</b> Stationarity</a></li>
+<li class="chapter" data-level="2.7" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#estimation"><i class="fa fa-check"></i><b>2.7</b> Estimation</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="arima-models.html"><a href="arima-models.html#ar-models"><i class="fa fa-check"></i><b>4.1</b> AR Models</a>
-<ul>
-<li class="chapter" data-level="4.1.1" data-path="arima-models.html"><a href="arima-models.html#ar1-model"><i class="fa fa-check"></i><b>4.1.1</b> AR(1) Model</a></li>
-<li class="chapter" data-level="4.1.2" data-path="arima-models.html"><a href="arima-models.html#ar-stationarity"><i class="fa fa-check"></i><b>4.1.2</b> <span style="color: red;"> AR Stationarity </span></a></li>
+<li class="chapter" data-level="2.7.1" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#mean"><i class="fa fa-check"></i><b>2.7.1</b> Mean</a></li>
+<li class="chapter" data-level="2.7.2" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocovariance-1"><i class="fa fa-check"></i><b>2.7.2</b> Autocovariance</a></li>
+<li class="chapter" data-level="2.7.3" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#autocorrelation-1"><i class="fa fa-check"></i><b>2.7.3</b> Autocorrelation</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="arima-models.html"><a href="arima-models.html#ma-models"><i class="fa fa-check"></i><b>4.2</b> MA Models</a>
-<ul>
-<li class="chapter" data-level="4.2.1" data-path="arima-models.html"><a href="arima-models.html#ma1-model"><i class="fa fa-check"></i><b>4.2.1</b> MA(1) Model</a></li>
+<li class="chapter" data-level="2.8" data-path="exploratory-analysis-of-time-series-data.html"><a href="exploratory-analysis-of-time-series-data.html#lab-1"><i class="fa fa-check"></i><b>2.8</b> Lab 1</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="arima-models.html"><a href="arima-models.html#arma-models"><i class="fa fa-check"></i><b>4.3</b> ARMA Models</a>
+<li class="chapter" data-level="3" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>3</b> ARMA</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="arima-models.html"><a href="arima-models.html#acf-for-armapq-models"><i class="fa fa-check"></i><b>4.3.1</b> ACF for ARMA(<em>p</em>,<em>q</em>) models</a></li>
-<li class="chapter" data-level="4.3.2" data-path="arima-models.html"><a href="arima-models.html#pacf-for-armapq-models"><i class="fa fa-check"></i><b>4.3.2</b> PACF for ARMA(<em>p</em>,<em>q</em>) models</a></li>
-</ul></li>
-<li class="chapter" data-level="4.4" data-path="arima-models.html"><a href="arima-models.html#arima-models-1"><i class="fa fa-check"></i><b>4.4</b> ARIMA Models</a>
+<li class="chapter" data-level="3.1" data-path="arma.html"><a href="arma.html#operators"><i class="fa fa-check"></i><b>3.1</b> Operators</a>
 <ul>
-<li class="chapter" data-level="4.4.1" data-path="arima-models.html"><a href="arima-models.html#model-selection-fitting"><i class="fa fa-check"></i><b>4.4.1</b> Model Selection/ Fitting</a></li>
-<li class="chapter" data-level="4.4.2" data-path="arima-models.html"><a href="arima-models.html#model-checking"><i class="fa fa-check"></i><b>4.4.2</b> Model Checking</a></li>
-<li class="chapter" data-level="4.4.3" data-path="arima-models.html"><a href="arima-models.html#forecasting"><i class="fa fa-check"></i><b>4.4.3</b> Forecasting</a></li>
+<li class="chapter" data-level="3.1.1" data-path="arma.html"><a href="arma.html#backshift-operator"><i class="fa fa-check"></i><b>3.1.1</b> Backshift operator</a></li>
+<li class="chapter" data-level="3.1.2" data-path="arma.html"><a href="arma.html#the-difference-operator"><i class="fa fa-check"></i><b>3.1.2</b> The difference operator</a></li>
 </ul></li>
-<li class="chapter" data-level="4.5" data-path="arima-models.html"><a href="arima-models.html#lab-3"><i class="fa fa-check"></i><b>4.5</b> Lab 3</a></li>
-<li class="chapter" data-level="4.6" data-path="arima-models.html"><a href="arima-models.html#lab-3.5"><i class="fa fa-check"></i><b>4.6</b> Lab 3.5</a></li>
-</ul></li>
-<li class="chapter" data-level="5" data-path="prophet-lab.html"><a href="prophet-lab.html"><i class="fa fa-check"></i><b>5</b> Prophet Lab</a></li>
-<li class="chapter" data-level="6" data-path="covariates.html"><a href="covariates.html"><i class="fa fa-check"></i><b>6</b> Covariates</a></li>
-<li class="chapter" data-level="7" data-path="state-space-models.html"><a href="state-space-models.html"><i class="fa fa-check"></i><b>7</b> State Space Models</a>
+<li class="chapter" data-level="3.2" data-path="arma.html"><a href="arma.html#autoregressive-ar-models"><i class="fa fa-check"></i><b>3.2</b> Autoregressive (AR) models</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="state-space-models.html"><a href="state-space-models.html#noisy-exponential-smoothing"><i class="fa fa-check"></i><b>7.1</b> (Noisy) Exponential Smoothing</a></li>
-<li class="chapter" data-level="7.2" data-path="state-space-models.html"><a href="state-space-models.html#state-space-models-1"><i class="fa fa-check"></i><b>7.2</b> State Space Models</a></li>
+<li class="chapter" data-level="3.2.1" data-path="arma.html"><a href="arma.html#ar1-model"><i class="fa fa-check"></i><b>3.2.1</b> AR(1) Model</a></li>
+<li class="chapter" data-level="3.2.2" data-path="arma.html"><a href="arma.html#stationarity-1"><i class="fa fa-check"></i><b>3.2.2</b> Stationarity</a></li>
+<li class="chapter" data-level="3.2.3" data-path="arma.html"><a href="arma.html#autocorrelation-2"><i class="fa fa-check"></i><b>3.2.3</b> Autocorrelation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="arma.html"><a href="arma.html#moving-average-ma-models"><i class="fa fa-check"></i><b>3.3</b> Moving Average (MA) models</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="arma.html"><a href="arma.html#examples-of-maq-models"><i class="fa fa-check"></i><b>3.3.1</b> Examples of MA(<em>q</em>) models</a></li>
+<li class="chapter" data-level="3.3.2" data-path="arma.html"><a href="arma.html#ma1-model"><i class="fa fa-check"></i><b>3.3.2</b> MA(1) Model</a></li>
+<li class="chapter" data-level="3.3.3" data-path="arma.html"><a href="arma.html#invertibility"><i class="fa fa-check"></i><b>3.3.3</b> Invertibility</a></li>
+<li class="chapter" data-level="3.3.4" data-path="arma.html"><a href="arma.html#autocorrelation-3"><i class="fa fa-check"></i><b>3.3.4</b> Autocorrelation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="arma.html"><a href="arma.html#pacf"><i class="fa fa-check"></i><b>3.4</b> PACF</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="arma.html"><a href="arma.html#definition"><i class="fa fa-check"></i><b>3.4.1</b> Definition</a></li>
+<li class="chapter" data-level="3.4.2" data-path="arma.html"><a href="arma.html#ar1-pacf"><i class="fa fa-check"></i><b>3.4.2</b> AR(1) PACF</a></li>
+<li class="chapter" data-level="3.4.3" data-path="arma.html"><a href="arma.html#pacf-for-arp"><i class="fa fa-check"></i><b>3.4.3</b> PACF for AR(p)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="arma.html"><a href="arma.html#ar-estimation"><i class="fa fa-check"></i><b>3.5</b> AR Estimation</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="arma.html"><a href="arma.html#yule-walker-equations"><i class="fa fa-check"></i><b>3.5.1</b> Yule-Walker Equations</a></li>
+<li class="chapter" data-level="3.5.2" data-path="arma.html"><a href="arma.html#example"><i class="fa fa-check"></i><b>3.5.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="arma.html"><a href="arma.html#arma-models"><i class="fa fa-check"></i><b>3.6</b> ARMA models</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="arma.html"><a href="arma.html#psi-representation"><i class="fa fa-check"></i><b>3.6.1</b> <span class="math inline">\(\psi\)</span> representation</a></li>
+<li class="chapter" data-level="3.6.2" data-path="arma.html"><a href="arma.html#arma11"><i class="fa fa-check"></i><b>3.6.2</b> ARMA(1,1)</a></li>
+<li class="chapter" data-level="3.6.3" data-path="arma.html"><a href="arma.html#forecasting"><i class="fa fa-check"></i><b>3.6.3</b> Forecasting</a></li>
+<li class="chapter" data-level="3.6.4" data-path="arma.html"><a href="arma.html#forecast-errors"><i class="fa fa-check"></i><b>3.6.4</b> Forecast Errors</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="arma.html"><a href="arma.html#lab-2"><i class="fa fa-check"></i><b>3.7</b> Lab 2</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="arima.html"><a href="arima.html"><i class="fa fa-check"></i><b>4</b> ARIMA</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="arima.html"><a href="arima.html#stationarity-2"><i class="fa fa-check"></i><b>4.1</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="arima.html"><a href="arima.html#visual-test"><i class="fa fa-check"></i><b>4.1.1</b> Visual Test</a></li>
+<li class="chapter" data-level="4.1.2" data-path="arima.html"><a href="arima.html#unit-root-tests"><i class="fa fa-check"></i><b>4.1.2</b> Unit Root Tests</a></li>
+<li class="chapter" data-level="4.1.3" data-path="arima.html"><a href="arima.html#dickey-fuller-df"><i class="fa fa-check"></i><b>4.1.3</b> Dickey Fuller (DF)</a></li>
+<li class="chapter" data-level="4.1.4" data-path="arima.html"><a href="arima.html#augmented-df"><i class="fa fa-check"></i><b>4.1.4</b> Augmented DF</a></li>
+<li class="chapter" data-level="4.1.5" data-path="arima.html"><a href="arima.html#adf-tseriesadf.test"><i class="fa fa-check"></i><b>4.1.5</b> ADF: <code>tseries::adf.test()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="arima.html"><a href="arima.html#differencing-nabla"><i class="fa fa-check"></i><b>4.2</b> Differencing <span class="math inline">\(\nabla\)</span></a></li>
+<li class="chapter" data-level="4.3" data-path="arima.html"><a href="arima.html#arima-models"><i class="fa fa-check"></i><b>4.3</b> ARIMA Models</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="arima.html"><a href="arima.html#arima111"><i class="fa fa-check"></i><b>4.3.1</b> ARIMA(1,1,1)</a></li>
+<li class="chapter" data-level="4.3.2" data-path="arima.html"><a href="arima.html#real-data-example"><i class="fa fa-check"></i><b>4.3.2</b> Real Data Example</a></li>
+<li class="chapter" data-level="4.3.3" data-path="arima.html"><a href="arima.html#model-selection-fitting"><i class="fa fa-check"></i><b>4.3.3</b> Model Selection/ Fitting</a></li>
+<li class="chapter" data-level="4.3.4" data-path="arima.html"><a href="arima.html#model-selection---automated"><i class="fa fa-check"></i><b>4.3.4</b> Model Selection - automated</a></li>
+<li class="chapter" data-level="4.3.5" data-path="arima.html"><a href="arima.html#model-checking"><i class="fa fa-check"></i><b>4.3.5</b> Model Checking</a></li>
+<li class="chapter" data-level="4.3.6" data-path="arima.html"><a href="arima.html#forecasting-1"><i class="fa fa-check"></i><b>4.3.6</b> Forecasting</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="arima.html"><a href="arima.html#sarima"><i class="fa fa-check"></i><b>4.4</b> SARIMA</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="arima.html"><a href="arima.html#unpacking-notation"><i class="fa fa-check"></i><b>4.4.1</b> Unpacking Notation</a></li>
+<li class="chapter" data-level="4.4.2" data-path="arima.html"><a href="arima.html#data-example"><i class="fa fa-check"></i><b>4.4.2</b> Data Example</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#lab-3"><i class="fa fa-check"></i><b>4.5</b> Lab 3</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="state-space-models.html"><a href="state-space-models.html"><i class="fa fa-check"></i><b>5</b> State Space Models</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="state-space-models.html"><a href="state-space-models.html#local-level-model"><i class="fa fa-check"></i><b>5.1</b> Local Level Model</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="state-space-models.html"><a href="state-space-models.html#likelihood-function"><i class="fa fa-check"></i><b>5.1.1</b> Likelihood Function</a></li>
+<li class="chapter" data-level="5.1.2" data-path="state-space-models.html"><a href="state-space-models.html#kalman-filter"><i class="fa fa-check"></i><b>5.1.2</b> Kalman Filter</a></li>
+<li class="chapter" data-level="5.1.3" data-path="state-space-models.html"><a href="state-space-models.html#specific-problem"><i class="fa fa-check"></i><b>5.1.3</b> Specific Problem</a></li>
+</ul></li>
 </ul></li>
 </ul>
 
@@ -211,17 +259,138 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="state-space-models" class="section level1 hasAnchor" number="7">
-<h1><span class="header-section-number">Set 7</span> State Space Models<a href="state-space-models.html#state-space-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="noisy-exponential-smoothing" class="section level2 hasAnchor" number="7.1">
-<h2><span class="header-section-number">7.1</span> (Noisy) Exponential Smoothing<a href="state-space-models.html#noisy-exponential-smoothing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="state-space-models" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Set 5</span> State Space Models<a href="state-space-models.html#state-space-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>An alternate framework for time series modeling is the state space model. This model contains a lot of depth and flexibility. For additional model details, <a href="https://atsa-es.github.io/atsa/Lectures/Week%203/lec_05_univariate_state_space.html#1">see this resource</a>. These models are based on a decomposition of the series into a number of components, each of which may be accompanied by error terms (and thus, uncertainty). The simplest model is the <em>local level model</em>.</p>
+<div id="local-level-model" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Local Level Model<a href="state-space-models.html#local-level-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this model,</p>
+<p><span class="math display">\[\begin{align}
+y_t &amp;= \mu_t + \epsilon_t \\
+\mu_{t+1} &amp;= \mu_{t} + \eta_t,
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\epsilon_t \sim N(0, \sigma^2_{\epsilon})\)</span> and <span class="math inline">\(\eta_t \sim N(0, \sigma^2_{\eta})\)</span>. The idea of this model is that the observations <span class="math inline">\(y\)</span> consist of noisy measurements (observation error) of an underlying random walk.</p>
+<p>What is the estimate for <span class="math inline">\(\mu_t\)</span> when <span class="math inline">\(\text{Var}(\eta_t) = 0\)</span>? How about when <span class="math inline">\(\text{Var}(\epsilon_t) = 0\)</span>?</p>
+<div id="likelihood-function" class="section level3 hasAnchor" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> Likelihood Function<a href="state-space-models.html#likelihood-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We will first discuss the estimation of the parameters <span class="math inline">\((\sigma^2_{\epsilon},\sigma^2_{\eta})\)</span> using maximum likelihood estimation.</p>
+<p><span class="math display">\[\begin{align}
+p(y_1, \ldots y_n | \sigma^2_{\epsilon},\sigma^2_{\eta}) &amp;= \prod_{t=1}^T p(y_t | y_{1:t-1}, \sigma^2_{\epsilon},\sigma^2_{\eta})
+\end{align}\]</span></p>
+<p>Each observation <span class="math inline">\(y_t\)</span> given the past observations and states follows a normal distribution where,</p>
+<p><span class="math display">\[\begin{align}
+y_t | y_{1:t-1} \sim N( E(\mu_t | y_{1:t-1}), Var(\mu_t | y_{1:t-1}) + \sigma^2_\epsilon )
+\end{align}\]</span></p>
 </div>
-<div id="state-space-models-1" class="section level2 hasAnchor" number="7.2">
-<h2><span class="header-section-number">7.2</span> State Space Models<a href="state-space-models.html#state-space-models-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>general format</p>
-<p>ex w/ nile</p>
-<p>forecast forward consumer sentiment (using regression / AR model and state space - show differences like this: <a href="https://atsa-es.github.io/atsa/Lectures/Week%203/lec_05_univariate_state_space.html#25" class="uri">https://atsa-es.github.io/atsa/Lectures/Week%203/lec_05_univariate_state_space.html#25</a> )</p>
+<div id="kalman-filter" class="section level3 hasAnchor" number="5.1.2">
+<h3><span class="header-section-number">5.1.2</span> Kalman Filter<a href="state-space-models.html#kalman-filter" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The Kalman Filter provides a recursive way to estimate the state, <span class="math inline">\(E(\mu_t | y_{1:t-1})\)</span>, and its variance, <span class="math inline">\(Var(\mu_t | y_{1:t-1})\)</span>, recursively using the observations <span class="math inline">\(y_t\)</span>.</p>
+<p>We will start by defining the <em>prediction distribution</em> as,</p>
+<p><span class="math display">\[\begin{align}
+p(\mu_t | y_{1:t-1}) \sim N(a_t, p_t)
+\end{align}\]</span></p>
+<p>The Kalman Filter takes this as given and then recursively updates</p>
+<p><span class="math display">\[\begin{align}
+p(\mu_t | y_{1:t}) &amp;\sim N(a_{t|t}, p_{t|t}) \\
+p(\mu_{t+1} | y_{1:t}) &amp;\sim N(a_{t+1}, p_{t+1})
+\end{align}\]</span></p>
+<p>To find the first distribution, <span class="math inline">\(p(\mu_t | y_{1:t})\)</span>, we define <span class="math inline">\(v_t = y_t - a_t\)</span> and re-write,</p>
+<p><span class="math display">\[\begin{align}
+p(\mu_t | y_{1:t}) &amp;= p(\mu_t | y_{1:t-1}, v_t) \\
+&amp;= \frac{ p(\mu_t , v_t| y_{1:t-1})} { p(v_t| y_{1:t-1}) } \\
+&amp;= \frac{ p(\mu_t | y_{1:t-1}) p(v_t| y_{1:t-1} , \mu_t )} { p(v_t| y_{1:t-1}) } \\
+&amp;\equiv N(a_{t|t}, p_{t|t}),
+\end{align}\]</span></p>
+<p>where</p>
+<p><span class="math display">\[\begin{align}
+a_{t|t} &amp;= a_t + k_t v_t \\
+p_{t|t} &amp;= k_t \sigma^2_\epsilon \\
+k_t &amp;= \frac{p_t}{p_t + \sigma^2_\epsilon}
+\end{align}\]</span></p>
+<p>And, finally,</p>
+<p><span class="math display">\[\begin{align}
+p(\mu_{t+1} | y_{1:t}) \sim N(a_{t|t}, p_{t|t} + \sigma^2_{\eta})
+\end{align}\]</span></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="state-space-models.html#cb22-1" tabindex="-1"></a><span class="co"># Define the log-likelihood function for the Local Level Model</span></span>
+<span id="cb22-2"><a href="state-space-models.html#cb22-2" tabindex="-1"></a>llm_log_likelihood <span class="ot">&lt;-</span> <span class="cf">function</span>(params, y) {</span>
+<span id="cb22-3"><a href="state-space-models.html#cb22-3" tabindex="-1"></a>  <span class="co"># Extract variance parameters from params</span></span>
+<span id="cb22-4"><a href="state-space-models.html#cb22-4" tabindex="-1"></a>  sigma_eta2 <span class="ot">&lt;-</span> params[<span class="dv">1</span>]</span>
+<span id="cb22-5"><a href="state-space-models.html#cb22-5" tabindex="-1"></a>  sigma_eps2 <span class="ot">&lt;-</span> params[<span class="dv">2</span>]</span>
+<span id="cb22-6"><a href="state-space-models.html#cb22-6" tabindex="-1"></a>  </span>
+<span id="cb22-7"><a href="state-space-models.html#cb22-7" tabindex="-1"></a>  <span class="co"># Number of observations</span></span>
+<span id="cb22-8"><a href="state-space-models.html#cb22-8" tabindex="-1"></a>  T <span class="ot">&lt;-</span> <span class="fu">length</span>(y)</span>
+<span id="cb22-9"><a href="state-space-models.html#cb22-9" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="state-space-models.html#cb22-10" tabindex="-1"></a>  a_t_t <span class="ot">&lt;-</span> <span class="dv">0</span>  <span class="co"># Initial state estimate</span></span>
+<span id="cb22-11"><a href="state-space-models.html#cb22-11" tabindex="-1"></a>  P_t_t <span class="ot">&lt;-</span> <span class="dv">10000</span>  <span class="co"># Large initial variance (diffuse prior)</span></span>
+<span id="cb22-12"><a href="state-space-models.html#cb22-12" tabindex="-1"></a>  </span>
+<span id="cb22-13"><a href="state-space-models.html#cb22-13" tabindex="-1"></a>  <span class="co"># Log-likelihood accumulator</span></span>
+<span id="cb22-14"><a href="state-space-models.html#cb22-14" tabindex="-1"></a>  log_likelihood <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb22-15"><a href="state-space-models.html#cb22-15" tabindex="-1"></a>  </span>
+<span id="cb22-16"><a href="state-space-models.html#cb22-16" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>T) {</span>
+<span id="cb22-17"><a href="state-space-models.html#cb22-17" tabindex="-1"></a>    <span class="co"># Prediction step</span></span>
+<span id="cb22-18"><a href="state-space-models.html#cb22-18" tabindex="-1"></a>    a_t <span class="ot">&lt;-</span> a_t_t</span>
+<span id="cb22-19"><a href="state-space-models.html#cb22-19" tabindex="-1"></a>    P_t <span class="ot">&lt;-</span> P_t_t <span class="sc">+</span> sigma_eta2</span>
+<span id="cb22-20"><a href="state-space-models.html#cb22-20" tabindex="-1"></a>    </span>
+<span id="cb22-21"><a href="state-space-models.html#cb22-21" tabindex="-1"></a>    <span class="co"># Observation prediction</span></span>
+<span id="cb22-22"><a href="state-space-models.html#cb22-22" tabindex="-1"></a>    F_t <span class="ot">&lt;-</span> P_t <span class="sc">+</span> sigma_eps2</span>
+<span id="cb22-23"><a href="state-space-models.html#cb22-23" tabindex="-1"></a>    v_t <span class="ot">&lt;-</span> y[t] <span class="sc">-</span> a_t  <span class="co"># Prediction error</span></span>
+<span id="cb22-24"><a href="state-space-models.html#cb22-24" tabindex="-1"></a>    </span>
+<span id="cb22-25"><a href="state-space-models.html#cb22-25" tabindex="-1"></a>    <span class="co"># Update step</span></span>
+<span id="cb22-26"><a href="state-space-models.html#cb22-26" tabindex="-1"></a>    K_t <span class="ot">&lt;-</span> P_t <span class="sc">/</span> F_t  <span class="co"># Kalman gain</span></span>
+<span id="cb22-27"><a href="state-space-models.html#cb22-27" tabindex="-1"></a>    a_t_t <span class="ot">&lt;-</span> a_t <span class="sc">+</span> K_t <span class="sc">*</span> v_t</span>
+<span id="cb22-28"><a href="state-space-models.html#cb22-28" tabindex="-1"></a>    P_t_t <span class="ot">&lt;-</span> (K_t) <span class="sc">*</span> sigma_eps2</span>
+<span id="cb22-29"><a href="state-space-models.html#cb22-29" tabindex="-1"></a>    </span>
+<span id="cb22-30"><a href="state-space-models.html#cb22-30" tabindex="-1"></a>    <span class="co"># Contribution to log-likelihood</span></span>
+<span id="cb22-31"><a href="state-space-models.html#cb22-31" tabindex="-1"></a>    log_likelihood <span class="ot">&lt;-</span> log_likelihood <span class="sc">-</span> <span class="fl">0.5</span> <span class="sc">*</span> <span class="fu">log</span>(<span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">*</span> F_t) <span class="sc">-</span> <span class="fl">0.5</span> <span class="sc">*</span> (v_t<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> F_t)</span>
+<span id="cb22-32"><a href="state-space-models.html#cb22-32" tabindex="-1"></a>  }</span>
+<span id="cb22-33"><a href="state-space-models.html#cb22-33" tabindex="-1"></a>  </span>
+<span id="cb22-34"><a href="state-space-models.html#cb22-34" tabindex="-1"></a>  <span class="fu">return</span>(<span class="sc">-</span>log_likelihood)  <span class="co"># Negative log-likelihood for minimization</span></span>
+<span id="cb22-35"><a href="state-space-models.html#cb22-35" tabindex="-1"></a>}</span>
+<span id="cb22-36"><a href="state-space-models.html#cb22-36" tabindex="-1"></a></span>
+<span id="cb22-37"><a href="state-space-models.html#cb22-37" tabindex="-1"></a><span class="co"># Example usage</span></span>
+<span id="cb22-38"><a href="state-space-models.html#cb22-38" tabindex="-1"></a><span class="co"># Simulate some data for testing</span></span>
+<span id="cb22-39"><a href="state-space-models.html#cb22-39" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb22-40"><a href="state-space-models.html#cb22-40" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb22-41"><a href="state-space-models.html#cb22-41" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">numeric</span>(T)</span>
+<span id="cb22-42"><a href="state-space-models.html#cb22-42" tabindex="-1"></a>true_sigma_eta2 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb22-43"><a href="state-space-models.html#cb22-43" tabindex="-1"></a>true_sigma_eps2 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb22-44"><a href="state-space-models.html#cb22-44" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">numeric</span>(T)</span>
+<span id="cb22-45"><a href="state-space-models.html#cb22-45" tabindex="-1"></a>x[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="fu">sqrt</span>(<span class="dv">100</span>))</span>
+<span id="cb22-46"><a href="state-space-models.html#cb22-46" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>T) {</span>
+<span id="cb22-47"><a href="state-space-models.html#cb22-47" tabindex="-1"></a>  x[t] <span class="ot">&lt;-</span> x[t<span class="dv">-1</span>] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="fu">sqrt</span>(true_sigma_eta2))</span>
+<span id="cb22-48"><a href="state-space-models.html#cb22-48" tabindex="-1"></a>}</span>
+<span id="cb22-49"><a href="state-space-models.html#cb22-49" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(T, <span class="dv">0</span>, <span class="fu">sqrt</span>(true_sigma_eps2))</span>
+<span id="cb22-50"><a href="state-space-models.html#cb22-50" tabindex="-1"></a></span>
+<span id="cb22-51"><a href="state-space-models.html#cb22-51" tabindex="-1"></a><span class="co"># Optimize the log-likelihood</span></span>
+<span id="cb22-52"><a href="state-space-models.html#cb22-52" tabindex="-1"></a>optim_result <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
+<span id="cb22-53"><a href="state-space-models.html#cb22-53" tabindex="-1"></a>  <span class="at">par =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>),  <span class="co"># Initial guesses for sigma_eta2 and sigma_eps2</span></span>
+<span id="cb22-54"><a href="state-space-models.html#cb22-54" tabindex="-1"></a>  <span class="at">fn =</span> llm_log_likelihood,</span>
+<span id="cb22-55"><a href="state-space-models.html#cb22-55" tabindex="-1"></a>  <span class="at">y =</span> y,</span>
+<span id="cb22-56"><a href="state-space-models.html#cb22-56" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;L-BFGS-B&quot;</span>,</span>
+<span id="cb22-57"><a href="state-space-models.html#cb22-57" tabindex="-1"></a>  <span class="at">lower =</span> <span class="fu">c</span>(<span class="fl">1e-6</span>, <span class="fl">1e-6</span>)  <span class="co"># Ensure variances are positive</span></span>
+<span id="cb22-58"><a href="state-space-models.html#cb22-58" tabindex="-1"></a>)</span>
+<span id="cb22-59"><a href="state-space-models.html#cb22-59" tabindex="-1"></a></span>
+<span id="cb22-60"><a href="state-space-models.html#cb22-60" tabindex="-1"></a><span class="co"># Display results</span></span>
+<span id="cb22-61"><a href="state-space-models.html#cb22-61" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Estimated sigma_eta2:&quot;</span>, optim_result<span class="sc">$</span>par[<span class="dv">1</span>], <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Estimated sigma_eta2: 1.017554</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="state-space-models.html#cb24-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Estimated sigma_eps2:&quot;</span>, optim_result<span class="sc">$</span>par[<span class="dv">2</span>], <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Estimated sigma_eps2: 1.995769</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="state-space-models.html#cb26-1" tabindex="-1"></a>ss1 <span class="ot">=</span> <span class="fu">StructTS</span>(y, <span class="at">type =</span> <span class="st">&quot;level&quot;</span>)</span>
+<span id="cb26-2"><a href="state-space-models.html#cb26-2" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">forecast</span>(ss1, <span class="at">h =</span> <span class="dv">500</span>))</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
+</div>
+<div id="specific-problem" class="section level3 hasAnchor" number="5.1.3">
+<h3><span class="header-section-number">5.1.3</span> Specific Problem<a href="state-space-models.html#specific-problem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For the more general state space model we will use the package <a href="https://drive.google.com/file/d/14US56VzanuLt03XBkoAGzLy0gDEreZUc/view">bsts</a>.</p>
+<p>For our problem, we will introduce the covariate into the measurement equation. Our model is,</p>
+<p><span class="math display">\[\begin{align}
+y_t &amp;= \mu_t + \beta x_t + \epsilon_t \\
+\mu_t &amp;= \mu_{t-1} + \eta_t.
+\end{align}\]</span></p>
+<p>We will use the package <code>bsts</code> to fit this model. The first thing to do when specifying a <code>bsts</code> package is the specify the contents of the latent state vector <span class="math inline">\(\mu_t\)</span></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="state-space-models.html#cb27-1" tabindex="-1"></a><span class="cn">NA</span></span></code></pre></div>
 
+</div>
 </div>
 </div>
             </section>
@@ -229,7 +398,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="covariates.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="arima.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>
@@ -261,7 +430,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/dbreynol/DS809/edit/master/set4.Rmd",
+"link": "https://github.com/dbreynol/DS809/edit/master/set5_25.Rmd",
 "text": "Edit"
 },
 "history": {

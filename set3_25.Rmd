@@ -105,7 +105,7 @@ diff(x)
 
 Our data is not always stationary. If the data do not appear stationary, differencing can help. This leads to the class of _autoregressive integrated moving average_ (ARIMA) models. ARIMA models are indexed with orders (_p_,_d_,_q_) where _d_ indicates the order of differencing.
 
-$\{x_t\}$ follows an ARIMA(_p_,_d_,_q_) process if $(1-\mathbf{B})^d x_t$ is an ARMA(_p_,_q_) process.
+$\{x_t\}$ follows an ARIMA(_p_,_d_,_q_) process if $(1-\mathbf{B})^d x_t$ is an ARMA(_p_,_q_) process. In this context, $p$ refers to the order of the autoregressive part of the model, $d$ refers to the degree of differencing required, and $q$ refers to the order of the moving average component.
 
 ### ARIMA(1,1,1)
 
@@ -115,12 +115,12 @@ For example, consider an ARIMA(1,1,1).
 - Write out the model equation.
 - What would you expect the ACF and PACF plots to look like?
 
-### Example
+### Real Data Example
 
-For example, if we look at exports of the Central African Republic from 1960-2016, we see a clear evolution in the mean of the time series, indicating that the time series is not stationary.
+Let us look at some real data - exports of the Central African Republic from 1960-2016. In this time series, we see a clear evolution in the mean of the time series, indicating that the time series is not stationary.
 
 ```{r echo=TRUE}
-caf = global_economy %>% 
+caf = tsibbledata::global_economy %>% 
   filter(Code == "CAF") %>% 
   mutate(first_diff = c(NA, diff(Exports)))
 
@@ -140,20 +140,21 @@ The DF test corresponds with a visual assessment - the first difference appears 
 
 ### Model Selection/ Fitting
 
-To assess what kind of model to fit to the data, we can look at the ACF and PACF plots of the differenced data and diagnose some candidate models. For example,
+To assess what kind of model to fit to the data, we can look at the ACF and PACF plots of the differenced data and diagnose some candidate models. For example:
 
-```{r}
+```{r fig.height = 4 }
 par(mfrow = c(1,2))
 acf(caf$first_diff[-1], main="ACF of first diff")
 pacf(caf$first_diff[-1], main="PACF of first diff")
 ```
 The PACF above is suggestive of an AR(2) model; so an initial candidate model is an ARIMA(2,1,0). The ACF suggests an MA(3) model; so an alternative candidate is an ARIMA(0,1,3). We can fit both of these models and find which one has a better AIC score.
 
-```{r echo=TRUE}
+```{r echo=TRUE, eval=FALSE}
 Arima(caf$Exports, order = c(2,1,0)) # -134.27 / 274.54
 Arima(caf$Exports, order = c(0,1,3)) # - 133.12 / 274.25
 ```
-Since the AIC is smaller for the ARIMA(0,1,3) model, this is a good candidate. Or, we could search a larger space of models with the help of the <code>auto.arima</code> function.
+
+Since the AIC is smaller for the ARIMA(0,1,3) model, this is a good candidate. We could also search a larger space of models with the help of the <code>auto.arima</code> function.
 
 ### Model Selection - automated
 
@@ -166,9 +167,10 @@ The general sequence of steps involved in fitting an ARIMA model to a given time
 Steps two and three are automated with the function <code>forecast::auto.arima</code> function. For instance,
 
 ```{r echo=TRUE}
-m0 = auto.arima(caf$Exports)
-summary(m0)
+m_auto = auto.arima(caf$Exports)
 ```
+
+The model selected by this stepwise procedure is an ARIMA(2,1,2), whose AIC is `r round(m_auto$aic,2)`, a small improvement over the AIC value of the ARIMA(0,1,3), which was selected by visual inspection of the ACF/ PACF plots. 
 
 ### Model Checking
 
@@ -176,21 +178,14 @@ summary(m0)
 
 Residuals = difference between the observations (data), $y$, and expected (fitted) values, $\hat{y}$. Thus, the i'th residual is: $y_i-\hat{y}_i$.
 
-In R, we can obtain the vector of residuals using the `residuals` function, as shown below.
+In R, we can obtain the vector of residuals using the `residuals` function.
 
-#### `residuals()` function in R
-
-The `residuals()` function will return the residuals for fitted models.
-
-```{r}
-plot ( residuals(m0) ) 
+```{r fig.height = 4}
+par(mfrow = c(1,2))
+plot ( residuals(m_auto) , ylab = "Residuals") 
+acf( residuals(m_auto), main = "Residuals ACF" ) 
 ```
-To check the fit of our model, we want to check that the residuals are white noise.
-
-```{r}
-acf( residuals(m0) ) 
-```
-
+What do we aim to see in these plots? Do we?
 
 ### Forecasting
 
@@ -202,45 +197,45 @@ The basic idea of forecasting with an ARIMA model is to estimate the parameters 
 set.seed(1)
 ys = arima.sim(n = 500, model = list(ar = c(.4, .3)) )
 fitmod = Arima(ys, order = c(2,0,0))
-
-
 ```
 
 
 
 
-For example, let's say we want to forecast with a ARIMA(2,1,0) model with drift:
-$$z_t = \mu + \beta_1 z_{t-1} + \beta_2 z_{t-2} + e_t$$
+For example, let's say we want to forecast Central African Exports with the ARIMA(2,1,0) model with drift:
+$$z_t = \mu + \phi_1 z_{t-1} + \phi_2 z_{t-2} + w_t$$
 where $z_t = x_t - x_{t-1}$, the first difference.
 
 `Arima()` would write this model:
 
-$$(z_t-m) = \beta_1 (z_{t-1}-m) + \beta_2 (z_{t-2}-m) + e_t$$
-The relationship between $\mu$ and $m$ is $\mu = m(1 - \beta_1 - \beta_2)$.
+$$(z_t-m) = \phi_1 (z_{t-1}-m) + \phi_2 (z_{t-2}-m) + e_t$$
+The relationship between $\mu$ and $m$ is $\mu = m(1 - \phi_1 - \phi_2)$.
 
 
-Let's estimate the $\beta$'s for this model from Japan export.
+Let's estimate the $\phi$'s for this model from the Central African export data.
 
 ```{r}
 fit <- forecast::Arima(caf$Exports, order=c(2,1,0), include.constant=TRUE)
 coef(fit)
 ```
 
-```{r}
+```{r echo=TRUE}
 mu <- coef(fit)[3]*(1-coef(fit)[1]-coef(fit)[2])
-mu
 ```
+
+So, $\mu=$ `r round(mu,2)`
+
 
 So we can forecast with this model:
 
-$$z_t = 0.1335991 -0.05580519 z_{t-1} - 0.18850080 z_{t-2} + e_t$$
+$z_t =$ `r round(mu,2)` + `r round(fit$model$phi[1],2)` $z_{t-1}$ `r round(fit$model$phi[2],2)`$z_{t-2}$ + $w_t$
 To obtain the $T+1$ forecast value:
 
 ```{r echo = T}
-zt_1 = 16.119153 - 17.588928
-zt_2 = 17.588928 - 17.540302
+zt_1 = 12.51809 - 12.72904
+zt_2 = 12.72904 - 12.61192
 
-16.119153 + (0.1335991 - 0.05580519 * zt_1 - 0.18850080 * zt_2)
+12.51809 + (-0.3878149 -0.5230284 * zt_1 - 0.3065268 * zt_2)
 
 ```
 
@@ -316,8 +311,8 @@ In the plots of the seasonally differenced data, there are spikes in the PACF at
 
 ```{r echo=TRUE}
 Cost = ts(h02$Cost, frequency = 12, start = c(1991, 7)) 
-m0 = Arima(Cost, order = c(3,0,0), seasonal = c(2,1,0))
-summary(m0)
+m0 = arima(Cost, order = c(3,0,0), seasonal = c(2,1,0))
+m0 %>% broom::tidy() %>% knitr::kable()
 ```
 
 Let's quickly examine the residuals from the model,

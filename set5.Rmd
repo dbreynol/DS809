@@ -97,7 +97,7 @@ For the linear regression model, our likelihood function can be written as,
 p(y \vert \beta) = (2\pi \sigma)^{-n/2} \exp{\bigg( -\frac{1}{2 \sigma^2} (y - X \beta)^T (y - X \beta) \bigg)}.
 \end{align}
 
-For the prior, we will assum that we know nothing about $\beta$. So, we will use the prior distribution,
+For the prior, we will assume that we know nothing about $\beta$. So, we will use the prior distribution,
 
 \begin{align}
 p( \beta) \propto 1.
