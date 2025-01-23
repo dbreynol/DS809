@@ -365,10 +365,9 @@ fred$date = ymd(fred$date)
 
 Provide your code and validate it using the <code>ccf</code> function. 
 
-5. Write a function in R that takes two arguments: a time series ($y$) formatted as a vector and a vector ($k$) specifying a set of lags. The output for this function is the autocorrelation of $y$ for each lag in $k$, using the formula in [Autocorrelation]. Compare the output of your function to the output from <code>(acf(y))</code>.
+5. Write a function in R that takes two arguments: a time series ($y$) vector and a vector ($k$) specifying a set of lags. The output for this function is the autocorrelation of $y$ for each lag in $k$, using the formula in [Autocorrelation]. Compare the output of your function to the output from <code>(acf(y))</code>.
 
-
-
+6. Simulate data from the following model: $x_t = a + \phi x_{t-1} + w_t$, in which $w_t \sim N(0,\sigma^2)$. You can choose the value for parameters: $\phi, \sigma^2, a$. Report which values you chose and make a plot of the theoretical versus observed autocorrelation function for a simulation with length $T=100$ and a simulation with length $T=10,000$.
 
 ```{r eval=FALSE, echo=FALSE}
 

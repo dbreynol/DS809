@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2025-01-22" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -239,7 +239,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1.1" data-path="state-space-models.html"><a href="state-space-models.html#likelihood-function"><i class="fa fa-check"></i><b>5.1.1</b> Likelihood Function</a></li>
 <li class="chapter" data-level="5.1.2" data-path="state-space-models.html"><a href="state-space-models.html#kalman-filter"><i class="fa fa-check"></i><b>5.1.2</b> Kalman Filter</a></li>
-<li class="chapter" data-level="5.1.3" data-path="state-space-models.html"><a href="state-space-models.html#specific-problem"><i class="fa fa-check"></i><b>5.1.3</b> Specific Problem</a></li>
+<li class="chapter" data-level="5.1.3" data-path="state-space-models.html"><a href="state-space-models.html#forecasting-2"><i class="fa fa-check"></i><b>5.1.3</b> Forecasting</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="state-space-models.html"><a href="state-space-models.html#bayesian-inference"><i class="fa fa-check"></i><b>5.2</b> Bayesian Inference</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="state-space-models.html"><a href="state-space-models.html#bayesian-logic"><i class="fa fa-check"></i><b>5.2.1</b> Bayesian logic</a></li>
+<li class="chapter" data-level="5.2.2" data-path="state-space-models.html"><a href="state-space-models.html#monte-carlo-idea"><i class="fa fa-check"></i><b>5.2.2</b> Monte Carlo Idea</a></li>
+<li class="chapter" data-level="5.2.3" data-path="state-space-models.html"><a href="state-space-models.html#metropolis-algorithm"><i class="fa fa-check"></i><b>5.2.3</b> Metropolis Algorithm</a></li>
+<li class="chapter" data-level="5.2.4" data-path="state-space-models.html"><a href="state-space-models.html#example-1"><i class="fa fa-check"></i><b>5.2.4</b> Example</a></li>
+<li class="chapter" data-level="5.2.5" data-path="state-space-models.html"><a href="state-space-models.html#specific-problem"><i class="fa fa-check"></i><b>5.2.5</b> Specific Problem</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -345,42 +353,135 @@ p(\mu_{t+1} | y_{1:t}) \sim N(a_{t|t}, p_{t|t} + \sigma^2_{\eta})
 <span id="cb22-32"><a href="state-space-models.html#cb22-32" tabindex="-1"></a>  }</span>
 <span id="cb22-33"><a href="state-space-models.html#cb22-33" tabindex="-1"></a>  </span>
 <span id="cb22-34"><a href="state-space-models.html#cb22-34" tabindex="-1"></a>  <span class="fu">return</span>(<span class="sc">-</span>log_likelihood)  <span class="co"># Negative log-likelihood for minimization</span></span>
-<span id="cb22-35"><a href="state-space-models.html#cb22-35" tabindex="-1"></a>}</span>
-<span id="cb22-36"><a href="state-space-models.html#cb22-36" tabindex="-1"></a></span>
-<span id="cb22-37"><a href="state-space-models.html#cb22-37" tabindex="-1"></a><span class="co"># Example usage</span></span>
-<span id="cb22-38"><a href="state-space-models.html#cb22-38" tabindex="-1"></a><span class="co"># Simulate some data for testing</span></span>
-<span id="cb22-39"><a href="state-space-models.html#cb22-39" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb22-40"><a href="state-space-models.html#cb22-40" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb22-41"><a href="state-space-models.html#cb22-41" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">numeric</span>(T)</span>
-<span id="cb22-42"><a href="state-space-models.html#cb22-42" tabindex="-1"></a>true_sigma_eta2 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb22-43"><a href="state-space-models.html#cb22-43" tabindex="-1"></a>true_sigma_eps2 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb22-44"><a href="state-space-models.html#cb22-44" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">numeric</span>(T)</span>
-<span id="cb22-45"><a href="state-space-models.html#cb22-45" tabindex="-1"></a>x[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="fu">sqrt</span>(<span class="dv">100</span>))</span>
-<span id="cb22-46"><a href="state-space-models.html#cb22-46" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>T) {</span>
-<span id="cb22-47"><a href="state-space-models.html#cb22-47" tabindex="-1"></a>  x[t] <span class="ot">&lt;-</span> x[t<span class="dv">-1</span>] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="fu">sqrt</span>(true_sigma_eta2))</span>
-<span id="cb22-48"><a href="state-space-models.html#cb22-48" tabindex="-1"></a>}</span>
-<span id="cb22-49"><a href="state-space-models.html#cb22-49" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(T, <span class="dv">0</span>, <span class="fu">sqrt</span>(true_sigma_eps2))</span>
-<span id="cb22-50"><a href="state-space-models.html#cb22-50" tabindex="-1"></a></span>
-<span id="cb22-51"><a href="state-space-models.html#cb22-51" tabindex="-1"></a><span class="co"># Optimize the log-likelihood</span></span>
-<span id="cb22-52"><a href="state-space-models.html#cb22-52" tabindex="-1"></a>optim_result <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
-<span id="cb22-53"><a href="state-space-models.html#cb22-53" tabindex="-1"></a>  <span class="at">par =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>),  <span class="co"># Initial guesses for sigma_eta2 and sigma_eps2</span></span>
-<span id="cb22-54"><a href="state-space-models.html#cb22-54" tabindex="-1"></a>  <span class="at">fn =</span> llm_log_likelihood,</span>
-<span id="cb22-55"><a href="state-space-models.html#cb22-55" tabindex="-1"></a>  <span class="at">y =</span> y,</span>
-<span id="cb22-56"><a href="state-space-models.html#cb22-56" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;L-BFGS-B&quot;</span>,</span>
-<span id="cb22-57"><a href="state-space-models.html#cb22-57" tabindex="-1"></a>  <span class="at">lower =</span> <span class="fu">c</span>(<span class="fl">1e-6</span>, <span class="fl">1e-6</span>)  <span class="co"># Ensure variances are positive</span></span>
-<span id="cb22-58"><a href="state-space-models.html#cb22-58" tabindex="-1"></a>)</span>
-<span id="cb22-59"><a href="state-space-models.html#cb22-59" tabindex="-1"></a></span>
-<span id="cb22-60"><a href="state-space-models.html#cb22-60" tabindex="-1"></a><span class="co"># Display results</span></span>
-<span id="cb22-61"><a href="state-space-models.html#cb22-61" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Estimated sigma_eta2:&quot;</span>, optim_result<span class="sc">$</span>par[<span class="dv">1</span>], <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Estimated sigma_eta2: 1.017554</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="state-space-models.html#cb24-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Estimated sigma_eps2:&quot;</span>, optim_result<span class="sc">$</span>par[<span class="dv">2</span>], <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Estimated sigma_eps2: 1.995769</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="state-space-models.html#cb26-1" tabindex="-1"></a>ss1 <span class="ot">=</span> <span class="fu">StructTS</span>(y, <span class="at">type =</span> <span class="st">&quot;level&quot;</span>)</span>
-<span id="cb26-2"><a href="state-space-models.html#cb26-2" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">forecast</span>(ss1, <span class="at">h =</span> <span class="dv">500</span>))</span></code></pre></div>
-<p><img src="series_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
+<span id="cb22-35"><a href="state-space-models.html#cb22-35" tabindex="-1"></a>}</span></code></pre></div>
+<p>Next, we will simulate some data from this model and estimate parameters.</p>
+<p>The MLE for <span class="math inline">\(\hat{\sigma}^2_\eta=\)</span> 1.02 and for <span class="math inline">\(\hat{\sigma}^2_\epsilon=\)</span> 2. These are very close the the <em>true</em> values of the parameters used to generate the data, offering some evidence the algorithm is working.</p>
 </div>
-<div id="specific-problem" class="section level3 hasAnchor" number="5.1.3">
-<h3><span class="header-section-number">5.1.3</span> Specific Problem<a href="state-space-models.html#specific-problem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="forecasting-2" class="section level3 hasAnchor" number="5.1.3">
+<h3><span class="header-section-number">5.1.3</span> Forecasting<a href="state-space-models.html#forecasting-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For a local-level model, the forecast for <span class="math inline">\(h-\)</span>steps ahead is the most recent estimated level, <span class="math inline">\(\hat{\mu}_T\)</span>, since the model assumes the level evolves with a random walk.</p>
+<p>The forecast variance accumulates uncertainty from the process and observations noise:</p>
+<p><span class="math display">\[\text{Var}(\hat{y}_{T+h}) = \sigma^2_\epsilon + h \sigma^2_\eta\]</span>.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="state-space-models.html#cb23-1" tabindex="-1"></a>ss1 <span class="ot">=</span> <span class="fu">StructTS</span>(y, <span class="at">type =</span> <span class="st">&quot;level&quot;</span>)</span>
+<span id="cb23-2"><a href="state-space-models.html#cb23-2" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">forecast</span>(ss1, <span class="at">h =</span> <span class="dv">500</span>))</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-46-1.png" width="672" /></p>
+</div>
+</div>
+<div id="bayesian-inference" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Bayesian Inference<a href="state-space-models.html#bayesian-inference" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="bayesian-logic" class="section level3 hasAnchor" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Bayesian logic<a href="state-space-models.html#bayesian-logic" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In the Bayesian paradigm, parameters (<span class="math inline">\(\theta\)</span>) are random and data (<span class="math inline">\(y\)</span>) are fixed. Inference is carried out through the posterior distribution of parameters given data.</p>
+<p><span class="math display">\[p(\theta \vert y) = \frac{p(y|\theta) p(\theta)}{p(y)}\]</span>
+For very simple models, we can write the analytical solution for the posterior. For example, suppose we are flipping a coin and we are interested in learning about the parameter <span class="math inline">\(\theta = P(\text{Heads})\)</span>.</p>
+<p>Before observing any data, we believe that <span class="math inline">\(\theta\)</span> is probably around 0.5 but we are not sure. We can encode this belief with a prior distribution whose expected value is 0.5 and ranges from 0 to 1. A good choice is the <a href="https://en.wikipedia.org/wiki/Beta_distribution">Beta distribution</a>. In particular, we can use a Beta(<span class="math inline">\(\alpha = 2\)</span>, <span class="math inline">\(\beta = 2\)</span>),</p>
+<p><span class="math display">\[\begin{align}
+p(\theta) = 6\theta (1-\theta).
+\end{align}\]</span></p>
+<p>Now we generate some data. We flip the coin (independently) 7 times and observe 5 heads. Since our data is a sequence of 0s and 1s, we can use the binomial distribution for the likelihood. That is:</p>
+<p><span class="math display">\[\begin{align}
+p(y_1, \ldots y_7 \vert \theta) &amp;= {7 \choose 5}  \theta^5 (1-\theta)^2.
+\end{align}\]</span></p>
+<p>Now we can multiply them together to get the posterior distribution of <span class="math inline">\(\theta\)</span>:</p>
+<p><span class="math display">\[\begin{align}
+p(\theta \vert y) &amp;= \frac{p(y|\theta) p(\theta)}{p(y)} \\
+&amp;= \theta^5 (1-\theta)^2 \times \theta (1-\theta) \times 6/p(y) \\
+&amp;= \theta^6 (1-\theta)^3 \times 6/p(y) \\
+&amp;= \text{Beta}(7,4)
+\end{align}\]</span></p>
+<p><img src="series_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
+</div>
+<div id="monte-carlo-idea" class="section level3 hasAnchor" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Monte Carlo Idea<a href="state-space-models.html#monte-carlo-idea" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Suppose we can sample from <span class="math inline">\(p(\theta \vert \text{data})\)</span>. Then we could generate,</p>
+<p><span class="math display">\[\begin{align}
+\theta^{1},\ldots,\theta^{S} \sim p(\theta | \text{data})
+\end{align}\]</span></p>
+<p>and obtain Monte Carlo approximations of posterior quantities:</p>
+<p><span class="math display">\[\begin{align}
+E(g(\theta) \vert \text{data}) \approx \frac{1}{S} \sum_{i=1}^S g(\theta^i).
+\end{align}\]</span></p>
+<p>But what if you can’t sample from <span class="math inline">\(p(\theta \vert \text{data})\)</span>?</p>
+</div>
+<div id="metropolis-algorithm" class="section level3 hasAnchor" number="5.2.3">
+<h3><span class="header-section-number">5.2.3</span> Metropolis Algorithm<a href="state-space-models.html#metropolis-algorithm" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The metropolis algorithm proceeds as follows:</p>
+<ol style="list-style-type: decimal">
+<li><p>Sample <span class="math inline">\(\theta^{\star} \sim J(\theta \vert \theta^{s})\)</span>, where <span class="math inline">\(J\)</span> is called the <em>proposal distribution</em>. For the Metropolis Algorithm, we assume that this distribution is symmetric.</p></li>
+<li><p>Compute the acceptance ratio, <span class="math inline">\(r\)</span>:</p></li>
+</ol>
+<p><span class="math display">\[r = \frac{p(\theta^\star \vert \text{data})}{p(\theta^{s} \vert \text{data})}\]</span>
+3 Let</p>
+<p><span class="math display">\[\begin{equation}
+  \theta^{s+1} =
+    \begin{cases}
+      \theta^{\star} &amp; \text{with prob min}(r,1) \\
+      \theta^{s} &amp; \text{otherwise}
+    \end{cases}       
+\end{equation}\]</span></p>
+<p>Step 3 can be accomplished by sampling <span class="math inline">\(u \sim \text{Unif}(0,1)\)</span> and setting <span class="math inline">\(\theta^{s+1} = \theta^\star\)</span> if <span class="math inline">\(u &lt; r\)</span> and setting <span class="math inline">\(\theta^{s+1} = \theta^s\)</span> otherwise.</p>
+</div>
+<div id="example-1" class="section level3 hasAnchor" number="5.2.4">
+<h3><span class="header-section-number">5.2.4</span> Example<a href="state-space-models.html#example-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let’s consider a multivariate linear regression model. That is, we will model our response variable, <span class="math inline">\(y\)</span>, as</p>
+<p><span class="math display">\[\begin{align}
+y = X\beta + \epsilon.
+\end{align}\]</span></p>
+<p>For simplicity, let us assume that <span class="math inline">\(\epsilon \sim N(0,1)\)</span>. Therefore, the parameter that we want to do inference on is <span class="math inline">\(\beta\)</span>. So, we want to sample from <span class="math inline">\(p(\beta \vert y)\)</span>.To do so, we need two ingredients, a likelihood function and a prior distribution for <span class="math inline">\(\beta\)</span>, <span class="math inline">\(p(\beta)\)</span>.</p>
+<p><span class="math display">\[\begin{align}
+p(\beta \vert y) &amp;\propto p(y \vert \beta) p(\beta) \\
+&amp;= \text{likelihood} \times \text{prior}
+\end{align}\]</span></p>
+<p>For the linear regression model, our likelihood function can be written as,</p>
+<p><span class="math display">\[\begin{align}
+p(y \vert \beta) = (2\pi \sigma)^{-n/2} \exp{\bigg( -\frac{1}{2 \sigma^2} (y - X \beta)^T (y - X \beta) \bigg)}.
+\end{align}\]</span></p>
+<p>For the prior, we will assume that we know nothing about <span class="math inline">\(\beta\)</span>. So, we will use the prior distribution,</p>
+<p><span class="math display">\[\begin{align}
+p( \beta) \propto 1.
+\end{align}\]</span></p>
+<p>We will use the proposal distribution,</p>
+<p><span class="math display">\[\begin{align}
+J(\theta^{\star} \vert \theta) \sim N(\theta, cI)
+\end{align}\]</span>.</p>
+<p>Let us start by sampling some data that follows this model.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="state-space-models.html#cb24-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb24-2"><a href="state-space-models.html#cb24-2" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span></span>
+<span id="cb24-3"><a href="state-space-models.html#cb24-3" tabindex="-1"></a>X <span class="ot">=</span> <span class="fu">matrix</span>( <span class="at">data =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,n), <span class="fu">rnorm</span>(n) ), <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb24-4"><a href="state-space-models.html#cb24-4" tabindex="-1"></a>beta_true <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb24-5"><a href="state-space-models.html#cb24-5" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> X <span class="sc">%*%</span> beta_true, <span class="at">sd =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>Now let’s implement the MH algorithm and sample from the posterior distribution of <span class="math inline">\(\beta\)</span>. Our MCMC output for the slope coefficient, <span class="math inline">\(\beta_1\)</span>, is summarized below.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="state-space-models.html#cb25-1" tabindex="-1"></a>nIter <span class="ot">=</span> <span class="fl">1e5</span></span>
+<span id="cb25-2"><a href="state-space-models.html#cb25-2" tabindex="-1"></a>betas <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> nIter, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb25-3"><a href="state-space-models.html#cb25-3" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="state-space-models.html#cb25-4" tabindex="-1"></a>beta_current <span class="ot">=</span> betas[<span class="dv">1</span>,]</span>
+<span id="cb25-5"><a href="state-space-models.html#cb25-5" tabindex="-1"></a>p_current <span class="ot">=</span> <span class="fu">exp</span> ( <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">2</span> <span class="sc">*</span> <span class="fu">t</span>(y <span class="sc">-</span> X <span class="sc">%*%</span> betas[<span class="dv">1</span>,]) <span class="sc">%*%</span> (y<span class="sc">-</span> X <span class="sc">%*%</span> betas[<span class="dv">1</span>,] ))</span>
+<span id="cb25-6"><a href="state-space-models.html#cb25-6" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="state-space-models.html#cb25-7" tabindex="-1"></a><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>nIter) {</span>
+<span id="cb25-8"><a href="state-space-models.html#cb25-8" tabindex="-1"></a>  <span class="co"># propose a new value for betas</span></span>
+<span id="cb25-9"><a href="state-space-models.html#cb25-9" tabindex="-1"></a>  beta_prop <span class="ot">=</span> <span class="fu">rnorm</span>( <span class="dv">2</span>, <span class="at">mean =</span> betas[(j<span class="dv">-1</span>),], <span class="at">sd =</span> .<span class="dv">2</span>)</span>
+<span id="cb25-10"><a href="state-space-models.html#cb25-10" tabindex="-1"></a>  </span>
+<span id="cb25-11"><a href="state-space-models.html#cb25-11" tabindex="-1"></a>  <span class="co"># compute probability of data | beta proposed</span></span>
+<span id="cb25-12"><a href="state-space-models.html#cb25-12" tabindex="-1"></a>  p_prop <span class="ot">=</span> <span class="fu">exp</span> ( <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">2</span> <span class="sc">*</span> <span class="fu">t</span>(y <span class="sc">-</span> X <span class="sc">%*%</span> beta_prop) <span class="sc">%*%</span> (y<span class="sc">-</span> X <span class="sc">%*%</span> beta_prop ))</span>
+<span id="cb25-13"><a href="state-space-models.html#cb25-13" tabindex="-1"></a>  </span>
+<span id="cb25-14"><a href="state-space-models.html#cb25-14" tabindex="-1"></a>  r <span class="ot">=</span> p_prop<span class="sc">/</span>p_current</span>
+<span id="cb25-15"><a href="state-space-models.html#cb25-15" tabindex="-1"></a>  </span>
+<span id="cb25-16"><a href="state-space-models.html#cb25-16" tabindex="-1"></a>  <span class="cf">if</span> ( r <span class="sc">&gt;</span> <span class="dv">1</span> ) {</span>
+<span id="cb25-17"><a href="state-space-models.html#cb25-17" tabindex="-1"></a>    beta_current <span class="ot">=</span> beta_prop</span>
+<span id="cb25-18"><a href="state-space-models.html#cb25-18" tabindex="-1"></a>    p_current <span class="ot">=</span> p_prop</span>
+<span id="cb25-19"><a href="state-space-models.html#cb25-19" tabindex="-1"></a>    </span>
+<span id="cb25-20"><a href="state-space-models.html#cb25-20" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;</span> r) {</span>
+<span id="cb25-21"><a href="state-space-models.html#cb25-21" tabindex="-1"></a>    beta_current <span class="ot">=</span> beta_prop</span>
+<span id="cb25-22"><a href="state-space-models.html#cb25-22" tabindex="-1"></a>    p_current <span class="ot">=</span> p_prop</span>
+<span id="cb25-23"><a href="state-space-models.html#cb25-23" tabindex="-1"></a>  }</span>
+<span id="cb25-24"><a href="state-space-models.html#cb25-24" tabindex="-1"></a>  </span>
+<span id="cb25-25"><a href="state-space-models.html#cb25-25" tabindex="-1"></a>  betas[j, ] <span class="ot">=</span> beta_current</span>
+<span id="cb25-26"><a href="state-space-models.html#cb25-26" tabindex="-1"></a>  </span>
+<span id="cb25-27"><a href="state-space-models.html#cb25-27" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-50-1.png" width="672" /></p>
+</div>
+<div id="specific-problem" class="section level3 hasAnchor" number="5.2.5">
+<h3><span class="header-section-number">5.2.5</span> Specific Problem<a href="state-space-models.html#specific-problem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For the more general state space model we will use the package <a href="https://drive.google.com/file/d/14US56VzanuLt03XBkoAGzLy0gDEreZUc/view">bsts</a>.</p>
 <p>For our problem, we will introduce the covariate into the measurement equation. Our model is,</p>
 <p><span class="math display">\[\begin{align}
@@ -388,7 +489,7 @@ y_t &amp;= \mu_t + \beta x_t + \epsilon_t \\
 \mu_t &amp;= \mu_{t-1} + \eta_t.
 \end{align}\]</span></p>
 <p>We will use the package <code>bsts</code> to fit this model. The first thing to do when specifying a <code>bsts</code> package is the specify the contents of the latent state vector <span class="math inline">\(\mu_t\)</span></p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="state-space-models.html#cb27-1" tabindex="-1"></a><span class="cn">NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="state-space-models.html#cb26-1" tabindex="-1"></a><span class="cn">NA</span></span></code></pre></div>
 
 </div>
 </div>
