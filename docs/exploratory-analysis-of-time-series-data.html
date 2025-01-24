@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-01-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -436,7 +436,7 @@ You will again use the <code>fma::elec</code> dataframe and proceed in 3 steps:<
 </ul>
 <p>Provide your code that is clearly commented for each step as well as a plot that shows each of the three component series in three separate plots (hint: use <code>par(mfrow = c(1,3))</code> to make three plots in a row).</p>
 <ol start="4" style="list-style-type: decimal">
-<li>See chapter 1 of TSA (page 18) for a definition of cross correlation. This is a measure of the linear dependence of one time series on another. In other words, this is a multivariate version of the autocorrelation. Compute the cross correlation between GDP per capita and the Case Shiller Home Price Index (both from the FRED database), using the following data:</li>
+<li>See chapter 1 of TSA (page 30) for a definition of cross correlation. This is a measure of the linear dependence of one time series on another. In other words, this is a multivariate version of the autocorrelation. Compute the cross correlation between GDP per capita and the Case Shiller Home Price Index (both from the FRED database), using the following data:</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="exploratory-analysis-of-time-series-data.html#cb3-1" tabindex="-1"></a>fred <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv&quot;</span>)[,<span class="sc">-</span><span class="dv">1</span>]</span>
 <span id="cb3-2"><a href="exploratory-analysis-of-time-series-data.html#cb3-2" tabindex="-1"></a>fred<span class="sc">$</span>date <span class="ot">=</span> <span class="fu">ymd</span>(fred<span class="sc">$</span>date)</span></code></pre></div>
