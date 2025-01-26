@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2025-01-24" />
+<meta name="date" content="2025-01-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -440,7 +440,7 @@ You will again use the <code>fma::elec</code> dataframe and proceed in 3 steps:<
 </ol>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="exploratory-analysis-of-time-series-data.html#cb3-1" tabindex="-1"></a>fred <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv&quot;</span>)[,<span class="sc">-</span><span class="dv">1</span>]</span>
 <span id="cb3-2"><a href="exploratory-analysis-of-time-series-data.html#cb3-2" tabindex="-1"></a>fred<span class="sc">$</span>date <span class="ot">=</span> <span class="fu">ymd</span>(fred<span class="sc">$</span>date)</span></code></pre></div>
-<p>Provide your code and validate it using the <code>ccf</code> function.</p>
+<p>Provide your code that computes the ccf for lag 0 and 1:10 in both <em>directions</em> (i.e., one where GDP/capita leads and the other in which the Case Shiller leads). Validate your calculations using the <code>ccf</code> function.</p>
 <ol start="5" style="list-style-type: decimal">
 <li><p>Write a function in R that takes two arguments: a time series (<span class="math inline">\(y\)</span>) vector and a vector (<span class="math inline">\(k\)</span>) specifying a set of lags. The output for this function is the autocorrelation of <span class="math inline">\(y\)</span> for each lag in <span class="math inline">\(k\)</span>, using the formula in <a href="exploratory-analysis-of-time-series-data.html#autocorrelation">Autocorrelation</a>. Compare the output of your function to the output from <code>(acf(y))</code>.</p></li>
 <li><p>Simulate data from the following model: <span class="math inline">\(x_t = a + \phi x_{t-1} + w_t\)</span>, in which <span class="math inline">\(w_t \sim N(0,\sigma^2)\)</span>. You can choose the value for parameters: <span class="math inline">\(\phi, \sigma^2, a\)</span>. Report which values you chose and make a plot of the theoretical versus observed autocorrelation function for a simulation with length <span class="math inline">\(T=100\)</span> and a simulation with length <span class="math inline">\(T=10,000\)</span>.</p></li>
