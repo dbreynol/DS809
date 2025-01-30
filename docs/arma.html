@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2025-01-24" />
+<meta name="date" content="2025-01-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -229,7 +229,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">3.1</span> Operators<a href="arma.html#operators" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="backshift-operator" class="section level3 hasAnchor" number="3.1.1">
 <h3><span class="header-section-number">3.1.1</span> Backshift operator<a href="arma.html#backshift-operator" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>The <em>backshift shift operator</em> (<span class="math inline">\(\mathbf{B}\)</span>) is an important function in time series analysis, which we define as</p>
+<p>The <em>backshift shift operator</em> (<span class="math inline">\(\mathbf{B}\)</span>) is an important function in time series analysis, which is defined as</p>
 <p><span class="math display">\[ \mathbf{B} x_t = x_{t-1} \]</span></p>
 <p>or more generally as</p>
 <p><span class="math display">\[ \mathbf{B}^k x_t = x_{t-k} \]</span></p>
@@ -401,7 +401,7 @@ E(x_t - \beta x_{t-1})^2 &amp;= \gamma(0) - 2\beta \gamma(1) + \beta^2 \gamma(0)
 <h2><span class="header-section-number">3.5</span> AR Estimation<a href="arma.html#ar-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="yule-walker-equations" class="section level3 hasAnchor" number="3.5.1">
 <h3><span class="header-section-number">3.5.1</span> Yule-Walker Equations<a href="arma.html#yule-walker-equations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Consider the AR(p) model, <span class="math inline">\(x_t =\)</span></p>
+<p>Consider the AR(p) model, <span class="math inline">\(x_t = \phi_1 x_{t-1} + \phi_2 x_{t-2} + \phi_3 x_{t-3} + w_t\)</span></p>
 <p>Now, take the following steps,</p>
 <ol style="list-style-type: decimal">
 <li>Multiply both sides by <span class="math inline">\(x_{t-1}\)</span></li>
@@ -492,10 +492,9 @@ x_{T+h} - \tilde{x}_{T+h}  &amp;= \sum_{j=0}^{h-1} \psi_j w_{T+h-j} \\
 <div id="lab-2" class="section level2 hasAnchor" number="3.7">
 <h2><span class="header-section-number">3.7</span> Lab 2<a href="arma.html#lab-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li><p>Simulate data from an AR(1) process in which <span class="math inline">\(\phi_1 = 0.6\)</span>. For sample sizes <span class="math inline">\(n=10,10^3,10^5\)</span>, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 20. What do you observe?</p></li>
-<li><p>Simulate data from the MA(3) model: <span class="math inline">\(x_t = w_t+\theta_1w_{t-1}+\theta_2w_{t-2}+\theta_3w_{t-3}\)</span> in which <span class="math inline">\(\theta = (0.7,0.6,0.2)\)</span>. For sample sizes <span class="math inline">\(n=10,10^3,10^5\)</span>, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 20. What do you observe?</p></li>
-<li><p>For an MA(1), <span class="math inline">\(x_t = w_t + \theta w_{t-1}\)</span> with <span class="math inline">\(|\theta|&lt;1\)</span>, derive an expression for <span class="math inline">\(\phi_{22}\)</span>. Simulate data from this process and plot the difference between the theoretical value of <span class="math inline">\(\phi_{22}\)</span> and the sample quantity (which you can compute using <code>pacf</code>).</p></li>
-<li><p>Using ACF &amp; PACF for model ID</p></li>
+<li><p>Simulate data from the MA(1) model: <span class="math inline">\(x_t = w_t+\theta_1w_{t-1}\)</span> in which <span class="math inline">\(\theta = (0.7)\)</span>. For sample sizes <span class="math inline">\(n=10,10^3,10^5\)</span>, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 5. What do you observe?</p></li>
+<li><p>For an MA(1), <span class="math inline">\(x_t = w_t + \theta w_{t-1}\)</span> with <span class="math inline">\(|\theta|&lt;1\)</span>, derive an expression for <span class="math inline">\(\phi_{22}\)</span> (the lag 2 partial ACF). Simulate data from this process and plot the difference between the theoretical value of <span class="math inline">\(\phi_{22}\)</span> and the sample quantity (which you can compute using <code>pacf</code>).</p></li>
+<li><p>Using ACF &amp; PACF for model ID. Complete the table with either <em>cuts off after <span class="math inline">\(\ldots\)</span></em> or <em>tails off slowly</em>. Back up the 3 entries you fill in with either math or with empirical data (simulate data from the model type and show the relevant estimate quantities).</p></li>
 </ol>
 <table>
 <thead>
@@ -514,18 +513,18 @@ x_{T+h} - \tilde{x}_{T+h}  &amp;= \sum_{j=0}^{h-1} \psi_j w_{T+h-j} \\
 <tr class="even">
 <td align="center">MA(<em>q</em>)</td>
 <td align="center">Cuts off after lag <em>q</em></td>
-<td align="center">Tails off slowly</td>
+<td align="center"></td>
 </tr>
 <tr class="odd">
 <td align="center">ARMA(<em>p</em>,<em>q</em>)</td>
-<td align="center">Tails off slowly</td>
-<td align="center">Tails off slowly</td>
+<td align="center"></td>
+<td align="center"></td>
 </tr>
 </tbody>
 </table>
-<ol start="5" style="list-style-type: decimal">
-<li><p>Suppose you aim to estimate <span class="math inline">\(\mathbf{\phi}\)</span> for an AR(2) model in which <span class="math inline">\(\hat{\mathbf{\gamma}} = (2.1,1.5,1.3)\)</span>. What is the Yule-Walker estimate for <span class="math inline">\(\mathbf{\phi}\)</span> and also for <span class="math inline">\(\sigma\)</span>?</p></li>
-<li><p>Set up the likelihood function for and AR(p) model</p></li>
+<ol start="4" style="list-style-type: decimal">
+<li><p>Suppose you aim to estimate <span class="math inline">\(\mathbf{\phi}\)</span> for an AR(2) model in which <span class="math inline">\(\hat{\mathbf{\gamma}} = (2.1,1.5,1.3)\)</span> (i.e., <span class="math inline">\(\hat{\gamma}(0)=2.1)\)</span>. What is the Yule-Walker estimate for <span class="math inline">\(\mathbf{\phi}\)</span> and also for <span class="math inline">\(\sigma\)</span>?</p></li>
+<li><p>Using the Egyptian export data from class, compute the 95% interval for the one period and 2 period ahead forecasts. Use the <span class="math inline">\(\psi\)</span> representation from <a href="arma.html#forecast-errors">Forecast Errors</a>. You can find the <span class="math inline">\(\phi\)</span> values using <code>ARMAtoMA</code>. Validate your answers using <code>forecast::forecast</code>.</p></li>
 </ol>
 
 </div>

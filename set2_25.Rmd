@@ -369,7 +369,7 @@ for(i in 1:2) {
 
 ### Yule-Walker Equations
 
-Consider the AR(p) model, $x_t =$
+Consider the AR(p) model, $x_t = \phi_1 x_{t-1} + \phi_2 x_{t-2} + \phi_3 x_{t-3} + w_t$
 
 Now, take the following steps,
 
@@ -503,22 +503,19 @@ Or, use <code>forecast(arma_fit, h = 2)</code>
 
 ## Lab 2
 
-1. Simulate data from an AR(1) process in which $\phi_1 = 0.6$. For sample sizes $n=10,10^3,10^5$, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 20. What do you observe?
+1. Simulate data from the MA(1) model: $x_t = w_t+\theta_1w_{t-1}$ in which $\theta = (0.7)$. For sample sizes $n=10,10^3,10^5$, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 5. What do you observe?
 
-2. Simulate data from the MA(3) model: $x_t = w_t+\theta_1w_{t-1}+\theta_2w_{t-2}+\theta_3w_{t-3}$ in which $\theta = (0.7,0.6,0.2)$. For sample sizes $n=10,10^3,10^5$, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 20. What do you observe?
+2. For an MA(1), $x_t = w_t + \theta w_{t-1}$ with $|\theta|<1$, derive an expression for $\phi_{22}$ (the lag 2 partial ACF). Simulate data from this process and plot the difference between the theoretical value of $\phi_{22}$ and the sample quantity (which you can compute using <code>pacf</code>).
 
-3. For an MA(1), $x_t = w_t + \theta w_{t-1}$ with $|\theta|<1$, derive an expression for $\phi_{22}$. Simulate data from this process and plot the difference between the theoretical value of $\phi_{22}$ and the sample quantity (which you can compute using <code>pacf</code>).
-
-
-
-4. Using ACF & PACF for model ID
+3. Using ACF & PACF for model ID. Complete the table with either _cuts off after $\ldots$_ or _tails off slowly_. Back up the 3 entries you fill in with either math or with empirical data (simulate data from the model type and show the relevant estimate quantities).
 
 | Model   | ACF               | PACF                    |
 |:-------:|:-----------------:|:-----------------------:|
 | AR(_p_) | Tails off slowly  | Cuts off after lag _p_  |
-| MA(_q_) | Cuts off after lag _q_  | Tails off slowly  |
-| ARMA(_p_,_q_) | Tails off slowly  | Tails off slowly  |
+| MA(_q_) | Cuts off after lag _q_  |   |
+| ARMA(_p_,_q_) |   |   |
 
-5. Suppose you aim to estimate $\mathbf{\phi}$ for an AR(2) model in which $\hat{\mathbf{\gamma}} = (2.1,1.5,1.3)$. What is the Yule-Walker estimate for $\mathbf{\phi}$ and also for $\sigma$?
+4. Suppose you aim to estimate $\mathbf{\phi}$ for an AR(2) model in which $\hat{\mathbf{\gamma}} = (2.1,1.5,1.3)$ (i.e., $\hat{\gamma}(0)=2.1)$. What is the Yule-Walker estimate for $\mathbf{\phi}$ and also for $\sigma$?
 
-6. Set up the likelihood function for and AR(p) model
+5. Using the Egyptian export data from class, compute the 95\% interval for the one period and 2 period ahead forecasts. Use the $\psi$ representation from [Forecast Errors]. You can find the $\phi$ values using <code>ARMAtoMA</code>. Validate your answers using <code>forecast::forecast</code>.
+
