@@ -503,9 +503,9 @@ Or, use <code>forecast(arma_fit, h = 2)</code>
 
 ## Lab 2
 
-1. Simulate data from the MA(1) model: $x_t = w_t+\theta_1w_{t-1}$ in which $\theta = (0.7)$. For sample sizes $n=10,10^3,10^5$, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 5. What do you observe?
+1. Simulate data from the MA(1) model: $x_t = w_t+\theta_1w_{t-1}$ in which $\theta = (0.7)$. For sample sizes $n=10,10^3,10^5$, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 5. What do you observe? Do the same thing for an MA(3) model. Include which values you use for $\theta_1, \theta_2, \theta_3$.
 
-2. For an AR(1), derive an expression for $\phi_{22}$ (the lag 2 partial ACF). Follow the steps in [AR(1) PACF]
+2. For an AR(1), derive an expression for $\phi_{22}$ (the lag 2 partial ACF). Follow the steps in [AR(1) PACF]. 
 
 3. Using ACF & PACF for model ID. Complete the table with either _cuts off after $\ldots$_ or _tails off slowly_. Back up the 3 entries you fill in with either math or with empirical data (simulate data from the model type and show the relevant estimate quantities).
 
@@ -515,7 +515,7 @@ Or, use <code>forecast(arma_fit, h = 2)</code>
 | MA(_q_) | Cuts off after lag _q_  |   |
 | ARMA(_p_,_q_) |   |   |
 
-4. Suppose you aim to estimate $\mathbf{\phi}$ for an AR(2) model in which $\hat{\mathbf{\gamma}} = (2.1,1.5,1.3)$ (i.e., $\hat{\gamma}(0)=2.1)$. What is the Yule-Walker estimate for $\mathbf{\phi}$ and also for $\sigma$?
+4. Suppose you aim to estimate $\mathbf{\phi}$ for an AR(2) model in which $\hat{\mathbf{\gamma}} = (2.1,1.5,1.3)$ (i.e., $\hat{\gamma}(0)=2.1)$. What is the Yule-Walker estimate for $\mathbf{\phi}$ and also for $\sigma$? See [AR Estimation] for details.
 
 5. Using the Egyptian export data from class, compute the 95\% interval for the one period and 2 period ahead forecasts. Use the $\psi$ representation from [Forecast Errors]. You can find the $\phi$ values using <code>ARMAtoMA</code>. Validate your answers using <code>forecast::forecast</code>.
 
