@@ -505,7 +505,7 @@ Or, use <code>forecast(arma_fit, h = 2)</code>
 
 1. Simulate data from the MA(1) model: $x_t = w_t+\theta_1w_{t-1}$ in which $\theta = (0.7)$. For sample sizes $n=10,10^3,10^5$, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 5. What do you observe?
 
-2. For an MA(1), $x_t = w_t + \theta w_{t-1}$ with $|\theta|<1$, derive an expression for $\phi_{22}$ (the lag 2 partial ACF). Simulate data from this process and plot the difference between the theoretical value of $\phi_{22}$ and the sample quantity (which you can compute using <code>pacf</code>).
+2. For an AR(1), derive an expression for $\phi_{22}$ (the lag 2 partial ACF). Follow the steps in [AR(1) PACF]
 
 3. Using ACF & PACF for model ID. Complete the table with either _cuts off after $\ldots$_ or _tails off slowly_. Back up the 3 entries you fill in with either math or with empirical data (simulate data from the model type and show the relevant estimate quantities).
 

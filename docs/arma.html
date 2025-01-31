@@ -493,7 +493,7 @@ x_{T+h} - \tilde{x}_{T+h}  &amp;= \sum_{j=0}^{h-1} \psi_j w_{T+h-j} \\
 <h2><span class="header-section-number">3.7</span> Lab 2<a href="arma.html#lab-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
 <li><p>Simulate data from the MA(1) model: <span class="math inline">\(x_t = w_t+\theta_1w_{t-1}\)</span> in which <span class="math inline">\(\theta = (0.7)\)</span>. For sample sizes <span class="math inline">\(n=10,10^3,10^5\)</span>, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 5. What do you observe?</p></li>
-<li><p>For an MA(1), <span class="math inline">\(x_t = w_t + \theta w_{t-1}\)</span> with <span class="math inline">\(|\theta|&lt;1\)</span>, derive an expression for <span class="math inline">\(\phi_{22}\)</span> (the lag 2 partial ACF). Simulate data from this process and plot the difference between the theoretical value of <span class="math inline">\(\phi_{22}\)</span> and the sample quantity (which you can compute using <code>pacf</code>).</p></li>
+<li><p>For an AR(1), derive an expression for <span class="math inline">\(\phi_{22}\)</span> (the lag 2 partial ACF). Follow the steps in <a href="arma.html#ar1-pacf">AR(1) PACF</a></p></li>
 <li><p>Using ACF &amp; PACF for model ID. Complete the table with either <em>cuts off after <span class="math inline">\(\ldots\)</span></em> or <em>tails off slowly</em>. Back up the 3 entries you fill in with either math or with empirical data (simulate data from the model type and show the relevant estimate quantities).</p></li>
 </ol>
 <table>
