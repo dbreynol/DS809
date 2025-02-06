@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2025-02-03" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="exploratory-analysis-of-time-series-data.html"/>
-
+<link rel="next" href="arima.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -206,6 +206,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="3.7" data-path="arma.html"><a href="arma.html#lab-2"><i class="fa fa-check"></i><b>3.7</b> Lab 2</a></li>
 </ul></li>
+<li class="chapter" data-level="4" data-path="arima.html"><a href="arima.html"><i class="fa fa-check"></i><b>4</b> ARIMA</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="arima.html"><a href="arima.html#stationarity-2"><i class="fa fa-check"></i><b>4.1</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="arima.html"><a href="arima.html#visual-test"><i class="fa fa-check"></i><b>4.1.1</b> Visual Test</a></li>
+<li class="chapter" data-level="4.1.2" data-path="arima.html"><a href="arima.html#unit-root-tests"><i class="fa fa-check"></i><b>4.1.2</b> Unit Root Tests</a></li>
+<li class="chapter" data-level="4.1.3" data-path="arima.html"><a href="arima.html#dickey-fuller-test-df"><i class="fa fa-check"></i><b>4.1.3</b> Dickey Fuller Test (DF)</a></li>
+<li class="chapter" data-level="4.1.4" data-path="arima.html"><a href="arima.html#augmented-df-test"><i class="fa fa-check"></i><b>4.1.4</b> Augmented DF Test</a></li>
+<li class="chapter" data-level="4.1.5" data-path="arima.html"><a href="arima.html#adf-tseriesadf.test"><i class="fa fa-check"></i><b>4.1.5</b> ADF: <code>tseries::adf.test()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="arima.html"><a href="arima.html#differencing-nabla"><i class="fa fa-check"></i><b>4.2</b> Differencing <span class="math inline">\(\nabla\)</span></a></li>
+<li class="chapter" data-level="4.3" data-path="arima.html"><a href="arima.html#arima-models"><i class="fa fa-check"></i><b>4.3</b> ARIMA Models</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="arima.html"><a href="arima.html#arima111"><i class="fa fa-check"></i><b>4.3.1</b> ARIMA(1,1,1)</a></li>
+<li class="chapter" data-level="4.3.2" data-path="arima.html"><a href="arima.html#real-data-example"><i class="fa fa-check"></i><b>4.3.2</b> Real Data Example</a></li>
+<li class="chapter" data-level="4.3.3" data-path="arima.html"><a href="arima.html#model-selection-fitting"><i class="fa fa-check"></i><b>4.3.3</b> Model Selection/ Fitting</a></li>
+<li class="chapter" data-level="4.3.4" data-path="arima.html"><a href="arima.html#model-selection---automated"><i class="fa fa-check"></i><b>4.3.4</b> Model Selection - automated</a></li>
+<li class="chapter" data-level="4.3.5" data-path="arima.html"><a href="arima.html#model-checking"><i class="fa fa-check"></i><b>4.3.5</b> Model Checking</a></li>
+<li class="chapter" data-level="4.3.6" data-path="arima.html"><a href="arima.html#forecasting-1"><i class="fa fa-check"></i><b>4.3.6</b> Forecasting</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="arima.html"><a href="arima.html#sarima"><i class="fa fa-check"></i><b>4.4</b> SARIMA</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="arima.html"><a href="arima.html#unpacking-notation"><i class="fa fa-check"></i><b>4.4.1</b> Unpacking Notation</a></li>
+<li class="chapter" data-level="4.4.2" data-path="arima.html"><a href="arima.html#data-example"><i class="fa fa-check"></i><b>4.4.2</b> Data Example</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="arima.html"><a href="arima.html#lab-3"><i class="fa fa-check"></i><b>4.5</b> Lab 3</a></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -358,7 +385,7 @@ x_t = w_t + 5 w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,1)
 </div>
 <div id="autocorrelation-3" class="section level3 hasAnchor" number="3.3.4">
 <h3><span class="header-section-number">3.3.4</span> Autocorrelation<a href="arma.html#autocorrelation-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For the MA(q) model, the autocorrelation function cuts off for <span class="math inline">\(h &gt;q\)</span>. That is,</p>
+<p>For the MA(q) model, the autocovariance function cuts off for <span class="math inline">\(h &gt;q\)</span>. That is,</p>
 <p><span class="math display">\[\begin{align}
 \gamma(h) &amp;= \sigma^2 \sum_{j=0}^{q-h} \theta_j \theta_{j+h}~\text{for }h=0,\ldots,q \\
 \gamma(h) &amp;= 0~h&gt;q
@@ -492,7 +519,56 @@ x_{T+h} - \tilde{x}_{T+h}  &amp;= \sum_{j=0}^{h-1} \psi_j w_{T+h-j} \\
 <div id="lab-2" class="section level2 hasAnchor" number="3.7">
 <h2><span class="header-section-number">3.7</span> Lab 2<a href="arma.html#lab-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li><p>Simulate data from the MA(1) model: <span class="math inline">\(x_t = w_t+\theta_1w_{t-1}\)</span> in which <span class="math inline">\(\theta = (0.7)\)</span>. For sample sizes <span class="math inline">\(n=10,10^3,10^5\)</span>, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 5. What do you observe? Do the same thing for an MA(3) model. Include which values you use for <span class="math inline">\(\theta_1, \theta_2, \theta_3\)</span>. See page 96 of the textbook for the theoretical AFC function for the MA(3) model.</p></li>
+<li>Simulate data from the MA(1) model: <span class="math inline">\(x_t = w_t+\theta_1w_{t-1}\)</span> in which <span class="math inline">\(\theta = (0.7)\)</span>. For sample sizes <span class="math inline">\(n=10,10^3,10^5\)</span>, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 5. What do you observe? Do the same thing for an MA(3) model. Include which values you use for <span class="math inline">\(\theta_1, \theta_2, \theta_3\)</span>. See page 96 of the textbook for the theoretical AFC function for the MA(3) model.</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="arma.html#cb7-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb7-2"><a href="arma.html#cb7-2" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="arma.html#cb7-3" tabindex="-1"></a><span class="co"># MA1</span></span>
+<span id="cb7-4"><a href="arma.html#cb7-4" tabindex="-1"></a>theta <span class="ot">=</span> <span class="fl">0.7</span></span>
+<span id="cb7-5"><a href="arma.html#cb7-5" tabindex="-1"></a>sim1 <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ma=</span><span class="fu">c</span>(theta)), <span class="at">n =</span> <span class="dv">10</span>)</span>
+<span id="cb7-6"><a href="arma.html#cb7-6" tabindex="-1"></a>sim2 <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ma=</span><span class="fu">c</span>(theta)), <span class="at">n =</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">3</span>)</span>
+<span id="cb7-7"><a href="arma.html#cb7-7" tabindex="-1"></a>sim3 <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ma=</span><span class="fu">c</span>(theta)), <span class="at">n =</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">5</span>)</span>
+<span id="cb7-8"><a href="arma.html#cb7-8" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="arma.html#cb7-9" tabindex="-1"></a>acf_theoretical <span class="ot">=</span> <span class="fu">c</span>( theta<span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> theta<span class="sc">^</span><span class="dv">2</span>) , <span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">4</span>))</span>
+<span id="cb7-10"><a href="arma.html#cb7-10" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="arma.html#cb7-11" tabindex="-1"></a>simlist <span class="ot">=</span> <span class="fu">list</span>(sim1, sim2, sim3)</span>
+<span id="cb7-12"><a href="arma.html#cb7-12" tabindex="-1"></a>acf_sample <span class="ot">=</span> <span class="fu">lapply</span>(simlist, <span class="cf">function</span>(x) <span class="fu">abs</span> ( (<span class="fu">acf</span>(x, <span class="at">plot =</span> F))<span class="sc">$</span>acf[<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>] <span class="sc">-</span> acf_theoretical ) )</span>
+<span id="cb7-13"><a href="arma.html#cb7-13" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="arma.html#cb7-14" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">y =</span> acf_sample[[<span class="dv">1</span>]], <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, </span>
+<span id="cb7-15"><a href="arma.html#cb7-15" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">ylab =</span> <span class="st">&quot;Empirical-Theoretical ACF&quot;</span>, <span class="at">main =</span> <span class="st">&quot;MA1&quot;</span>,</span>
+<span id="cb7-16"><a href="arma.html#cb7-16" tabindex="-1"></a>     <span class="at">sub =</span> <span class="st">&quot;Small sample in red&quot;</span>,</span>
+<span id="cb7-17"><a href="arma.html#cb7-17" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;lags&quot;</span>)</span>
+<span id="cb7-18"><a href="arma.html#cb7-18" tabindex="-1"></a><span class="fu">lines</span>(acf_sample[[<span class="dv">2</span>]], <span class="at">col =</span> <span class="st">&quot;green&quot;</span>)</span>
+<span id="cb7-19"><a href="arma.html#cb7-19" tabindex="-1"></a><span class="fu">lines</span>(acf_sample[[<span class="dv">3</span>]], <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="arma.html#cb8-1" tabindex="-1"></a><span class="co"># MA3</span></span>
+<span id="cb8-2"><a href="arma.html#cb8-2" tabindex="-1"></a>theta <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.7</span>, <span class="fl">0.4</span>)</span>
+<span id="cb8-3"><a href="arma.html#cb8-3" tabindex="-1"></a>den <span class="ot">=</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">sum</span>(theta<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb8-4"><a href="arma.html#cb8-4" tabindex="-1"></a>acf_theoretical <span class="ot">=</span> <span class="fu">c</span>( (theta[<span class="dv">1</span>] <span class="sc">+</span> theta[<span class="dv">2</span>] <span class="sc">*</span> theta[<span class="dv">2</span>] <span class="sc">+</span> theta[<span class="dv">2</span>] <span class="sc">*</span> theta[<span class="dv">3</span>])<span class="sc">/</span>den,</span>
+<span id="cb8-5"><a href="arma.html#cb8-5" tabindex="-1"></a>              (theta[<span class="dv">2</span>] <span class="sc">+</span> theta[<span class="dv">1</span>] <span class="sc">*</span> theta[<span class="dv">3</span>])<span class="sc">/</span>den,</span>
+<span id="cb8-6"><a href="arma.html#cb8-6" tabindex="-1"></a>              theta[<span class="dv">3</span>]<span class="sc">/</span>den, <span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span>
+<span id="cb8-7"><a href="arma.html#cb8-7" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="arma.html#cb8-8" tabindex="-1"></a>sim1 <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ma=</span> theta), <span class="at">n =</span> <span class="dv">10</span>)</span>
+<span id="cb8-9"><a href="arma.html#cb8-9" tabindex="-1"></a>sim2 <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ma=</span> theta), <span class="at">n =</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">3</span>)</span>
+<span id="cb8-10"><a href="arma.html#cb8-10" tabindex="-1"></a>sim3 <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ma=</span> theta), <span class="at">n =</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">5</span>)</span>
+<span id="cb8-11"><a href="arma.html#cb8-11" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="arma.html#cb8-12" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="arma.html#cb8-13" tabindex="-1"></a>simlist <span class="ot">=</span> <span class="fu">list</span>(sim1, sim2, sim3)</span>
+<span id="cb8-14"><a href="arma.html#cb8-14" tabindex="-1"></a>acf_sample <span class="ot">=</span> <span class="fu">lapply</span>(simlist, <span class="cf">function</span>(x) <span class="fu">abs</span> ( (<span class="fu">acf</span>(x, <span class="at">plot =</span> F))<span class="sc">$</span>acf[<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>] <span class="sc">-</span> acf_theoretical ) )</span>
+<span id="cb8-15"><a href="arma.html#cb8-15" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="arma.html#cb8-16" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">y =</span> acf_sample[[<span class="dv">1</span>]], <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, </span>
+<span id="cb8-17"><a href="arma.html#cb8-17" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">ylab =</span> <span class="st">&quot;Empirical-Theoretical ACF&quot;</span>, <span class="at">main =</span> <span class="st">&quot;MA3&quot;</span>,</span>
+<span id="cb8-18"><a href="arma.html#cb8-18" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;lags&quot;</span>,</span>
+<span id="cb8-19"><a href="arma.html#cb8-19" tabindex="-1"></a>     <span class="at">sub =</span> <span class="st">&quot;Small sample in red&quot;</span>)</span>
+<span id="cb8-20"><a href="arma.html#cb8-20" tabindex="-1"></a><span class="fu">lines</span>(acf_sample[[<span class="dv">2</span>]], <span class="at">col =</span> <span class="st">&quot;green&quot;</span>)</span>
+<span id="cb8-21"><a href="arma.html#cb8-21" tabindex="-1"></a><span class="fu">lines</span>(acf_sample[[<span class="dv">3</span>]], <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="series_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>From page 96, for <span class="math inline">\(1 \leq h \leq q\)</span></p>
+<p><span class="math display">\[\begin{align}
+\rho(h) = \frac{\sigma^2_w \sum_{j=0}^{q-h} \theta_j \theta_{j+h}}{1+\theta_1^2 + \ldots + \theta_q^2},
+\end{align}\]</span></p>
+<p>and <span class="math inline">\(\rho(h) = 0\)</span> for <span class="math inline">\(h &gt; q\)</span>.</p>
+<ol start="2" style="list-style-type: decimal">
 <li><p>For an AR(1), derive an expression for <span class="math inline">\(\phi_{22}\)</span> (the lag 2 partial ACF). Follow the steps in <a href="arma.html#ar1-pacf">AR(1) PACF</a>. See also page 100 in the textbook.</p></li>
 <li><p>Using ACF &amp; PACF for model ID. Complete the table with either <em>cuts off after <span class="math inline">\(\ldots\)</span></em> or <em>tails off slowly</em>. Back up the 3 entries you fill in with either math or with empirical data (simulate data from the model type and show the relevant estimate quantities).</p></li>
 </ol>
@@ -513,19 +589,32 @@ x_{T+h} - \tilde{x}_{T+h}  &amp;= \sum_{j=0}^{h-1} \psi_j w_{T+h-j} \\
 <tr class="even">
 <td align="center">MA(<em>q</em>)</td>
 <td align="center">Cuts off after lag <em>q</em></td>
-<td align="center"></td>
+<td align="center">Tails off slowly</td>
 </tr>
 <tr class="odd">
 <td align="center">ARMA(<em>p</em>,<em>q</em>)</td>
-<td align="center"></td>
-<td align="center"></td>
+<td align="center">Tails off slowly</td>
+<td align="center">Tails off slowly</td>
 </tr>
 </tbody>
 </table>
 <ol start="4" style="list-style-type: decimal">
-<li><p>Suppose you aim to estimate <span class="math inline">\(\mathbf{\phi}\)</span> for an AR(2) model in which <span class="math inline">\(\hat{\mathbf{\gamma}} = (2.1,1.5,1.3)\)</span> (i.e., <span class="math inline">\(\hat{\gamma}(0)=2.1)\)</span>. What is the Yule-Walker estimate for <span class="math inline">\(\mathbf{\phi}\)</span> and also for <span class="math inline">\(\sigma\)</span>? See <a href="arma.html#ar-estimation">AR Estimation</a> for details.</p></li>
-<li><p>Using the Egyptian export data from class, compute the 95% interval for the one period and 2 period ahead forecasts. Use the <span class="math inline">\(\psi\)</span> representation from <a href="arma.html#forecast-errors">Forecast Errors</a>. You can find the <span class="math inline">\(\phi\)</span> values using <code>ARMAtoMA</code>. Validate your answers using <code>forecast::forecast</code>.</p></li>
+<li>Suppose you aim to estimate <span class="math inline">\(\mathbf{\phi}\)</span> for an AR(2) model in which <span class="math inline">\(\hat{\mathbf{\gamma}} = (2.1,1.5,1.3)\)</span> (i.e., <span class="math inline">\(\hat{\gamma}(0)=2.1)\)</span>. What is the Yule-Walker estimate for <span class="math inline">\(\mathbf{\phi}\)</span> and also for <span class="math inline">\(\sigma\)</span>? See <a href="arma.html#ar-estimation">AR Estimation</a> for details.</li>
 </ol>
+<p><span class="math display">\[
+\left[ \begin{array}{c} 1.5 \\ 1.3 \end{array} \right] = \begin{pmatrix} 2.1 &amp; 1.5 \\ 1.5 &amp; 2.1 \end{pmatrix} \times \left[ \begin{array}{c} \phi_1 \\ \phi_2 \end{array} \right]
+\]</span></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="arma.html#cb9-1" tabindex="-1"></a>Gamma_mat <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">2.1</span>,<span class="fl">1.5</span>,<span class="fl">1.5</span>,<span class="fl">2.1</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb9-2"><a href="arma.html#cb9-2" tabindex="-1"></a>phi_hat <span class="ot">=</span> <span class="fu">solve</span>(Gamma_mat) <span class="sc">%*%</span> <span class="fu">c</span>(<span class="fl">1.5</span>, <span class="fl">1.3</span>) <span class="co"># 0.556, 0.222</span></span>
+<span id="cb9-3"><a href="arma.html#cb9-3" tabindex="-1"></a>sigma_hat <span class="ot">=</span> <span class="fl">2.1</span> <span class="sc">-</span> <span class="fu">sum</span>(phi_hat <span class="sc">*</span> <span class="fu">c</span>(<span class="fl">1.5</span>, <span class="fl">1.3</span>)) <span class="co"># 0.98</span></span></code></pre></div>
+<ol start="5" style="list-style-type: decimal">
+<li>Using the Egyptian export data from class, compute the 95% interval for the one period and 2 period ahead forecasts. Use the <span class="math inline">\(\psi\)</span> representation from <a href="arma.html#forecast-errors">Forecast Errors</a>. You can find the <span class="math inline">\(\phi\)</span> values using <code>ARMAtoMA</code>. Validate your answers using <code>forecast::forecast</code>.</li>
+</ol>
+<p><span class="math display">\[\begin{align}
+\hat{x}_{T+h} \pm 1.96 \sqrt{ \hat{\sigma}^2_w \sum_{j=0}^{h-1} \psi_j^2 }
+\end{align}\]</span></p>
+<pre><code>## [1] 12.44787 23.56703</code></pre>
+<pre><code>## [1] 12.23114 27.85260</code></pre>
 
 </div>
 </div>
@@ -534,8 +623,8 @@ x_{T+h} - \tilde{x}_{T+h}  &amp;= \sum_{j=0}^{h-1} \psi_j w_{T+h-j} \\
           </div>
         </div>
       </div>
-<a href="exploratory-analysis-of-time-series-data.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="exploratory-analysis-of-time-series-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="arima.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

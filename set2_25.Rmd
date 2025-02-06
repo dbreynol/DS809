@@ -270,7 +270,7 @@ $$
 
 ### Autocorrelation
 
-For the MA(q) model, the autocorrelation function cuts off for $h >q$. That is,
+For the MA(q) model, the autocovariance function cuts off for $h >q$. That is,
 
 \begin{align}
 \gamma(h) &= \sigma^2 \sum_{j=0}^{q-h} \theta_j \theta_{j+h}~\text{for }h=0,\ldots,q \\
@@ -505,6 +505,61 @@ Or, use <code>forecast(arma_fit, h = 2)</code>
 
 1. Simulate data from the MA(1) model: $x_t = w_t+\theta_1w_{t-1}$ in which $\theta = (0.7)$. For sample sizes $n=10,10^3,10^5$, plot the difference between the theoretical autocorrelation and the observed (sample) autocorrelation for lags 1 through 5. What do you observe? Do the same thing for an MA(3) model. Include which values you use for $\theta_1, \theta_2, \theta_3$. See page 96 of the textbook for the theoretical AFC function for the MA(3) model. 
 
+```{r echo=TRUE}
+set.seed(1)
+
+# MA1
+theta = 0.7
+sim1 = arima.sim(model = list(ma=c(theta)), n = 10)
+sim2 = arima.sim(model = list(ma=c(theta)), n = 10^3)
+sim3 = arima.sim(model = list(ma=c(theta)), n = 10^5)
+
+acf_theoretical = c( theta/ (1 + theta^2) , rep(0,4))
+
+simlist = list(sim1, sim2, sim3)
+acf_sample = lapply(simlist, function(x) abs ( (acf(x, plot = F))$acf[2:6] - acf_theoretical ) )
+
+plot(x = 1:5, y = acf_sample[[1]], type = "l", col = "red", 
+     ylim = c(0,1), ylab = "Empirical-Theoretical ACF", main = "MA1",
+     sub = "Small sample in red",
+     xlab = "lags")
+lines(acf_sample[[2]], col = "green")
+lines(acf_sample[[3]], col = "blue")
+```
+
+```{r echo=TRUE}
+# MA3
+theta = c(0.8, 0.7, 0.4)
+den = 1 + sum(theta^2)
+acf_theoretical = c( (theta[1] + theta[2] * theta[2] + theta[2] * theta[3])/den,
+              (theta[2] + theta[1] * theta[3])/den,
+              theta[3]/den, rep(0,2))
+
+sim1 = arima.sim(model = list(ma= theta), n = 10)
+sim2 = arima.sim(model = list(ma= theta), n = 10^3)
+sim3 = arima.sim(model = list(ma= theta), n = 10^5)
+
+
+simlist = list(sim1, sim2, sim3)
+acf_sample = lapply(simlist, function(x) abs ( (acf(x, plot = F))$acf[2:6] - acf_theoretical ) )
+
+plot(x = 1:5, y = acf_sample[[1]], type = "l", col = "red", 
+     ylim = c(0,1), ylab = "Empirical-Theoretical ACF", main = "MA3",
+     xlab = "lags",
+     sub = "Small sample in red")
+lines(acf_sample[[2]], col = "green")
+lines(acf_sample[[3]], col = "blue")
+```
+
+From page 96, for $1 \leq h \leq q$ 
+
+\begin{align}
+\rho(h) = \frac{\sigma^2_w \sum_{j=0}^{q-h} \theta_j \theta_{j+h}}{1+\theta_1^2 + \ldots + \theta_q^2},
+\end{align}
+
+and $\rho(h) = 0$ for $h > q$.
+
+
 2. For an AR(1), derive an expression for $\phi_{22}$ (the lag 2 partial ACF). Follow the steps in [AR(1) PACF]. See also page 100 in the textbook. 
 
 3. Using ACF & PACF for model ID. Complete the table with either _cuts off after $\ldots$_ or _tails off slowly_. Back up the 3 entries you fill in with either math or with empirical data (simulate data from the model type and show the relevant estimate quantities).
@@ -512,10 +567,41 @@ Or, use <code>forecast(arma_fit, h = 2)</code>
 | Model   | ACF               | PACF                    |
 |:-------:|:-----------------:|:-----------------------:|
 | AR(_p_) | Tails off slowly  | Cuts off after lag _p_  |
-| MA(_q_) | Cuts off after lag _q_  |   |
-| ARMA(_p_,_q_) |   |   |
+| MA(_q_) | Cuts off after lag _q_  | Tails off slowly  |
+| ARMA(_p_,_q_) | Tails off slowly  |  Tails off slowly |
 
 4. Suppose you aim to estimate $\mathbf{\phi}$ for an AR(2) model in which $\hat{\mathbf{\gamma}} = (2.1,1.5,1.3)$ (i.e., $\hat{\gamma}(0)=2.1)$. What is the Yule-Walker estimate for $\mathbf{\phi}$ and also for $\sigma$? See [AR Estimation] for details.
 
+$$
+\left[ \begin{array}{c} 1.5 \\ 1.3 \end{array} \right] = \begin{pmatrix} 2.1 & 1.5 \\ 1.5 & 2.1 \end{pmatrix} \times \left[ \begin{array}{c} \phi_1 \\ \phi_2 \end{array} \right]
+$$
+
+```{r echo=TRUE}
+Gamma_mat = matrix(c(2.1,1.5,1.5,2.1), nrow = 2)
+phi_hat = solve(Gamma_mat) %*% c(1.5, 1.3) # 0.556, 0.222
+sigma_hat = 2.1 - sum(phi_hat * c(1.5, 1.3)) # 0.98
+```
+
+
 5. Using the Egyptian export data from class, compute the 95\% interval for the one period and 2 period ahead forecasts. Use the $\psi$ representation from [Forecast Errors]. You can find the $\phi$ values using <code>ARMAtoMA</code>. Validate your answers using <code>forecast::forecast</code>.
+
+
+\begin{align}
+\hat{x}_{T+h} \pm 1.96 \sqrt{ \hat{\sigma}^2_w \sum_{j=0}^{h-1} \psi_j^2 }
+\end{align}
+
+```{r}
+library(fpp3)
+exp = global_economy %>% filter(Code == "EGY") %>% select(Exports)
+
+m0 = auto.arima(exp$Exports)
+psi = ARMAtoMA(ar = coefficients(m0)[1:2], ma = coefficients(m0)[3], lag.max = 1 ) 
+
+# forecast(m0, h = 2) # 12.4 - 18.0 - 23.6
+c( 18.00745 - 1.96 * sqrt( m0$sigma2 ) , 18.00745 + 1.96 * sqrt( m0$sigma2 ) ) # h = 1
+c( 20.04187 - 1.96 * sqrt( m0$sigma2 * (1+psi^2)  ) , 20.04187 + 1.96 * sqrt( m0$sigma2 * (1+psi^2)  ) ) # h = 2
+
+```
+
+
 

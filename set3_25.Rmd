@@ -24,13 +24,13 @@ The visual test is simply looking at a plot of the data versus time.  Look for:
 
 One of the most common forms of non-stationarity that is tested for is that the process has a random walk component, such as $x_t = x_{t-1} + e_t$.  A random walk is called a 'unit root' process in the time series literature since it occurs when one of the roots of the AR polynomial is 1. A test for an underlying random walk is called a 'unit root' test.
 
-### Dickey Fuller (DF)
+### Dickey Fuller Test (DF)
 
 The DF tests for a unit root in the context of an AR(1) model, which can be written,
 
 \begin{align}
 x_t &= \phi_1 x_{t-1} + w_t \\
-\nabla x_t &= (1-\phi_1) x_{t-1} + w_t \\
+\nabla x_t &= (\phi_1 - 1) x_{t-1} + w_t \\
 &= \delta x_{t-1} + w_t
 \end{align}
 
@@ -41,12 +41,12 @@ H_0&: \delta = 0 \\
 H_A&: \delta \neq 0
 \end{align}
 
-The test statistic has a specific distribution simply known as the Dickey–Fuller table, which is used to find the p-value. We want to reject the null hypothesis of non-stationarity.
+The test statistic has a specific distribution simply known as the Dickey–Fuller table, which is used to find the p-value. We want to reject the null hypothesis (small p-value) of non-stationarity.
 
 
-### Augmented DF
+### Augmented DF Test
 
-The Augmented Dickey-Fuller test looks for evidence that an AR(p) process has a unit root (an underlying random walk process).  
+The Augmented Dickey-Fuller Test (ADF) looks for evidence that an AR(p) process has a unit root (an underlying random walk process).  
 
 The **null hypothesis** is that the time series has a unit root, that is, it has a random walk component.  
 
@@ -61,7 +61,7 @@ The first difference, $\nabla$, of the general AR(p) model can be re-written as,
 where
 
 \begin{align}
-\phi_1^\prime &= \sum_{i=1}^{p-1} \phi_{i+1}^\prime \nabla x_{t-1} \\
+\phi_1^\prime &= \sum_{j=1}^{p} \phi_{j}-1 \\
 \phi_j^\prime &= \sum_{j=1}^{p} \phi_{j}~\text{ for} j \geq 2
 \end{align}
 
@@ -187,6 +187,23 @@ acf( residuals(m_auto), main = "Residuals ACF" )
 ```
 What do we aim to see in these plots? Do we?
 
+We could alternatively use a hypothesis test (Box-Pierce test) in which:
+
+\begin{align}
+H_0 &: \rho_1 = \rho_2 = \ldots = \rho_k = 0 \\
+H_A &: \text{at least one autocorrelation is different from 0}
+\end{align}
+
+The test statistic (the Ljung-Box Q-Statistic) for this test:
+
+\begin{align}
+Q = n(n+2) \sum_{i=1}^k \frac{\hat{\rho}_i^2}{(n-k)}
+\end{align}
+
+follows a chi-squared distribution with $k$ degrees of freedom under the null hypothesis.
+
+
+
 ### Forecasting
 
 #### Point Estimates
@@ -281,14 +298,17 @@ Consider the SARIMA model, ARIMA$(0,0,0)(1,0,0)_{12}$
 
 ### Data Example
 
-To see how this looks with real data, we will try to forecast monthly corticosteroid drug sales in Australia. These are known as H02 drugs under the Anatomical Therapeutic Chemical classification scheme. Their primary application is the treatment of allergic reactions, and are therefore highly seasonal.
+To see how this looks with real data, we will try to forecast monthly corticosteroid drug sales in Australia. These are known as H02 drugs under the Anatomical Therapeutic Chemical classification scheme. Their primary application is the treatment of allergic reactions, and are therefore highly seasonal. The dataset is <code>tsibbledata::PBS</code>.
 
-```{r fig.height = 2, fig.width = 5, fig.align = "center", warning=FALSE}
+```{r echo=TRUE}
 h02 <- PBS  %>% 
   filter(ATC2 == "H02") %>% 
   summarise(Cost = sum(Cost)/1e6) %>% 
   mutate(lcost = log(Cost)) %>% 
   mutate(dlcost = c( rep(0,12),diff(lcost, 12)))
+```
+
+```{r fig.height = 2, fig.width = 5, fig.align = "center", warning=FALSE}
 
 ggplot(h02, aes(Month, lcost)) + geom_line() + theme_minimal() + ggtitle("AUS Corticosteroid Drug Sales")
 ```
@@ -334,14 +354,14 @@ plot( forecast(m0, h=12) )
 
 1. Consider `fpp3::aus_airpassengers`, the total number of passengers (in millions) from Australian air carriers for the period 1970-2011.
 
-- Use `forecast::auto.arima()` to find an appropriate ARIMA model. What model was selected? Write the model in terms of the backshift operator.
-- Check that the residuals look like white noise.
-- Plot forecasts for the next 10 periods.
+- Plot the data. Are the data stationary? If not, find an appropriate transformation which yields stationary data.
+- Plot the ACF and PACF of the transformed time series. What are one or two candidate models based on these plots?
+- Use `forecast::auto.arima()` to find an optimized ARIMA model. Use the original (i.e., nonstationary) time series as the input. What model was selected? Write the fit model equation.
+- Check that the residuals look like white noise. <code>forecast::checkresiduals</code>
+- Plot forecasts for the next 10 periods. <code>forecast::forecast</code>
 - Plot forecasts from an ARIMA(0,1,0) model with drift and compare these to the automatically selected model.
 
-2. Simulate data from both models in the [Unpacking Notation] section and validate each of the properties we discussed.
-
-4. Choose an employment type from `fpp3::us_employment`, the total employment in different industries in the United States.
+2. Choose an employment type from `fpp3::us_employment`, the total employment in different industries in the United States.
 
 - Are the data stationary? If not, find an appropriate transformation which yields stationary data.
 - Examine ACF and PACF plots of the transformed data (if this was necessary to attain stationarity) to identify a couple of ARIMA models that might be useful in describing the time series. Which of your models is the best according to their AIC values?
@@ -349,23 +369,26 @@ plot( forecast(m0, h=12) )
 - Forecast the next 3 years of data. Get the latest figures from https://fred.stlouisfed.org/categories/11 to check the accuracy of your forecasts.
 - Eventually, the prediction intervals are so wide that the forecasts are not particularly useful. How many years of forecasts do you think are sufficiently accurate to be usable?
 
-```{r echo=F, eval=FALSE}
+
+```{r echo=FALSE, eval=FALSE }
+2. Simulate data from both models in the [Unpacking Notation] section and validate each of the properties we discussed.
+
 # find the variable using the search on this site:
 # https://fred.stlouisfed.org/
 pr = getSymbols('MORTGAGE30US',src='FRED', warnings = F) # 30-Year Fixed Rate Mortgage Average
 home = getSymbols('CSUSHPINSA', src = 'FRED') # S&P/Case-Shiller U.S. National Home Price Index
 gdp = getSymbols('A939RX0Q048SBEA', src = 'FRED')
-```
+
 
 3. Fit a model to the h02 data using auto.arima. What model is selected? How does the AIC compare with the .... mode. We will compare some of the models fitted so far using a test set consisting of the last two years of data. Thus, we fit the models using data from July 1991 to June 2006, and forecast the script sales for July 2006 – June 2008. 
 
 Another way that a time series may violate stationarity is with seasonality. For example, the Leisure and Hospitality sector of the economy spikes in the summer and dips in the winter months. We will look at employment (in thousands) in this sector since 2010:
 
-```{r echo=TRUE}
+#```{r echo=TRUE}
 leisure = fpp3::us_employment %>% 
   filter(Title == "Leisure and Hospitality", year(Month) >= 2010) %>% 
   select(Month, Employed)
-```
+#```
 
 1. Make a plot of this time series and comment on the trend and the seasonality.
 
@@ -374,3 +397,10 @@ leisure = fpp3::us_employment %>%
 3. Use `auto.arima` to fit an ARIMA model to the data. You can use either the original time series or the transformed time series. In either case, you may find it helpful to coerce your input time series into a time series object with frequency 12. This will ensure that the function explores seasonal parameters and transformations in the fitting process. What model was selected?
 
 4. Use `forecast` to forecast the next twelve months of data. Plot the forecast along with the orginal time series. Does the model capture the trend and seasonality?
+
+5. Write a function that takes a time series vector as input and returns the Ljung-Box Q-Statistic for $k=2$, along with the p-value for the hypothesis test in [White Noise].
+
+```
+
+
+

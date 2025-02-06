@@ -111,7 +111,6 @@ llm_log_likelihood <- function(params, y) {
 
 Next, we will simulate some data from this model and estimate parameters.
 
-
 ```{r}
 
 # Example usage
