@@ -613,7 +613,16 @@ x_{T+h} - \tilde{x}_{T+h}  &amp;= \sum_{j=0}^{h-1} \psi_j w_{T+h-j} \\
 <p><span class="math display">\[\begin{align}
 \hat{x}_{T+h} \pm 1.96 \sqrt{ \hat{\sigma}^2_w \sum_{j=0}^{h-1} \psi_j^2 }
 \end{align}\]</span></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="arma.html#cb10-1" tabindex="-1"></a><span class="fu">library</span>(fpp3)</span>
+<span id="cb10-2"><a href="arma.html#cb10-2" tabindex="-1"></a>exp <span class="ot">=</span> global_economy <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Code <span class="sc">==</span> <span class="st">&quot;EGY&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(Exports)</span>
+<span id="cb10-3"><a href="arma.html#cb10-3" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="arma.html#cb10-4" tabindex="-1"></a>m0 <span class="ot">=</span> <span class="fu">auto.arima</span>(exp<span class="sc">$</span>Exports)</span>
+<span id="cb10-5"><a href="arma.html#cb10-5" tabindex="-1"></a>psi <span class="ot">=</span> <span class="fu">ARMAtoMA</span>(<span class="at">ar =</span> <span class="fu">coefficients</span>(m0)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">ma =</span> <span class="fu">coefficients</span>(m0)[<span class="dv">3</span>], <span class="at">lag.max =</span> <span class="dv">1</span> ) </span>
+<span id="cb10-6"><a href="arma.html#cb10-6" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="arma.html#cb10-7" tabindex="-1"></a><span class="co"># forecast(m0, h = 2) # 12.4 - 18.0 - 23.6</span></span>
+<span id="cb10-8"><a href="arma.html#cb10-8" tabindex="-1"></a><span class="fu">c</span>( <span class="fl">18.00745</span> <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sqrt</span>( m0<span class="sc">$</span>sigma2 ) , <span class="fl">18.00745</span> <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sqrt</span>( m0<span class="sc">$</span>sigma2 ) ) <span class="co"># h = 1</span></span></code></pre></div>
 <pre><code>## [1] 12.44787 23.56703</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="arma.html#cb12-1" tabindex="-1"></a><span class="fu">c</span>( <span class="fl">20.04187</span> <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sqrt</span>( m0<span class="sc">$</span>sigma2 <span class="sc">*</span> (<span class="dv">1</span><span class="sc">+</span>psi<span class="sc">^</span><span class="dv">2</span>)  ) , <span class="fl">20.04187</span> <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sqrt</span>( m0<span class="sc">$</span>sigma2 <span class="sc">*</span> (<span class="dv">1</span><span class="sc">+</span>psi<span class="sc">^</span><span class="dv">2</span>)  ) ) <span class="co"># h = 2</span></span></code></pre></div>
 <pre><code>## [1] 12.23114 27.85260</code></pre>
 
 </div>
