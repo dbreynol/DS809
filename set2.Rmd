@@ -26,8 +26,8 @@ Since we don't have data prior to $y_1$, we denote $\hat{y}_{1 | 0} = l_0$. Ther
 Let's take a look at how this method depends on the parameters. We will use Albanian export data from `tsibbledata`, which you can grab here:
 
 ```{r echo=TRUE}
-alb = global_economy %>% filter(Country == "Albania", Year > 1990) 
-y = alb$Exports
+alg = global_economy %>% filter(Country == "Algeria", Year > 1990) 
+y = alg$Exports
 ```
 
 ```{r}
@@ -40,9 +40,9 @@ es = function(par, ts) { # parameter vector: first parameter is alpha/ second is
 }
 
 #plot_df = data.frame(ys = c(y, es(y, .4, 0), es(y, .1, 1)), alpha = c(rep(0,n), rep(.4,n), rep(.1,n)))
-plot(x = 1991:2017, y, type = "l", xlab = "year", ylab = "exports", main = "Albanian Exports (black); alpha = .9 (red); alpha = .5 (blue)")
+plot(x = 1991:2017, y, type = "l", xlab = "year", ylab = "exports", main = "Albanian Exports (black); alpha = .9 (red); alpha = .1 (blue)")
 lines(x = 1991:2017, y = es(c(.9, y[1]), y), col = "red")
-lines(x = 1991:2017, y = es(c(.5, y[1]), y), col = "blue")
+lines(x = 1991:2017, y = es(c(.1, y[1]), y), col = "blue")
 ```
 
 In the plot above, of Albanian exports between 1991 and 2017, we display two smoothed time series (one for $\alpha = 0.5$ and one where $\alpha = 0.9$). For any $\alpha$ between 0 and 1, the weights attached to the observations decrease exponentially as we go back in time, hence the name “exponential smoothing”. If $\alpha$ is small (i.e., close to 0), more weight is given to observations from the more distant past. If $\alpha$ is large (i.e., close to 1), more weight is given to the more recent observations.

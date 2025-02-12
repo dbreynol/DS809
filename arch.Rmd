@@ -1,0 +1,54 @@
+# Volatility Models
+
+## ARCH(1)
+
+So far, we have focused our attention on models for stationary time series data. In these models, the conditional mean changes over time while the conditional variance stays constant. For example, for the AR(1) model,
+
+\begin{align}
+E[x_t | x_{t-1}] &= \phi_1 x_{t-1} \\
+Var[x_t | x_{t-1}] &= \sigma^2_w.
+\end{align}
+
+What if the conditional variance also changes over time? That is a good case to use an ARCH model. In an ARCH model, used often in financial applications, our response variable is typically the return at time $t$:
+
+\begin{align}
+r_t = \frac{x_t - x_{t-1}}{x_{t-1}}
+\end{align}
+
+Or, alternatively, the response may be $r_t = \nabla log(x_t)$. the ARCH(1) model is:
+
+\begin{align}
+r_t &= \sigma_t w_t \\
+\sigma^2_t &= \omega + \alpha_1 r_{t-1}^2,
+\end{align}
+
+where $w_t \sim N(0,1)$.
+
+### Statistical Properties
+
+We can show that the ARCH(1) model has the following properties:
+
+\begin{align}
+E(r_t) &= 0 \\
+Var(r_t | r_{t-1}) =  \omega + \alpha_1 r_{t-1}^2
+\end{align}
+
+So, the conditional variance changes depending on the prior period return. This captures the characteristic that big return (loss) days tend to be followed by bit return (loss) days.
+
+Furthermore, we can subtract the second equation from the square of the first to obtain,
+
+\begin{align}
+r_t^2 &= \omega + \alpha_1 r_{t-1}^2 + v_t. \\
+\end{align}
+
+In this equation, $v_t = \sigma_t^2 (w_t^2-1)$. Since $w_t^2$ is the square of a N(0,1) random variable $w_t^2-1$ is a shifted (mean 0) $\chi^2_1$ random variable. 
+
+What model does this look like?
+
+Using this model for $r_t^2$, we can explore the unconditional variance of $r_t$ since $Var(r_t)= E(r_t^2) = \alpha_0/(1-\alpha_0) $. And, furthermore, $E(r_t r_{t-h}) = 0$ for all $h>1$. 
+
+What model does $r_t$ follow then?
+
+
+
+

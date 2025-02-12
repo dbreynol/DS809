@@ -94,7 +94,7 @@ Var(x_t) &= \frac{\sigma^2_w}{1-\phi_1^2} \\
 
 For this to work, $|\phi_1| < 1$. 
 
-### Stationarity
+### AR Stationarity
 
 We seek a means for identifying whether our AR(_p_) models are also stationary. We can write out an AR(_p_) model using the backshift operator:
 

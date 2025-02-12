@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>DS809</title>
+  <title>Set 5 Review/ Mild Extensions | DS809</title>
   <meta name="description" content="Course materials for DS809, Spring 2024." />
   <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="DS809" />
+  <meta property="og:title" content="Set 5 Review/ Mild Extensions | DS809" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Course materials for DS809, Spring 2024." />
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="DS809" />
+  <meta name="twitter:title" content="Set 5 Review/ Mild Extensions | DS809" />
   
   <meta name="twitter:description" content="Course materials for DS809, Spring 2024." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
+<link rel="prev" href="arima.html"/>
 
-<link rel="next" href="exploratory-analysis-of-time-series-data.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -258,23 +258,79 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">DS809</h1>
-<p class="author"><em>David Reynolds</em></p>
-<p class="date"><em>2025-02-12</em></p>
+<div id="review-mild-extensions" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Set 5</span> Review/ Mild Extensions<a href="review-mild-extensions.html#review-mild-extensions" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="linear-filtering" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> <em>Linear Filtering</em><a href="review-mild-extensions.html#linear-filtering" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We saw a case of a linear filter with the <em>moving average</em> in Lab 1.</p>
+<p>A linear filter is a mathematical operation that transforms a time series into a new time series by applying a weighted sum of past and present values of the original series.</p>
+<p>Another popular linear filter, generally appropriate for a time series with no clear seasonality or trend, is with <em>exponential smoothing</em>. Like the moving average, this method averages over recent observations but differs in that it assigns relatively more weight to observations that are relatively closer. This idea can be expressed as,
+<span class="math display">\[\begin{align}
+\hat{y}_{t+1 | t} = \alpha y_t + (1-\alpha) \hat{y}_{t | t-1},
+\end{align}\]</span>
+where <span class="math inline">\(\hat{y}_{t+1 | t}\)</span> can be interpreted as the smoothed value of <span class="math inline">\(y_{t+1}\)</span> given data up to time <span class="math inline">\(t\)</span>. So, for the first few smoothed values, we have:
+<span class="math display">\[\begin{align}
+\hat{y}_{1|0} &amp;= l_0 \\
+\hat{y}_{2|1} &amp;= \alpha y_1 + (1-\alpha) l_0 \\
+\hat{y}_{3|2} &amp;= \alpha y_2 + (1-\alpha) \hat{y}_{2|1} \\
+&amp;= \alpha y_2 + (1-\alpha) \alpha y_1 + (1-\alpha)^2 l_0
+\end{align}\]</span>
+Since we don’t have data prior to <span class="math inline">\(y_1\)</span>, we denote <span class="math inline">\(\hat{y}_{1 | 0} = l_0\)</span>. Therefore, this model depends on two parameters, <span class="math inline">\((l_0, \alpha)\)</span>. If we continue with the sequence above, each predicted value <span class="math inline">\(\hat{y_t}\)</span> can be expressed,
+<span class="math display">\[\begin{align}
+\hat{y}_{t+1 | t} = (1-\alpha) ^ t l_0  + \sum_{j=0}^{t-1} \alpha (1-\alpha) ^ j y_{t-j}. \\
+\end{align}\]</span>
+Let’s take a look at how this method depends on the parameters. We will use Algerian export data from <code>tsibbledata</code>, which you can grab here:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="review-mild-extensions.html#cb41-1" tabindex="-1"></a>alg <span class="ot">=</span> global_economy <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Country <span class="sc">==</span> <span class="st">&quot;Algeria&quot;</span>, Year <span class="sc">&gt;</span> <span class="dv">1990</span>) </span>
+<span id="cb41-2"><a href="review-mild-extensions.html#cb41-2" tabindex="-1"></a>y <span class="ot">=</span> alg<span class="sc">$</span>Exports</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="review-mild-extensions.html#cb42-1" tabindex="-1"></a>es <span class="ot">=</span> <span class="cf">function</span>(par, ts) { <span class="co"># parameter vector: first parameter is alpha/ second is l0</span></span>
+<span id="cb42-2"><a href="review-mild-extensions.html#cb42-2" tabindex="-1"></a>  yt <span class="ot">=</span> <span class="fu">c</span>(par[<span class="dv">2</span>])</span>
+<span id="cb42-3"><a href="review-mild-extensions.html#cb42-3" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="fu">length</span>(ts)) {</span>
+<span id="cb42-4"><a href="review-mild-extensions.html#cb42-4" tabindex="-1"></a>    yt[j] <span class="ot">=</span> par[<span class="dv">1</span>] <span class="sc">*</span> ts[j<span class="dv">-1</span>] <span class="sc">+</span> (<span class="dv">1</span><span class="sc">-</span>par[<span class="dv">1</span>]) <span class="sc">*</span> yt[j<span class="dv">-1</span>]</span>
+<span id="cb42-5"><a href="review-mild-extensions.html#cb42-5" tabindex="-1"></a>  }</span>
+<span id="cb42-6"><a href="review-mild-extensions.html#cb42-6" tabindex="-1"></a>  <span class="fu">return</span>(yt)</span>
+<span id="cb42-7"><a href="review-mild-extensions.html#cb42-7" tabindex="-1"></a>}</span></code></pre></div>
+<p>Below, we compute the exponentially smoothed series using <code>es(c(0.9, y[1]), y)</code> as well as <span class="math inline">\(\alpha = 0.1\)</span>.</p>
+<p><img src="series_files/figure-html/unnamed-chunk-53-1.png" width="672" /></p>
+<p>For any <span class="math inline">\(\alpha\)</span> between 0 and 1, the weights attached to the observations decrease exponentially as we go back in time, hence the name “exponential smoothing”. If <span class="math inline">\(\alpha\)</span> is small (i.e., close to 0), more weight is given to observations from the more distant past. If <span class="math inline">\(\alpha\)</span> is large (i.e., close to 1), more weight is given to the more recent observations.</p>
+<p>The <span class="math inline">\((\alpha, l_0)\)</span> parameters can be estimated by minimizing the SSE:</p>
+<p><span class="math display">\[\begin{align}
+\text{SSE} = \sum_{i=i}^T \bigg(y_t - \hat{y}_{t | t-1}   \bigg)^2.
+\end{align}\]</span></p>
+<p>Change the <code>es</code> function we developed in [Exponential Smoothing] to return the SSE, rather than <code>yt</code>, the smoothed time series. Now, use the <code>optim</code> function to find the values of <span class="math inline">\((\alpha, l_0)\)</span> that minimize SSE. Plot the exponentially smoothed time series of the Albanian export data using the optimized values for <span class="math inline">\((\alpha, l_0)\)</span>. What are these values?</p>
 </div>
-<div id="course-info" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">Set 1</span> Course Info<a href="index.html#course-info" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>The course is designed to introduce techniques needed in the estimation/analysis of temporal data (time series) in various business disciplines. The first half of the course focuses on traditional stationary time series models. Some examples of business application areas include demand forecasting, financial asset return modeling, stochastic volatility modeling of financial indexes and securities, mortgage default risk assessment, call center arrival modeling, online webpage click-rate modeling, and market share modeling. The second half of the course focuses on state space modelling approaches to time series data and Bayesian techniques for time series data.</p>
+<div id="ar-parameter-constraints" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> <em>AR Parameter Constraints</em><a href="review-mild-extensions.html#ar-parameter-constraints" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This relates to the <a href="arma.html#ar-stationarity">AR Stationarity</a> section from last week’s material. Prove that the following AR process either is or is not stationary:</p>
+<p><span class="math display">\[x_t = -0.2 x_{t-1} + 0.4 x_{t-2} +  w_t\]</span></p>
+</div>
+<div id="ma-parameter-constraints" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> <em>MA Parameter Constraints</em><a href="review-mild-extensions.html#ma-parameter-constraints" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>MA models do not have issues with stationarity (since they are finite sums of white noise), but there can be issues with parameter identifiability. That is, there can be multiple ways to write a single MA model. This leads to the parameter constraint on the <span class="math inline">\(\theta\)</span> parameters in <a href="arma.html#arma-models">ARMA Models</a>. To show concretely how this can be a problem, show that the following two MA(1) models are the same (that is, they have the same mean function, variance function, and autocorrelation function).</p>
+<p><span class="math display">\[
+x_t = w_t + \frac{1}{5} w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,25) \\
+\Updownarrow \\
+x_t = w_t + 5 w_{t-1} ~\text{with} ~w_t \sim ~\text{N}(0,1)
+\]</span></p>
+</div>
+<div id="sarima-models" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> <em>SARIMA models</em><a href="review-mild-extensions.html#sarima-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Write out the following SARIMA model equations and describe the theoretical ACF function. (For example, <em>The theoretical ACF tails of slowly at lags <span class="math inline">\(\ldots\)</span></em>). You can use simulations (<code>astsa::sarima.sim</code>) to arrive at your answer (show at least one empirical ACF per model).</p>
+<p>ARIMA<span class="math inline">\((0,0,0)(0,0,1)_{12}\)</span></p>
+<p>ARIMA<span class="math inline">\((1,0,0)(1,0,0)_{12}\)</span></p>
+</div>
+<div id="residuals-check" class="section level2 hasAnchor" number="5.5">
+<h2><span class="header-section-number">5.5</span> <em>Residuals check</em><a href="review-mild-extensions.html#residuals-check" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In <a href="arima.html#check-the-residuals">Check the residuals</a>, you can see the details for the Box-Pierce test. This is a very common way to check that the residuals process resembles white noise. Write a function that takes a time series vector as input and returns the Ljung-Box Q-Statistic for <span class="math inline">\(k=2\)</span>, along with the p-value for the hypothesis test. Then, check your function’s output using <code>Box.test(x, lag = 2)</code>.</p>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
+<a href="arima.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="exploratory-analysis-of-time-series-data.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -305,7 +361,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/dbreynol/DS809/edit/master/index.Rmd",
+"link": "https://github.com/dbreynol/DS809/edit/master/volset.Rmd",
 "text": "Edit"
 },
 "history": {

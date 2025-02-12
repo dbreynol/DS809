@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>DS809</title>
+  <title>Set 6 ARCH(1) | DS809</title>
   <meta name="description" content="Course materials for DS809, Spring 2024." />
   <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="DS809" />
+  <meta property="og:title" content="Set 6 ARCH(1) | DS809" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Course materials for DS809, Spring 2024." />
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="DS809" />
+  <meta name="twitter:title" content="Set 6 ARCH(1) | DS809" />
   
   <meta name="twitter:description" content="Course materials for DS809, Spring 2024." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
+<link rel="prev" href="review-mild-extensions.html"/>
 
-<link rel="next" href="exploratory-analysis-of-time-series-data.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -241,6 +241,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.4" data-path="review-mild-extensions.html"><a href="review-mild-extensions.html#sarima-models"><i class="fa fa-check"></i><b>5.4</b> <em>SARIMA models</em></a></li>
 <li class="chapter" data-level="5.5" data-path="review-mild-extensions.html"><a href="review-mild-extensions.html#residuals-check"><i class="fa fa-check"></i><b>5.5</b> <em>Residuals check</em></a></li>
 </ul></li>
+<li class="chapter" data-level="6" data-path="arch1.html"><a href="arch1.html"><i class="fa fa-check"></i><b>6</b> ARCH(1)</a></li>
 </ul>
 
       </nav>
@@ -258,14 +259,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">DS809</h1>
-<p class="author"><em>David Reynolds</em></p>
-<p class="date"><em>2025-02-12</em></p>
-</div>
-<div id="course-info" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">Set 1</span> Course Info<a href="index.html#course-info" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>The course is designed to introduce techniques needed in the estimation/analysis of temporal data (time series) in various business disciplines. The first half of the course focuses on traditional stationary time series models. Some examples of business application areas include demand forecasting, financial asset return modeling, stochastic volatility modeling of financial indexes and securities, mortgage default risk assessment, call center arrival modeling, online webpage click-rate modeling, and market share modeling. The second half of the course focuses on state space modelling approaches to time series data and Bayesian techniques for time series data.</p>
+<div id="arch1" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Set 6</span> ARCH(1)<a href="arch1.html#arch1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>So far, we have focused our attention on models for stationary time series data. In these models, the conditional mean changes over time while the conditional variance stays constant. For example, for the AR(1) model,</p>
+<p><span class="math display">\[\begin{align}
+E[x_t | x_{t-1}] &amp;= \phi_1 x_{t-1} \\
+Var[x_t | x_{t-1}] &amp;= \sigma^2_w.
+\end{align}\]</span></p>
+<p>What if the conditional variance also changes over time? That is a good case to use an ARCH model. In an ARCH model, our response variable is typically the return at time <span class="math inline">\(t\)</span>:</p>
+<p><span class="math display">\[\begin{align}
+r_t = \frac{x_t - x_{t-1}}{x_{t-1}}
+\end{align}\]</span></p>
 
 </div>
             </section>
@@ -273,8 +277,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
+<a href="review-mild-extensions.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="exploratory-analysis-of-time-series-data.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -305,7 +309,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/dbreynol/DS809/edit/master/index.Rmd",
+"link": "https://github.com/dbreynol/DS809/edit/master/arch.Rmd",
 "text": "Edit"
 },
 "history": {

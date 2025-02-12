@@ -24,7 +24,7 @@ backshift-operator
 the-difference-operator
 autoregressive-ar-models
 ar1-model
-stationarity-1
+ar-stationarity
 autocorrelation-2
 moving-average-ma-models
 examples-of-maq-models
@@ -45,7 +45,7 @@ forecasting
 forecast-errors
 lab-2
 arima
-stationarity-2
+stationarity-1
 visual-test
 unit-root-tests
 dickey-fuller-test-df
@@ -65,3 +65,9 @@ sarima
 unpacking-notation
 data-example
 lab-3
+review-mild-extensions
+linear-filtering
+ar-parameter-constraints
+ma-parameter-constraints
+sarima-models
+residuals-check
