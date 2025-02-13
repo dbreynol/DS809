@@ -30,10 +30,10 @@ We can show that the ARCH(1) model has the following properties:
 
 \begin{align}
 E(r_t) &= 0 \\
-Var(r_t | r_{t-1}) =  \omega + \alpha_1 r_{t-1}^2
+Var(r_t | r_{t-1}) &=  \omega + \alpha_1 r_{t-1}^2.
 \end{align}
 
-So, the conditional variance changes depending on the prior period return. This captures the characteristic that big return (loss) days tend to be followed by bit return (loss) days.
+So, $r_{t}|r_{t-1} \sim N(0,\omega + \alpha_1 r_{t-1}^2)$. The conditional variance changes depending on the prior period return. This captures the characteristic that big return (loss) days tend to be followed by bit return (loss) days.
 
 Furthermore, we can subtract the second equation from the square of the first to obtain,
 
@@ -45,10 +45,25 @@ In this equation, $v_t = \sigma_t^2 (w_t^2-1)$. Since $w_t^2$ is the square of a
 
 What model does this look like?
 
-Using this model for $r_t^2$, we can explore the unconditional variance of $r_t$ since $Var(r_t)= E(r_t^2) = \alpha_0/(1-\alpha_0) $. And, furthermore, $E(r_t r_{t-h}) = 0$ for all $h>1$. 
+Using this model for $r_t^2$, we can explore the unconditional variance of $r_t$ since $Var(r_t)= E(r_t^2) = \alpha_0/(1-\alpha_0)$. And, furthermore, $E(r_t r_{t-h}) = 0$ for all $h>1$. 
 
 What model does $r_t$ follow then?
 
+### Simulation/ Model Fit
 
+Let's simulate data from:
 
+\begin{align}
+r_t &= \sigma_t w_t \\
+\sigma^2_t &= 0.1 + 0.4 r_{t-1}^2,
+\end{align}
+
+And fit the model using <code>fGarch::garchFit</code>.
+
+### Model Fit for BTC
+
+```{r}
+btc = read.csv("https://tinyurl.com/3epw5n4z") %>% 
+  mutate(timestamp = ymd(timestamp))
+```
 

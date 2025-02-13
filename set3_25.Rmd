@@ -369,6 +369,44 @@ plot( forecast(m0, h=12) )
 - Forecast the next 3 years of data. Get the latest figures from https://fred.stlouisfed.org/categories/11 to check the accuracy of your forecasts.
 - Eventually, the prediction intervals are so wide that the forecasts are not particularly useful. How many years of forecasts do you think are sufficiently accurate to be usable?
 
+```{r eval=FALSE}
+leisure = fpp3::us_employment %>% 
+  filter(Title == "Leisure and Hospitality") %>% 
+  mutate(log_emp = log(Employed))
+
+plot(leisure$Employed, type = "l")
+
+ll = log(leisure$Employed)
+lld1 = (diff(ll)) # show ACF
+lld1d12 = diff(lld1, 12) # good
+# AR3 / MAS1
+ll = ts( leisure$log_emp, start = c(1939,1), frequency = 12)
+m0 = Arima(ll, 
+           order = c(3,1,0),
+           seasonal = c(0,1,1))
+summary(m0)
+checkresiduals(m0)
+
+m_auto = auto.arima(ll)
+checkresiduals(m_auto)
+
+library(fredr)
+fredr_set_key("bd6a5a557f46d9b2ea931e46e50b2578")
+
+newdat = fredr(
+  series_id = "USLAH",
+  observation_start = as.Date("2019-10-01"),
+  observation_end = as.Date("2025-01-01")
+)
+
+updated = ts(newdat$value, start = c(2019,10), frequency = 12)
+fx = exp ( forecast(m_auto, h= 12*5)$mean )
+plot(forecast(m_auto, h = 12 * 5))
+
+plot( window(updated, end = c(2024,9)), ylim = c(10000, 20000) )
+lines(fx)
+```
+
 
 ```{r echo=FALSE, eval=FALSE }
 2. Simulate data from both models in the [Unpacking Notation] section and validate each of the properties we discussed.

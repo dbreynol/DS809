@@ -15,8 +15,8 @@ summary(md1)
 # sigma_t^2 = alpha_0 + alpha_1 * y_{t-1}^2
 set.seed(1)
 alpha_0 = .1
-alpha_1 = .4
-n = 1000
+alpha_1 = .5
+n = 10000
 r_tm1 = 0
 returns = array( dim = n )
 
@@ -26,20 +26,40 @@ for(t in 1:n) {
   r_tm1 = r_t
 }
 
+plot(returns, type = "l")
 acf(returns)
 (acf(returns ^ 2))
 
-mv1 = fGarch::garchFit(data = returns, formula = ~garch(1,1))
-summary(mv1)
+m0 = fGarch::garchFit(data = returns, formula = ~garch(1,0))
+
 plot(returns, type = "l")
 
+btc = read.csv("https://tinyurl.com/3epw5n4z") %>% 
+  mutate(timestamp = ymd(timestamp))
+
+
+mbv = fGarch::garchFit(diff(log(btc$btc)), formula = ~ arma(0,2) + garch(1,1)) # 4076
+predict(mbv, n.ahead = 10)
+
+# Number of periods to forecast
+n_forecast <- 10
+sigma2_forecast <- numeric(n_forecast)
+
+# First forecast
+sigma2_forecast[1] <- omega + alpha1 * tail(data^2, 1) + beta1 * sigma2_last
+
+# Iterative forecasts (assuming zero future shocks)
+for (t in 2:n_forecast) {
+  sigma2_forecast[t] <- omega + (alpha1 + beta1) * sigma2_forecast[t-1]
+}
+
+# Convert to standard deviation (volatility)
+sigma_forecast <- sqrt(sigma2_forecast)
 
 
 
-install.packages("devtools")
-devtools::install_github("five-dots/rpolygon.io")
-#POLYGON_KEY = "yDOlUmAgEZklJkhw_LBwFmL5_hYFnqoU"
-Sys.getenv("POLYGON_KEY")
-library(rpolygon.io)
-last_aapl <- rpolygon("/v1/last/stocks/AAPL")
-prev_aapl <- rpolygon("/v2/aggs/ticker/AAPL/prev", args = list(unadjusted = "true"))
+
+# Define ARCH(1) model specification
+arch_spec <- ugarchspec(variance.model = list(model = "sGARCH", garchOrder = c(1, 0)),
+                        mean.model = list(armaOrder = c(0, 0), include.mean = TRUE),
+                        distribution.model = "norm")  # Assume normal errors
