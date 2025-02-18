@@ -106,3 +106,28 @@ plot(m3, which = 5 )
 ```
 
 
+## Lab 5
+
+1. Fit the ARCH(1), GARCH(1,1), and GARCH(1,1) + ARMA(0,1) to the log of the difference of the historical bitcoin data. Report the log likelihood for each model.
+
+2. Plot the standardized residuals for each model (3 plots). Which one looks the best?
+
+3. Generate predictions for each model for the next 14 days (2/5 - 2/18) and compare with the actual data:
+
+```{r echo = T, eval = F}
+recent = read.csv("https://raw.githubusercontent.com/dbreynol/admn510_data/refs/heads/main/btc_recent.csv")
+```
+
+For each of the 3 models, report the:
+
+i) mean squared prediction error (point estimate versus actual BTC price)
+ii) Proportion of confidence intervals that contain the true BTC price using a critical value of 1.
+
+```{r eval=F, echo = T}
+# hint!
+predict(model, n.ahead = 14, crit_val = 1)
+```
+
+
+
+

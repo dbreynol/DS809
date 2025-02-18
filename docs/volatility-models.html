@@ -250,6 +250,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6.2" data-path="volatility-models.html"><a href="volatility-models.html#garch11"><i class="fa fa-check"></i><b>6.2</b> GARCH(1,1)</a></li>
 <li class="chapter" data-level="6.3" data-path="volatility-models.html"><a href="volatility-models.html#fgarchgarchfit"><i class="fa fa-check"></i><b>6.3</b> <code>fGarch::garchFit</code></a></li>
+<li class="chapter" data-level="6.4" data-path="volatility-models.html"><a href="volatility-models.html#lab-5"><i class="fa fa-check"></i><b>6.4</b> Lab 5</a></li>
 </ul></li>
 </ul>
 
@@ -351,6 +352,22 @@ r_t^2 &amp;= \omega + (\alpha_1+\beta_1)r_{t-1}^2 + v_t - \beta_1 v_{t-1} \\
 <span id="cb43-20"><a href="volatility-models.html#cb43-20" tabindex="-1"></a></span>
 <span id="cb43-21"><a href="volatility-models.html#cb43-21" tabindex="-1"></a></span>
 <span id="cb43-22"><a href="volatility-models.html#cb43-22" tabindex="-1"></a><span class="fu">plot</span>(m3, <span class="at">which =</span> <span class="dv">5</span> )</span></code></pre></div>
+</div>
+<div id="lab-5" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Lab 5<a href="volatility-models.html#lab-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li><p>Fit the ARCH(1), GARCH(1,1), and GARCH(1,1) + ARMA(0,1) to the log of the difference of the historical bitcoin data. Report the log likelihood for each model.</p></li>
+<li><p>Plot the standardized residuals for each model (3 plots). Which one looks the best?</p></li>
+<li><p>Generate predictions for each model for the next 14 days (2/5 - 2/18) and compare with the actual data:</p></li>
+</ol>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="volatility-models.html#cb44-1" tabindex="-1"></a>recent <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/admn510_data/refs/heads/main/btc_recent.csv&quot;</span>)</span></code></pre></div>
+<p>For each of the 3 models, report the:</p>
+<ol style="list-style-type: lower-roman">
+<li>mean squared prediction error (point estimate versus actual BTC price)</li>
+<li>Proportion of confidence intervals that contain the true BTC price using a critical value of 1.</li>
+</ol>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="volatility-models.html#cb45-1" tabindex="-1"></a><span class="co"># hint!</span></span>
+<span id="cb45-2"><a href="volatility-models.html#cb45-2" tabindex="-1"></a><span class="fu">predict</span>(model, <span class="at">n.ahead =</span> <span class="dv">14</span>, <span class="at">crit_val =</span> <span class="dv">1</span>)</span></code></pre></div>
 
 </div>
 </div>

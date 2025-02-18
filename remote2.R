@@ -95,5 +95,26 @@ sd = sarima.sim(ma = .7, sma = .9, n = 1000, S = 12)
 acf(sd, type = "partial")
 
 # q2: reviewing data
+require(graphics)
+
+trees <- window(treering, start = 0)
+(fit <- StructTS(trees, type = "level"))
+plot(trees)
+lines(fitted(fit), col = "green")
 
 
+
+library(tidyverse)
+conversions = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/conversions.csv")
+
+
+wday(ymd("2025-2-18"), label = T)
+
+
+library(forecast)
+Arima(y, order = c(1,0,0))
+
+
+
+
+recent = read.csv("https://raw.githubusercontent.com/dbreynol/admn510_data/refs/heads/main/btc_recent.csv")
