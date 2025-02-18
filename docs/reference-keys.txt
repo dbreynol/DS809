@@ -75,4 +75,5 @@ volatility-models
 arch1
 statistical-properties
 simulation-model-fit
-model-fit-for-btc
+garch11
+fgarchgarchfit

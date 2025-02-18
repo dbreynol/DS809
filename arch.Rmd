@@ -45,7 +45,7 @@ In this equation, $v_t = \sigma_t^2 (w_t^2-1)$. Since $w_t^2$ is the square of a
 
 What model does this look like?
 
-Using this model for $r_t^2$, we can explore the unconditional variance of $r_t$ since $Var(r_t)= E(r_t^2) = \alpha_0/(1-\alpha_0)$. And, furthermore, $E(r_t r_{t-h}) = 0$ for all $h>1$. 
+Using this model for $r_t^2$, we can explore the unconditional variance of $r_t$ since $Var(r_t)= E(r_t^2) = \omega/(1-\alpha_1)$. And, furthermore, $E(r_t r_{t-h}) = 0$ for all $h>1$. 
 
 What model does $r_t$ follow then?
 
@@ -60,10 +60,49 @@ r_t &= \sigma_t w_t \\
 
 And fit the model using <code>fGarch::garchFit</code>.
 
-### Model Fit for BTC
+## GARCH(1,1)
 
-```{r}
+An important extension of ARCH is the generalized ARCH (GARCH). The GARCH(1,1) can be written:
+
+\begin{align}
+r_t &= \sigma_t w_t \\
+\sigma^2_t &= \omega + \alpha_1 r_{t-1}^2 + \beta_1 \sigma^2_{t-1},
+\end{align}
+
+$\alpha_1$ is the ARCH effect. This parameter represents the short-term reaction of volatility to new shocks. The other parameter, $\beta_1$, captures the persistence of volatility. When this parameter is close to 1, volatility is more persistent.
+
+In this case, the squared returns follows a non-Gaussian ARMA(1,1) model:
+
+\begin{align}
+r_t^2 &= \omega + (\alpha_1+\beta_1)r_{t-1}^2 + v_t - \beta_1 v_{t-1} \\
+\end{align}
+
+
+## <code>fGarch::garchFit</code>
+
+```{r eval=FALSE, echo=TRUE}
+# bitcoin data
 btc = read.csv("https://tinyurl.com/3epw5n4z") %>% 
   mutate(timestamp = ymd(timestamp))
+
+y = diff(log(btc$btc))
+# ARCH(1)
+m1 = fGarch::garchFit(data = y, formula = ~ garch(1,0)) # 4076
+summary(m1)
+predict(m1, n.ahead = 10, plot = T)
+
+# Garch(1,1)
+m2 = fGarch::garchFit(data = y, formula = ~ garch(1,1)) # 4076
+summary(m2)
+predict(m2, n.ahead = 10, plot = T)
+
+# ARMA(0,1) + Garch(1,1)
+m3 = fGarch::garchFit(data = y, formula = ~ arma(0,1) + garch(1,1)) # 4217
+summary(m3)
+predict(m3, n.ahead = 10, plot = T, crit.val = 1)
+
+
+plot(m3, which = 5 )
 ```
+
 

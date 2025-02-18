@@ -400,7 +400,7 @@ newdat = fredr(
 )
 
 updated = ts(newdat$value, start = c(2019,10), frequency = 12)
-fx = exp ( forecast(m_auto, h= 12*5)$mean )
+fx = exp ( forecast(m_auto, h= 12*5 + 2)$mean )
 plot(forecast(m_auto, h = 12 * 5))
 
 plot( window(updated, end = c(2024,9)), ylim = c(10000, 20000) )
