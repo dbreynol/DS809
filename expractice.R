@@ -37,3 +37,24 @@ sd(c(78,69,96,96,66,82))
 (30/400) / (70/400)
 
 
+
+cereal = read.csv("https://raw.githubusercontent.com/DBomber60/WIHS/refs/heads/master/cereal.csv")
+
+
+with(cereal, cor(rating, fiber))
+
+m0 = (lm(rating ~ fiber, cereal))
+predict(m0, newdata = data.frame(fiber = 14))
+80 - 83.45829 
+
+
+str(cereal)
+cor(cereal[,4:16])
+
+# calories/ sugars
+m1 = (lm(rating ~ calories + sugars, cereal))
+summary(lm(rating ~ sugars, cereal))
+
+
+plot(x = cereal$sugars, y = residuals(m1))
+
