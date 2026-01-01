@@ -118,3 +118,15 @@ Arima(y, order = c(1,0,0))
 
 
 recent = read.csv("https://raw.githubusercontent.com/dbreynol/admn510_data/refs/heads/main/btc_recent.csv")
+
+library(fredr)
+
+newdat = fredr(
+  series_id = "CSUSHPINSA",
+  observation_start = as.Date("2019-10-01"),
+  observation_end = as.Date("2025-01-01")
+)
+
+
+
+

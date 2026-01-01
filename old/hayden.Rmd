@@ -1,0 +1,30 @@
+---
+output: html_document
+date: "2025-02-27"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Answer the following 5 questions for these 2 datasets:
+
+```{r eval=FALSE}
+# dataset 1: Johnson and Johnson quarterly earnings.
+y1 = JohnsonJohnson
+
+# dataset 2: weekly unemployment claims data
+df2 = read.csv("https://tinyurl.com/2r89cbj4")[,c('date', 'value')]
+```
+
+
+1. Plot the data. Are the data stationary? Why not? If not, find an appropriate transformation which yields approximately stationary data.
+
+2. Plot the ACF and PACF of the transformed time series. What are one or two candidate models based on these plots?
+
+3. Use forecast::auto.arima() to find an optimized ARIMA model. Use the original (i.e., nonstationary) time series as the input. What model was selected? Write the fit model equation.
+
+4. Comment on the residuals from the model fit in question 3.
+
+5. Plot forecasts from the model fit in question 3 for the next 10 periods.

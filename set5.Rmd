@@ -288,3 +288,7 @@ You are interested in doing (Bayesian) inference on $\mu$. You decide to use a n
 $$p(\mu) \sim \text{Normal}(\mu_0, \tau^2)$$.
 
 The posterior distribution, $p(\mu \vert y_1, \ldots, y_n )$ is also Normal. What are the mean and variance of the posterior distribution for $\mu$?
+
+
+
+

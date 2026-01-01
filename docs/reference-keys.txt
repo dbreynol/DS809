@@ -1,4 +1,4 @@
-course-info
+output-bookdowngitbook
 exploratory-analysis-of-time-series-data
 time-series-data
 time-series-eda
