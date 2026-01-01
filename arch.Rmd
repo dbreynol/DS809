@@ -2,7 +2,7 @@
 
 ## ARCH(1)
 
-So far, we have focused our attention on models for stationary time series data. In these models, the conditional mean changes over time while the conditional variance stays constant. For example, for the AR(1) model,
+So far, we have focused our attention on models for stationary time series data. In these models, the conditional mean changes over time while the conditional variance (show this expression) stays constant. For example, for the AR(1) model,
 
 \begin{align}
 E[x_t | x_{t-1}] &= \phi_1 x_{t-1} \\
