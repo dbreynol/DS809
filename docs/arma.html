@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2025-02-20" />
+<meta name="date" content="2026-01-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,6 +55,7 @@
 
 
 <style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -334,7 +335,7 @@ Var(x_t) &amp;= \frac{\sigma^2_w}{1-\phi_1^2} \\
 <p>Are the following AR processes stationary?</p>
 <ol style="list-style-type: decimal">
 <li><span class="math inline">\(x_t = 0.5 x_{t-1} + w_t\)</span></li>
-<li><span class="math inline">\(x_t = -0.2 x_{t-1} + 0.4 x_{t-2} + w_t\)</span></li>
+<li><span class="math inline">\(x_t = -0.2 x_{t-1} + 0.4 x_{t-2} +  w_t\)</span></li>
 <li><span class="math inline">\(x_t = x_{t-1} + w_t\)</span></li>
 </ol>
 <p><img src="series_files/figure-html/ar_comp_pos_neg-1.png" width="672" /></p>
@@ -483,7 +484,7 @@ x_t = \phi_1 x_{t-1} + \dots + \phi_p x_{t-p} + w_t + \theta_1 w_{t-1} + \dots +
 <p>ARMA models are <em>invertible</em> if all roots of <span class="math inline">\(\theta_q (\mathbf{B}) &gt; 1\)</span></p>
 <div id="psi-representation" class="section level3 hasAnchor" number="3.6.1">
 <h3><span class="header-section-number">3.6.1</span> <span class="math inline">\(\psi\)</span> representation<a href="arma.html#psi-representation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For a causal ARMA<span class="math inline">\((p,q)\)</span> model, <span class="math inline">\(\phi_p (\mathbf{B}^p) x_t= \theta_q (\mathbf{B}^q) w_t\)</span>, we may write</p>
+<p>For a causal ARMA<span class="math inline">\((p,q)\)</span> model, <span class="math inline">\(\phi_p (\mathbf{B}^p) x_t=  \theta_q (\mathbf{B}^q) w_t\)</span>, we may write</p>
 <p><span class="math display">\[\begin{align}
 x_t = \sum_{j=0}^\infty \psi_j w_{t-j}.
 \end{align}\]</span></p>

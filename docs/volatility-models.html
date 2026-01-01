@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2025-02-20" />
+<meta name="date" content="2026-01-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,6 +55,7 @@
 
 
 <style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -273,7 +274,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Set 6</span> Volatility Models<a href="volatility-models.html#volatility-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="arch1" class="section level2 hasAnchor" number="6.1">
 <h2><span class="header-section-number">6.1</span> ARCH(1)<a href="volatility-models.html#arch1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>So far, we have focused our attention on models for stationary time series data. In these models, the conditional mean changes over time while the conditional variance stays constant. For example, for the AR(1) model,</p>
+<p>So far, we have focused our attention on models for stationary time series data. In these models, the conditional mean changes over time while the conditional variance (show this expression) stays constant. For example, for the AR(1) model,</p>
 <p><span class="math display">\[\begin{align}
 E[x_t | x_{t-1}] &amp;= \phi_1 x_{t-1} \\
 Var[x_t | x_{t-1}] &amp;= \sigma^2_w.
