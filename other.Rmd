@@ -1,0 +1,52 @@
+---
+title: "other"
+output: html_document
+date: "2026-01-05"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Classical Regression 
+
+Given that regression is already in our tool kit, we will use it as our first method to model a time series. Let us assume that we have some output or dependent time series, say, $x_t$ , for $t = 1, \ldots,n$, that is being influenced by a collection of possible inputs, say, $z_{t1}, z_{t2}, \ldots, z_{tq}$, where we regard the inputs as fixed and known. 
+
+We will look at monthly Australian electricity production (the <code>fma::elec</code> dataframe). The data is shown below.
+
+```{r echo=F}
+aelec <- window(elec, start=1980)
+plot(x = time(aelec), y = aelec, type = "l", main = "Australian Electricity Production")
+```
+
+Let us fit two models to this data, one where we use time as the independent variable. This estimates a linear trend. In the other, we will try to capture some of the obvious seasonality in the data.
+
+\begin{align}
+y_t &= \beta_0 + \beta_1 t + w_t \\ 
+y_t &= \beta_0 + \beta_1 t + \beta_2 \times ({2\pi \cos(t)}) + w_t
+\end{align}
+
+The fits from these two models are shown below. 
+
+```{r}
+m0 = lm(aelec ~ time(aelec))
+m1 = lm(aelec ~ time(aelec) + cos(2 * pi * time(aelec)))
+plot(x = time(aelec), y = aelec, type = "l", main = "Australian Electricity Production")
+lines(x = c(time(aelec)), y = predict(m0), col = "red")
+lines(x = c(time(aelec)), y = predict(m1), col = "blue")
+```
+
+Clearly, model 2 offers a superior fit as compared with model 1. In fact, this model explains about 95\% of the variation in electricity production. To check the validity of the model, let us examine the residuals across the range of time, $t$.
+
+```{r}
+plot(x = c(time(aelec)), y = residuals(m1), main = "Model 2 Residuals")
+```
+
+One of the assumptions of the linear regression model is that the errors are independent and identically distributed. That is, for the model,
+
+\begin{align}
+y = X \beta + \epsilon,
+\end{align}
+
+The error vector, $\epsilon \sim N(0, \sigma^2)$, consists of independent and identically distributed random variables. This implies that there is no correlation structure to the residuals. One way to check that this is true is to check for the absence of correlation in the observed residuals. What does the figure above indicate about the validity of this assumption for model 2?
