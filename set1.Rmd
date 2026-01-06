@@ -29,7 +29,7 @@ knitr::kable(head(conversions))
 
 This dataset contains information on the total number of daily conversions by country and marketing channel. Let us focus our analysis on the US and first visualize the number of conversions by day. 
 
-```{r}
+```{r fig.height= 4}
 conversions$datestamp = ymd(conversions$datestamp)
 
 # overall trend
@@ -52,7 +52,7 @@ conversions %>%
 This plot contains a lot of useful information. To gain insight into how conversions depend on marketing channel, we can use facets. Facets are subplots that display a time series for each marketing channel.
 
 
-```{r}
+```{r fig.height= 4}
 conversions %>% 
   filter(country_code == "us") %>% 
   ggplot(aes(x = datestamp, y = conversions)) + 
@@ -62,7 +62,7 @@ conversions %>%
 
 Display ads and search engine ads are the dominant marketing channels. Both have a regular pattern that is likely a function of the day of week, with a higher number of conversions during weekdays as compared with weekends. We can explore this feature by aggregating over each weekday and visualizing how the distribution of conversions changes by day.
 
-```{r}
+```{r fig.height= 4}
 conversions %>% 
   filter(country_code == "us") %>% 
   drop_na() %>% 
@@ -91,14 +91,14 @@ where $j$ indexes the day of week. The indicator function in this case acts as a
 \mathbb{1}(\text{weekday} = j) =
 \begin{cases}
 1 & \text{if } \text{weekday} = j \\
-0 & \text{otherwise}
+0 & \text{otherwise.}
 \end{cases}
 \end{align}
 
 
 The residuals from this model consist of each observation minus the mean for that particular weekday. 
 
-```{r}
+```{r fig.height= 4}
 # EDA via models
 
 mod_df = conversions %>% 
@@ -122,9 +122,10 @@ mod_df %>%
 ```
 
 This allows us to more clearly see the trend across the date range, removing the effect of the weekly pattern. 
+
 ## Noise Processes
 
-Noise processes (white noise, AR, MA) matter in time-series work because they are the practical language for describing, diagnosing, and modeling uncertainty over time. These are the building blocks of nearly all time series models.
+Noise processes (white noise, random walk, AR, MA) are important in time-series work because they are the practical language for describing, diagnosing, and modeling uncertainty over time. These are the building blocks of nearly all time series models.
 
 Time series data always mix:
 
@@ -144,37 +145,53 @@ Noise offer a precise way of measuring:
 
 ### White noise
 
-White noise is a particularly important building block becuase when a time series is white noise, then there is no predictable structure left. That is, a white noise time series will not yield to any amount of forecasting prowess.
+White noise is a particularly important building block becuase when a time series is white noise, then there is no predictable structure. That is, a white noise time series will not yield to any amount of forecasting prowess.
 
 Let $w_t$ be a random variable indexed by time, $t \in [1,T]$.
 
 The following properties characterize white noise:
 
 \begin{align}
-E(w_t) &= 0 \\
-Var(w_t) &= \sigma^2 \\
-Cov(w_t, w_s) &= 0 \text{  } \forall t,s
+\mathbb{E}(w_t) &= 0 \\
+\operatorname{Var}(w_t) &= \sigma^2 \\
+\operatorname{Cov}(w_t, w_s) &= 0 \text{  } \forall \text{ } t,s
 \end{align}
 
 Note that Gaussian white noise is a special case where $w_t \sim N(o, \sigma^2)$. White noise can come in different flavors. In the right hand plot below, $w_t = 2e_t - 1$, where $e_t \sim \text{Bernoulli(.5)}$. In the left plot, $w_t \sim N(0,2)$.
 
-```{r eval = T}
-par(mfrow = c(1,2), mai = c(1,1,0.3,0.1), omi = c(0,0,0,0))
-## loop over orders of p
+```{r fig.height= 4}
+library(ggplot2)
+library(gridExtra)
+
+# Set seed and generate data
 set.seed(2)
 n = 100
 wn1 = rnorm(n, sd = 2)
-wn2 = ifelse((rbinom(n, 1, 1/2) == 1) , 2, 0) - 1
+wn2 = ifelse((rbinom(n, 1, 1/2) == 1), 2, 0) - 1
 
+# Create data frames for plotting
+df1 = data.frame(index = 1:n, value = wn1)
+df2 = data.frame(index = 1:n, value = wn2)
 
-plot(wn1, las = 1,
-        ylab = expression(italic(x[t])), main = "Gaussian White Noise")
+# Create Gaussian White Noise plot
+p1 = ggplot(df1, aes(x = index, y = value)) +
+  geom_point() +
+  labs(x = "Index", y = expression(italic(x[t])), 
+       title = "Gaussian White Noise") +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5))
 
-plot(wn2, las = 1,
-        ylab = expression(italic(y[t])), main = "Bernoulli White Noise")
+# Create Bernoulli White Noise plot
+p2 = ggplot(df2, aes(x = index, y = value)) +
+  geom_point() +
+  labs(x = "Index", y = expression(italic(y[t])), 
+       title = "Bernoulli White Noise") +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Arrange plots side by side
+grid.arrange(p1, p2, ncol = 2)
 ```
-
-
 
 ### Random Walk
 
@@ -184,24 +201,47 @@ $y_t = y_{t-1}+w_t$,
 
 where $w_t \sim N(0, \sigma^2)$ and all elements of the error vector are mutually independent. This is the random walk model.
 
-The random walk is fundamental because it is the simplest model where the past fully determines the present level, yet provides no information about the future—making it the natural benchmark, diagnostic, and cautionary tale in time-series analysis. When a time series follows a random walk, one can estimate the distribution of changes from one time step to the next but not the level of the time series beyond one time step.
+The random walk is fundamental because it is the simplest model where the past fully determines the present level, yet provides no information about the future—making it the natural benchmark (or, null model) in time-series analysis. When a time series follows a random walk, one can estimate the distribution of changes from one time step to the next but not the level of the time series beyond one time step.
 
 Let's derive some important properties of this model:
 
-1. What is the mean, $E(y_t)$?
-2. What is the variance, $Var(y_t)$?
+1. What is the mean, $\mathbb{E}(y_t)$?
+2. What is the variance, $\operatorname{Var}(y_t)$?
 
-```{r}
-rw = cumsum(rnorm(100))
-last_el = rw[100]
-#par(mfrow = c(1,2))
-plot(1:100, rw, type = "l", ylim = c(-50,50), main = "Random Walks; Sigma = 1", xlab = "t")
+```{r fig.height=4}
+# Generate random walks data
+set.seed(1)  # Remove this line if you want reproducible results
+n_walks <- 50
+n_steps <- 100
 
-for (j in 2:50) {
-  rw = cumsum(rnorm(100))
-  last_el[j] = rw[100]
-  lines(1:100, rw, type = "l", col = rainbow(50)[j])
+# Create a data frame to store all random walks
+rw_data <- data.frame()
+last_el <- numeric(n_walks)
+
+for (j in 1:n_walks) {
+  rw <- cumsum(rnorm(n_steps))
+  last_el[j] <- rw[n_steps]
+  
+  # Add this walk to the data frame
+  rw_data <- rbind(rw_data, data.frame(
+    t = 1:n_steps,
+    value = rw,
+    walk_id = j
+  ))
 }
+
+# Create the ggplot
+ggplot(rw_data, aes(x = t, y = value, group = walk_id, color = walk_id)) +
+  geom_line() +
+  scale_color_gradientn(colors = rainbow(n_walks)) +
+  coord_cartesian(ylim = c(-30, 30)) +
+  labs(
+    title = "Random Walks; Sigma = 1",
+    x = "t",
+    y = NULL
+  ) +
+  theme_classic() +
+  theme(legend.position = "none")  # Hide legend since we have 50 walks
 ```
 
 ### AR Process
@@ -220,20 +260,20 @@ This model quantifies how much of today depends on yesterday (and the day before
 Consider the AR(1) process with a drift: 
 
 \begin{align}
-x_t &= a + \phi x_t + w_t
+x_t &= a + \phi x_{t-1} + w_t
 \end{align}
 
-Write $x_t$ as a function of past white noise values and find $E(x_t)$ and $Var(x_t)$.
+Write $x_t$ as a function of past white noise values and find $\mathbb{E}(x_t)$ and $\operatorname{Var}(x_t)$.
 
 ## Measures of Dependence
 
 ### Autocovariance
 
-In all but the simplest models, there is dependence between adjacent values $x_s$ and $x_t$. This can be assessed using the notions of covariance and correlation. The autocovariance function is defined as the second moment product:
+In all but the simplest models, there is dependence between adjacent values $x_s$ and $x_t$. This can be assessed using the notions of covariance and correlation. The autocovariance function is defined as:
 
 \begin{align}
-\gamma(s,t) &= \text{cov}(x_s, x_t) \\
-&= E((x_s - \mu_s) (x_t - \mu_t))
+\gamma(s,t) &= \operatorname{Cov}(x_s, x_t) \\
+&= \mathbb{E}((x_s - \mu_s) (x_t - \mu_t))
 \end{align}
 
 The autocovariance measures the linear dependence between two points on the same series observed at different times. Very smooth series exhibit autocovariance functions that stay large even when the $t$ and $s$ are far apart, whereas choppy series tend to have autocovariance functions that are nearly zero for large separations.
@@ -261,14 +301,14 @@ Compute the autocorrelation of:
 
 A (weakly) stationary time series $x_t$ is a process such that,
 
-1. The mean is constant: $E(X_t) = \mu$.
+1. The mean is constant: $\mathbb{E}(X_t) = \mu$ for all $t$.
 2. The autocovariance function, $\gamma(s,t)$ depends on $s$ and $t$ only through their difference, $|s-t|$.
 
 Therefore, we can write the autocovariance function of a stationary time series as,
 
 \begin{align}
-\gamma(h) &= \text{cov}(x_{t+h}, x_{t}) \\
-&= E((x_{t+h} - \mu) (x_{t} - \mu))
+\gamma(h) &= \operatorname{Cov}(x_{t+h}, x_{t}) \\
+&= \mathbb{E}((x_{t+h} - \mu) (x_{t} - \mu))
 \end{align}
 
 And, similarly, the autocorrelation function of a stationary time series can be written,
@@ -277,7 +317,6 @@ And, similarly, the autocorrelation function of a stationary time series can be 
 \rho(h) &= \frac{\gamma(t+h,t)}{\sqrt{\gamma(t+h,t+h) \gamma(t,t)}} \\
 &= \frac{\gamma(h)}{\gamma(0)}
 \end{align}
-
 
 
 ## Estimation
@@ -292,14 +331,14 @@ If a time series is stationary, the mean function is constant so that we can est
 \hat{\mu} = \frac{1}{T} \sum_{t=1}^T x_t 
 \end{align}
 
-**What is the variance of the mean in a stationary time series context?**
+**What is the variance of the sample mean in a stationary time series context?**
 
 ### Autocovariance
 
 The sample autocovariance, $\hat{\gamma}$, for a time series $x$ at lag $k$ is:
 
 \begin{align}
-\hat{\gamma}_k &= \text{cov}(x_t, x_{t-k}) \\
+\hat{\gamma}_k &= \hat{\operatorname{Cov}}(x_t, x_{t-k}) \\
 &=  \frac{1}{T} \sum_{t = k + 1}^{T} (x_t - \bar{x})(x_{t-k} - \bar{x})
 \end{align}
 
@@ -308,8 +347,8 @@ The sample autocovariance, $\hat{\gamma}$, for a time series $x$ at lag $k$ is:
 The sample autocorrelation function for lag $k$, $\hat{\rho}_k$, is simply the lag $k$ autocovariance, $\hat{\gamma_k}$, scaled by the sample variance.
 
 \begin{align}
-\hat{\rho}_k &= \frac{ \hat{\gamma_k} }{\hat{\sigma}_{y_t} \hat{\sigma}_{y_{t-k}}} \\
-&= \frac{ \hat{\gamma_k} }{\hat{\gamma_0}}.
+\hat{\rho}_k &= \frac{ \hat{\gamma}_k }{\hat{\sigma}_{y_t} \hat{\sigma}_{y_{t-k}}} \\
+&= \frac{ \hat{\gamma}_k }{\hat{\gamma}_0}.
 \end{align}
 
 
