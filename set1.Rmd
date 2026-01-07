@@ -133,7 +133,7 @@ Time series data always mix:
 
 - **Noise**: random shocks, measurement error, unmodeled behavior
 
-Noise offer a precise way of measuring:
+Noise offers a precise way of measuring:
 
 - How much of today depends on yesterday (AR)
 
@@ -247,10 +247,10 @@ ggplot(rw_data, aes(x = t, y = value, group = walk_id, color = walk_id)) +
 ### AR Process
 
 
-A slightly more general model is the autoregressive (AR) model, in which $x_t$ is a linear combination of its past $p$ values plus gaussian white noise, $w_t$. That is,
+A slightly more general model is the autoregressive (AR) model, in which $y_t$ is a linear combination of its past $p$ values plus gaussian white noise, $w_t$. That is,
 
 \begin{align}
-x_t = \sum_{i=1}^p \phi_i x_{t-i} + w_t.
+y_t = \sum_{i=1}^p \phi_i y_{t-i} + w_t.
 \end{align}
 
 This model quantifies how much of today depends on yesterday (and the day before, etc.).
@@ -260,10 +260,10 @@ This model quantifies how much of today depends on yesterday (and the day before
 Consider the AR(1) process with a drift: 
 
 \begin{align}
-x_t &= a + \phi x_{t-1} + w_t
+y_t &= a + \phi y_{t-1} + w_t
 \end{align}
 
-Write $x_t$ as a function of past white noise values and find $\mathbb{E}(x_t)$ and $\operatorname{Var}(x_t)$.
+Write $y_t$ as a function of past white noise values and find $\mathbb{E}(y_t)$ and $\operatorname{Var}(y_t)$.
 
 ## Measures of Dependence
 
