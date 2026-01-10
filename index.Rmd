@@ -16,19 +16,19 @@ description: "Course materials for DS809, Spring 2024."
 knitr::opts_chunk$set(echo = F)
 library(tidyverse)
 library(knitr)
-library(fpp3) # employment dataset
-library(fpp2) # aelec dataset
-library(quantmod) # white noise google
-library(broom) # tidy
-library(forecast) # ma
-library(qcc) # CUSUM
-library(prophet) # prophet lab
-library(bsts)
-library(dynlm)
-library(stochvol) # svsample
-library(latex2exp)
+#library(fpp3) # employment dataset
+#library(fpp2) # aelec dataset
+#library(quantmod) # white noise google
+#library(broom) # tidy
+#library(forecast) # ma
+#library(qcc) # CUSUM
+#library(prophet) # prophet lab
+#library(bsts)
+#library(dynlm)
+#library(stochvol) # svsample
+#library(latex2exp)
 require(gridExtra)
-library(astsa)
+#library(astsa)
 ```
 
 # Course Info

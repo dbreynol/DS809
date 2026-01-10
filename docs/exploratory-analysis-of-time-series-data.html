@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Set 2 Exploratory Analysis of Time Series Data | DS809</title>
   <meta name="description" content="Course materials for DS809, Spring 2024." />
-  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Set 2 Exploratory Analysis of Time Series Data | DS809" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2026-01-06" />
+<meta name="date" content="2026-01-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -120,6 +120,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="lib/css/bootstrap.min.css" type="text/css" />
 <link rel="stylesheet" href="lib/css/style.css" type="text/css" />
@@ -256,11 +260,11 @@ demand of a product.</li>
 </tbody>
 </table>
 <p>This dataset contains information on the total number of daily conversions by country and marketing channel. Let us focus our analysis on the US and first visualize the number of conversions by day.</p>
-<p><img src="series_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="series_files/figure-html/unnamed-chunk-2-1.png" alt="" width="672" /></p>
 <p>This plot contains a lot of useful information. To gain insight into how conversions depend on marketing channel, we can use facets. Facets are subplots that display a time series for each marketing channel.</p>
-<p><img src="series_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="series_files/figure-html/unnamed-chunk-3-1.png" alt="" width="672" /></p>
 <p>Display ads and search engine ads are the dominant marketing channels. Both have a regular pattern that is likely a function of the day of week, with a higher number of conversions during weekdays as compared with weekends. We can explore this feature by aggregating over each weekday and visualizing how the distribution of conversions changes by day.</p>
-<p><img src="series_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="series_files/figure-html/unnamed-chunk-4-1.png" alt="" width="672" /></p>
 <p>Clearly, there are significant changes in the mean level of conversions across the week. This is a form of seasonality. It may be useful to see what the data look like when this weekday effect is removed. To do so, we could visualize the residuals from the following linear regression model:</p>
 <p><span class="math display">\[\begin{align}
 \hat{\text{conversions}} = \hat{\beta}_0 + \sum_{j=1}^6 \bigg( \hat{\beta}_j \times \mathbb{1}(\text{weekday = j}) \bigg),
@@ -274,7 +278,7 @@ demand of a product.</li>
 \end{cases}
 \end{align}\]</span></p>
 <p>The residuals from this model consist of each observation minus the mean for that particular weekday.</p>
-<p><img src="series_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="series_files/figure-html/unnamed-chunk-5-1.png" alt="" width="672" /></p>
 <p>This allows us to more clearly see the trend across the date range, removing the effect of the weekly pattern.</p>
 </div>
 <div id="noise-processes" class="section level2 hasAnchor" number="2.3">
@@ -285,7 +289,7 @@ demand of a product.</li>
 <li><p><strong>Signal</strong>: trends, seasonality, persistence, cycles</p></li>
 <li><p><strong>Noise</strong>: random shocks, measurement error, unmodeled behavior</p></li>
 </ul>
-<p>Noise offer a precise way of measuring:</p>
+<p>Noise offers a precise way of measuring:</p>
 <ul>
 <li><p>How much of today depends on yesterday (AR)</p></li>
 <li><p>How shocks propagate over time (MA)</p></li>
@@ -302,7 +306,7 @@ demand of a product.</li>
 \operatorname{Cov}(w_t, w_s) &amp;= 0 \text{  } \forall \text{ } t,s
 \end{align}\]</span></p>
 <p>Note that Gaussian white noise is a special case where <span class="math inline">\(w_t \sim N(o, \sigma^2)\)</span>. White noise can come in different flavors. In the right hand plot below, <span class="math inline">\(w_t = 2e_t - 1\)</span>, where <span class="math inline">\(e_t \sim \text{Bernoulli(.5)}\)</span>. In the left plot, <span class="math inline">\(w_t \sim N(0,2)\)</span>.</p>
-<p><img src="series_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="series_files/figure-html/unnamed-chunk-6-1.png" alt="" width="672" /></p>
 </div>
 <div id="random-walk" class="section level3 hasAnchor" number="2.3.2">
 <h3><span class="header-section-number">2.3.2</span> Random Walk<a href="exploratory-analysis-of-time-series-data.html#random-walk" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -315,13 +319,13 @@ demand of a product.</li>
 <li>What is the mean, <span class="math inline">\(\mathbb{E}(y_t)\)</span>?</li>
 <li>What is the variance, <span class="math inline">\(\operatorname{Var}(y_t)\)</span>?</li>
 </ol>
-<p><img src="series_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="series_files/figure-html/unnamed-chunk-7-1.png" alt="" width="672" /></p>
 </div>
 <div id="ar-process" class="section level3 hasAnchor" number="2.3.3">
 <h3><span class="header-section-number">2.3.3</span> AR Process<a href="exploratory-analysis-of-time-series-data.html#ar-process" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>A slightly more general model is the autoregressive (AR) model, in which <span class="math inline">\(x_t\)</span> is a linear combination of its past <span class="math inline">\(p\)</span> values plus gaussian white noise, <span class="math inline">\(w_t\)</span>. That is,</p>
+<p>A slightly more general model is the autoregressive (AR) model, in which <span class="math inline">\(y_t\)</span> is a linear combination of its past <span class="math inline">\(p\)</span> values plus gaussian white noise, <span class="math inline">\(w_t\)</span>. That is,</p>
 <p><span class="math display">\[\begin{align}
-x_t = \sum_{i=1}^p \phi_i x_{t-i} + w_t.
+y_t = \sum_{i=1}^p \phi_i y_{t-i} + w_t.
 \end{align}\]</span></p>
 <p>This model quantifies how much of today depends on yesterday (and the day before, etc.).</p>
 </div>
@@ -329,9 +333,9 @@ x_t = \sum_{i=1}^p \phi_i x_{t-i} + w_t.
 <h3><span class="header-section-number">2.3.4</span> Exercise<a href="exploratory-analysis-of-time-series-data.html#exercise" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Consider the AR(1) process with a drift:</p>
 <p><span class="math display">\[\begin{align}
-x_t &amp;= a + \phi x_{t-1} + w_t
+y_t &amp;= a + \phi y_{t-1} + w_t
 \end{align}\]</span></p>
-<p>Write <span class="math inline">\(x_t\)</span> as a function of past white noise values and find <span class="math inline">\(\mathbb{E}(x_t)\)</span> and <span class="math inline">\(\operatorname{Var}(x_t)\)</span>.</p>
+<p>Write <span class="math inline">\(y_t\)</span> as a function of past white noise values and find <span class="math inline">\(\mathbb{E}(y_t)\)</span> and <span class="math inline">\(\operatorname{Var}(y_t)\)</span>.</p>
 </div>
 </div>
 <div id="measures-of-dependence" class="section level2 hasAnchor" number="2.4">
@@ -412,7 +416,7 @@ x_t &amp;= a + \phi x_{t-1} + w_t
 <div id="lab-1" class="section level2 hasAnchor" number="2.7">
 <h2><span class="header-section-number">2.7</span> Lab 1<a href="exploratory-analysis-of-time-series-data.html#lab-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li>Join the Kayak visits data (see below) to the conversions data from <a href="exploratory-analysis-of-time-series-data.html#time-series-eda">Time Series EDA</a>. Use the <code>inner_join</code> function with the argument, <code>by = c(“datestamp”, “country_code”, “marketing_channel”)</code> and then filter to only US observations. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the response variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model. Do the residuals validate standard linear regression model assumptions?</li>
+<li>Join the Kayak visits data (see below) to the conversions data from <a href="exploratory-analysis-of-time-series-data.html#time-series-eda">Time Series EDA</a>. Use the <code>inner_join</code> function with the argument, <code>by = c(“datestamp”, “country_code”, “marketing_channel”)</code> and then filter to only US observations. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it is helpful visually (i.e., subtract the mean and divide by the standard deviation). Then, fit a linear regression model with <code>conversions</code> as the response variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model. Do the residuals support standard linear regression model assumptions?</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="exploratory-analysis-of-time-series-data.html#cb2-1" tabindex="-1"></a>visits <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv&quot;</span>)</span>
 <span id="cb2-2"><a href="exploratory-analysis-of-time-series-data.html#cb2-2" tabindex="-1"></a>visits<span class="sc">$</span>datestamp <span class="ot">=</span> <span class="fu">ymd</span>(visits<span class="sc">$</span>datestamp)</span></code></pre></div>
@@ -421,7 +425,7 @@ x_t &amp;= a + \phi x_{t-1} + w_t
 <span class="math display">\[\begin{align}
 \hat{y_t} = \frac{1}{m} \sum_{j=-k}^{k} y_{t+j},
 \end{align}\]</span>
-where <span class="math inline">\(m=2k+1\)</span>. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order <span class="math inline">\(m=13\)</span> for the <code>fma::elec</code> dataframe used in [Classical Regression]. Plot the smoothed series along with the raw data in a single plot.</p></li>
+where <span class="math inline">\(m=2k+1\)</span>. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order <span class="math inline">\(m=13\)</span> for the <code>fma::elec</code> dataframe. Plot the smoothed series along with the raw data in a single plot.</p></li>
 <li><p>Time series data can exhibit a variety of patterns, and it is often helpful to decompose a time series into components, each representing an underlying pattern category. In this question, you will decompose a time series into three parts: a trend component (<span class="math inline">\(T\)</span>), a seasonality component (<span class="math inline">\(S\)</span>), and a random component (<span class="math inline">\(R\)</span>). That is, for each observation <span class="math inline">\(Y_t\)</span>, we want to break it down into three parts:</p></li>
 </ol>
 <p><span class="math display">\[Y_T = T_t + S_t + R_t\]</span>
@@ -429,12 +433,12 @@ You will again use the <code>fma::elec</code> dataframe and proceed in 3 steps:<
 <ul>
 <li><p><em>Step 1</em>: Compute the trend component using an order 13 moving average (good news: you did exactly this in the last question, so use the output from the prior question as the trend component, <span class="math inline">\(\hat{T}\)</span>).</p></li>
 <li><p><em>Step 2</em>: Compute the detrended series: <span class="math inline">\(Y-\hat{T}\)</span></p></li>
-<li><p><em>Step 3</em>: To estimate the seasonal component for each month, simply average the detrended values for each month. For example, the seasonal component for March is the average of all the detrended March values in the data. Then adjust the seasonal component values to ensure that they add to zero. The seasonal component is obtained by stringing together these monthly values, and then replicating the sequence for each year of data. This gives <span class="math inline">\(\hat{S}\)</span>.</p></li>
+<li><p><em>Step 3</em>: To estimate the seasonal component for each month, simply average the detrended series (computed in step 2) for each month. For example, the seasonal component for March is the average of all the detrended March values. The seasonal component is obtained by stringing together these monthly values, and then replicating the sequence for each year of data. This gives <span class="math inline">\(\hat{S}\)</span>.</p></li>
 <li><p><em>Step 4</em>: The remainder component is calculated by subtracting the estimated seasonal and trend-cycle components. That is <span class="math inline">\(\hat{R} = Y - \hat{T} - \hat{S}\)</span>.</p></li>
 </ul>
 <p>Provide your code that is clearly commented for each step as well as a plot that shows each of the three component series in three separate plots (hint: use <code>par(mfrow = c(1,3))</code> to make three plots in a row).</p>
 <ol start="4" style="list-style-type: decimal">
-<li>See chapter 1 of TSA (page 30) for a definition of cross correlation. This is a measure of the linear dependence of one time series on another. In other words, this is a multivariate version of the autocorrelation. Compute the cross correlation using your own defined function between GDP per capita and the Case Shiller Home Price Index (both from the FRED database), using the following data:</li>
+<li>See chapter 1 of TSA (page 30) for a definition of cross correlation. This is a measure of the linear dependence of one time series on another. In other words, this is a multivariate version of the autocorrelation. Compute the cross correlation between GDP per capita and the Case Shiller Home Price Index (both from the FRED database), using the following data:</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="exploratory-analysis-of-time-series-data.html#cb3-1" tabindex="-1"></a>fred <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv&quot;</span>)[,<span class="sc">-</span><span class="dv">1</span>]</span>
 <span id="cb3-2"><a href="exploratory-analysis-of-time-series-data.html#cb3-2" tabindex="-1"></a>fred<span class="sc">$</span>date <span class="ot">=</span> <span class="fu">ymd</span>(fred<span class="sc">$</span>date)</span></code></pre></div>
@@ -470,42 +474,42 @@ You will again use the <code>fma::elec</code> dataframe and proceed in 3 steps:<
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
-"sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
-"linkedin": false,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": {
-"link": "https://github.com/dbreynol/DS809/edit/master/set1.Rmd",
-"text": "Edit"
-},
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": ["series.pdf"],
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "subsection"
-}
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/dbreynol/DS809/edit/master/set1.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["series.pdf"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
 });
 });
 </script>

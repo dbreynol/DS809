@@ -354,7 +354,7 @@ The sample autocorrelation function for lag $k$, $\hat{\rho}_k$, is simply the l
 
 ## Lab 1
 
-1. Join the Kayak visits data (see below) to the conversions data from [Time Series EDA]. Use the <code>inner_join</code> function with the argument, <code>by = c("datestamp", "country_code", "marketing_channel")</code> and then filter to only US observations. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it makes sense. Then, fit a linear regression model with <code>conversions</code> as the response variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model. Do the residuals validate standard linear regression model assumptions?
+1. Join the Kayak visits data (see below) to the conversions data from [Time Series EDA]. Use the <code>inner_join</code> function with the argument, <code>by = c("datestamp", "country_code", "marketing_channel")</code> and then filter to only US observations. Make a plot of <code>user_visits</code> and <code>conversions</code> by day. Standardize them if it is helpful visually (i.e., subtract the mean and divide by the standard deviation). Then, fit a linear regression model with <code>conversions</code> as the response variable and <code>user_visits</code> as the explanatory variable. What is the estimated line equation? Finally, make a plot of the residuals from this model. Do the residuals support standard linear regression model assumptions?
 
 ```{r echo=TRUE, eval=FALSE}
 visits = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/visits.csv")
@@ -388,7 +388,7 @@ df %>% mutate(std_visits = (visits - mean(visits))/sd(visits), std_conv = (conv 
 \begin{align}
 \hat{y_t} = \frac{1}{m} \sum_{j=-k}^{k} y_{t+j},
 \end{align}
-where $m=2k+1$. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order $m=13$ for the <code>fma::elec</code> dataframe used in [Classical Regression]. Plot the smoothed series along with the raw data in a single plot. 
+where $m=2k+1$. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order $m=13$ for the <code>fma::elec</code> dataframe. Plot the smoothed series along with the raw data in a single plot. 
 
 ```{r echo=F, eval = F}
 k = 6
@@ -406,7 +406,7 @@ You will again use the <code>fma::elec</code> dataframe and proceed in 3 steps:
 * *Step 2*: Compute the detrended series: $Y-\hat{T}$
 
 
-* *Step 3*: To estimate the seasonal component for each month, simply average the detrended values for each month. For example, the seasonal component for March is the average of all the detrended March values in the data. Then adjust the seasonal component values to ensure that they add to zero. The seasonal component is obtained by stringing together these monthly values, and then replicating the sequence for each year of data. This gives $\hat{S}$.
+* *Step 3*: To estimate the seasonal component for each month, simply average the detrended series (computed in step 2) for each month. For example, the seasonal component for March is the average of all the detrended March values. The seasonal component is obtained by stringing together these monthly values, and then replicating the sequence for each year of data. This gives $\hat{S}$.
 
 * *Step 4*: The remainder component is calculated by subtracting the estimated seasonal and trend-cycle components. That is $\hat{R} = Y - \hat{T} - \hat{S}$.
 
@@ -426,7 +426,7 @@ plot(elec_R, ylim = c(-1000,1000), main = "Random")
 
 ```
 
-4. See chapter 1 of TSA (page 30) for a definition of cross correlation. This is a measure of the linear dependence of one time series on another. In other words, this is a multivariate version of the autocorrelation. Compute the cross correlation using your own defined function between GDP per capita and the Case Shiller Home Price Index (both from the FRED database), using the following data: 
+4. See chapter 1 of TSA (page 30) for a definition of cross correlation. This is a measure of the linear dependence of one time series on another. In other words, this is a multivariate version of the autocorrelation. Compute the cross correlation between GDP per capita and the Case Shiller Home Price Index (both from the FRED database), using the following data: 
 
 ```{r echo=TRUE}
 fred = read.csv("https://raw.githubusercontent.com/dbreynol/DS809/main/data/fred_dat.csv")[,-1]
