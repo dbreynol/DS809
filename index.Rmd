@@ -20,7 +20,7 @@ library(knitr)
 #library(fpp2) # aelec dataset
 #library(quantmod) # white noise google
 #library(broom) # tidy
-#library(forecast) # ma
+library(forecast) # ma
 #library(qcc) # CUSUM
 #library(prophet) # prophet lab
 #library(bsts)
