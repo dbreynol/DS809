@@ -1,0 +1,83 @@
+---
+title: "Untitled"
+output: html_document
+date: "2026-01-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## ARIMA - models for the conditional mean
+
+So far, we have focused our attention on models for stationary time series data. In these models, the conditional mean changes over time while the conditional variance stays constant. For example, for the AR(1) model,
+
+$$
+\begin{align}
+E[x_t | x_{t-1}] &= \phi_1 x_{t-1} \\
+Var[x_t | x_{t-1}] &= \sigma^2_w.
+\end{align}
+$$
+
+## ARCH(1) motivation
+
+What if the conditional variance also changes over time? That is a good case to use an ARCH model. In an ARCH model, used often in financial applications, our response variable is typically the return at time $t$:
+
+\begin{align}
+r_t = \frac{x_t - x_{t-1}}{x_{t-1}}
+\end{align}
+
+Or, alternatively, the response may be $r_t = \nabla log(x_t)$.
+
+## ARCH(1) model
+
+Enter the ARCH(1)
+
+$$
+\begin{align}
+r_t &= \sigma_t w_t \\
+\sigma^2_t &= \omega + \alpha_1 r_{t-1}^2,
+\end{align}
+$$
+
+where $w_t \sim N(0,1)$.
+
+## ARCH(1) Properties - Conditional
+
+The response variable, $r_t$ has the following properties. It is normally distributed with mean and variance:
+
+$$
+\begin{align}
+E(r_t | r_{t-1}) &= 0 \\
+Var(r_t | r_{t-1}) &=  \omega + \alpha_1 r_{t-1}^2.
+\end{align}
+$$
+This is where the conditional heteroskedasticity comes from!
+
+## ARCH(1) Properties - Unconditional
+
+The unconditional properties of $r_t$ are:
+
+$$
+\begin{align}
+E(r_t ) &= 0 \\
+Var(r_t) &=  \alpha_0/(1-\alpha_0) \\
+E(r_t, r_{r-h}) &= 0
+\end{align}
+$$
+
+Ok, so what model does $r_t$ follow??
+
+
+## ARCH(1) Properties - What about $r_t^2$
+
+we can subtract the second equation from the square of the first to obtain,
+
+$$
+\begin{align}
+r_t^2 &= \omega + \alpha_1 r_{t-1}^2 + v_t. \\
+\end{align}
+$$
+In this equation, $v_t = \sigma_t^2 (w_t^2-1)$. Since $w_t^2$ is the square of a N(0,1) random variable $w_t^2-1$ is a shifted (mean 0) $\chi^2_1$ random variable.
+
+

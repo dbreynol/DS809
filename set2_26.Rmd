@@ -330,7 +330,7 @@ Let us calculate $\phi_{22}$ for the AR(1) model, $x_t = \phi x_{t-1} + w_t$.
 E(x_t - \beta x_{t-1})^2 &= \gamma(0) - 2\beta \gamma(1) + \beta^2 \gamma(0)
 \end{align}
 
-2. Minimize the expression above to find the estimator of $\beta$.
+2. Minimize the expression above (i.e., take the derivative with respect to $\beta$, set equal to zero and solve for $\beta$) to find the estimator of $\beta$.
 
 3. Plug in this estimated quantity to $\text{cor}(x_{t}-\hat{x}_{t-1}, x_{t-2} - \hat{x}_{t-2})$
 
@@ -572,10 +572,7 @@ and $\rho(h) = 0$ for $h > q$.
 
 2. For an AR(1), derive an expression for $\phi_{22}$ (the lag 2 partial ACF). Follow the steps in [AR(1) PACF]. See also page 100 in the textbook. 
 
-3. Using ACF & PACF for model ID. Complete the table with either _cuts off after $\ldots$_ or _tails off slowly_. Back up the 3 entries you fill in with either math or with empirical data (simulate data from the model type and show the relevant estimate quantities).
-
-
-4. Suppose you aim to estimate $\mathbf{\phi}$ for an AR(2) model in which $\hat{\mathbf{\gamma}} = (2.1,1.5,1.3)$ (i.e., $\hat{\gamma}(0)=2.1)$. What is the Yule-Walker estimate for $\mathbf{\phi}$ and also for $\sigma$? See [AR Estimation] for details.
+3. Suppose you aim to estimate $\mathbf{\phi}$ for an AR(2) model in which $\hat{\mathbf{\gamma}} = (2.1,1.5,1.3)$ (i.e., $\hat{\gamma}(0)=2.1)$. What is the Yule-Walker estimate for $\mathbf{\phi}$ and also for $\sigma$? See [AR Estimation] for details.
 
 $$
 \left[ \begin{array}{c} 1.5 \\ 1.3 \end{array} \right] = \begin{pmatrix} 2.1 & 1.5 \\ 1.5 & 2.1 \end{pmatrix} \times \left[ \begin{array}{c} \phi_1 \\ \phi_2 \end{array} \right]
@@ -588,7 +585,18 @@ sigma_hat = 2.1 - sum(phi_hat * c(1.5, 1.3)) # 0.98
 ```
 
 
-5. Using the Egyptian export data from class, compute the 95\% interval for the one period and 2 period ahead forecasts. Use the $\psi$ representation from [Forecast Errors]. You can find the $\phi$ values using <code>ARMAtoMA</code>. Validate your answers using <code>forecast::forecast</code>.
+4. Using the Egyptian export data, which you can access here:
+
+```{r echo=TRUE, eval=FALSE}
+library(fpp3)
+exp = global_economy %>% filter(Code == "EGY") %>% select(Exports)
+```
+
+First, plot the ACF and the PACF of the time series. Note observations.
+
+Second, fit an ARMA(2,1) model using the <code>forecast::Arima</code> function. What is the estimated model equation?
+
+Finally, compute point forecasts and their 95\% interval for one 2 period ahead forecasts. Use the $\psi$ representation from [Forecast Errors]. You can find the $\phi$ values using <code>ARMAtoMA</code>. Validate your answers using <code>forecast::forecast</code>.
 
 
 \begin{align}

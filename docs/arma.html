@@ -23,7 +23,7 @@
 <meta name="author" content="David Reynolds" />
 
 
-<meta name="date" content="2026-01-26" />
+<meta name="date" content="2026-02-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -392,7 +392,7 @@ and,</p>
 E(x_t - \beta x_{t-1})^2 &amp;= \gamma(0) - 2\beta \gamma(1) + \beta^2 \gamma(0)
 \end{align}\]</span></p>
 <ol start="2" style="list-style-type: decimal">
-<li><p>Minimize the expression above to find the estimator of <span class="math inline">\(\beta\)</span>.</p></li>
+<li><p>Minimize the expression above (i.e., take the derivative with respect to <span class="math inline">\(\beta\)</span>, set equal to zero and solve for <span class="math inline">\(\beta\)</span>) to find the estimator of <span class="math inline">\(\beta\)</span>.</p></li>
 <li><p>Plug in this estimated quantity to <span class="math inline">\(\text{cor}(x_{t}-\hat{x}_{t-1}, x_{t-2} - \hat{x}_{t-2})\)</span></p></li>
 </ol>
 </div>
@@ -535,15 +535,19 @@ x_{T+h} - \tilde{x}_{T+h}  &amp;= \sum_{j=0}^{h-1} \psi_j w_{T+h-j} \\
 <p>and <span class="math inline">\(\rho(h) = 0\)</span> for <span class="math inline">\(h &gt; q\)</span>.</p>
 <ol start="2" style="list-style-type: decimal">
 <li><p>For an AR(1), derive an expression for <span class="math inline">\(\phi_{22}\)</span> (the lag 2 partial ACF). Follow the steps in <a href="arma.html#ar1-pacf">AR(1) PACF</a>. See also page 100 in the textbook.</p></li>
-<li><p>Using ACF &amp; PACF for model ID. Complete the table with either <em>cuts off after <span class="math inline">\(\ldots\)</span></em> or <em>tails off slowly</em>. Back up the 3 entries you fill in with either math or with empirical data (simulate data from the model type and show the relevant estimate quantities).</p></li>
 <li><p>Suppose you aim to estimate <span class="math inline">\(\mathbf{\phi}\)</span> for an AR(2) model in which <span class="math inline">\(\hat{\mathbf{\gamma}} = (2.1,1.5,1.3)\)</span> (i.e., <span class="math inline">\(\hat{\gamma}(0)=2.1)\)</span>. What is the Yule-Walker estimate for <span class="math inline">\(\mathbf{\phi}\)</span> and also for <span class="math inline">\(\sigma\)</span>? See <a href="arma.html#ar-estimation">AR Estimation</a> for details.</p></li>
 </ol>
 <p><span class="math display">\[
 \left[ \begin{array}{c} 1.5 \\ 1.3 \end{array} \right] = \begin{pmatrix} 2.1 &amp; 1.5 \\ 1.5 &amp; 2.1 \end{pmatrix} \times \left[ \begin{array}{c} \phi_1 \\ \phi_2 \end{array} \right]
 \]</span></p>
-<ol start="5" style="list-style-type: decimal">
-<li>Using the Egyptian export data from class, compute the 95% interval for the one period and 2 period ahead forecasts. Use the <span class="math inline">\(\psi\)</span> representation from <a href="arma.html#forecast-errors">Forecast Errors</a>. You can find the <span class="math inline">\(\phi\)</span> values using <code>ARMAtoMA</code>. Validate your answers using <code>forecast::forecast</code>.</li>
+<ol start="4" style="list-style-type: decimal">
+<li>Using the Egyptian export data, which you can access here:</li>
 </ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="arma.html#cb7-1" tabindex="-1"></a><span class="fu">library</span>(fpp3)</span>
+<span id="cb7-2"><a href="arma.html#cb7-2" tabindex="-1"></a>exp <span class="ot">=</span> global_economy <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Code <span class="sc">==</span> <span class="st">&quot;EGY&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(Exports)</span></code></pre></div>
+<p>First, plot the ACF and the PACF of the time series. Note observations.</p>
+<p>Second, fit an ARMA(2,1) model using the <code>forecast::Arima</code> function. What is the estimated model equation?</p>
+<p>Finally, compute point forecasts and their 95% interval for one 2 period ahead forecasts. Use the <span class="math inline">\(\psi\)</span> representation from <a href="arma.html#forecast-errors">Forecast Errors</a>. You can find the <span class="math inline">\(\phi\)</span> values using <code>ARMAtoMA</code>. Validate your answers using <code>forecast::forecast</code>.</p>
 <p><span class="math display">\[\begin{align}
 \hat{x}_{T+h} \pm 1.96 \sqrt{ \hat{\sigma}^2_w \sum_{j=0}^{h-1} \psi_j^2 }
 \end{align}\]</span></p>
