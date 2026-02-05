@@ -364,7 +364,7 @@ visits$datestamp = ymd(visits$datestamp)
 
 
 
-```{r eval=FALSE, echo=F}
+```{r eval=FALSE, echo=T}
 
 df = inner_join(visits, conversions, by = c("datestamp", "country_code", "marketing_channel")) %>% 
   filter(country_code == "us") %>% 
@@ -390,7 +390,7 @@ df %>% mutate(std_visits = (visits - mean(visits))/sd(visits), std_conv = (conv 
 \end{align}
 where $m=2k+1$. The concept behind this technique is that observations that are close in time are likely to be close in value. Compute a moving average of order $m=13$ for the <code>fma::elec</code> dataframe. Plot the smoothed series along with the raw data in a single plot. 
 
-```{r echo=F, eval = F}
+```{r echo=T, eval = F}
 k = 6
 elec_T = stats::filter(fma::elec, filter = rep(1/13, 13), sides = 2)
 ```
@@ -412,7 +412,7 @@ You will again use the <code>fma::elec</code> dataframe and proceed in 3 steps:
 
 Provide your code that is clearly commented for each step as well as a plot that shows each of the three component series in three separate plots (hint: use <code>par(mfrow = c(1,3))</code> to make three plots in a row).
 
-```{r echo=F, eval = F}
+```{r echo=T, eval = F}
 detrend = fma::elec - elec_T
 monthly_means = tapply(detrend, cycle(detrend), function(x) mean(x, na.rm = T))
 elec_S = ts ( rep(monthly_means, length.out = length(fma::elec)), start = c(1956,1), frequency = 12)
@@ -440,7 +440,7 @@ From the text, we aim to compute:
 \hat{\gamma}_{xy}(h) = n^{-1} \sum_{t=1}^{n-h} (x_{t+h}-\bar{x})(y_t - \bar{y})
 \end{align}
 
-```{r echo=F, eval = F}
+```{r echo=T, eval = F}
 x = fred$gdp
 y = fred$shiller
 
@@ -468,7 +468,7 @@ print(round(my_ccf, 3))
 
 5. Write a function in R that takes two arguments: a time series ($y$) vector and a vector ($k$) specifying a set of lags. The output for this function is the autocorrelation of $y$ for each lag in $k$, using the formula in [Autocorrelation]. Compare the output of your function to the output from <code>(acf(y))</code>.
 
-```{r echo=F, eval=F}
+```{r echo=T, eval=F}
 
 # simulated data to test function
 y = arima.sim(n = 10, model = list(ar = c(.1,.2)))
