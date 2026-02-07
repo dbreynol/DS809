@@ -8,10 +8,11 @@
 
 The ARMA model we have seen assumes stationary data. Stationarity means 'not changing in time' in the context of time-series models. In a typical data analysis, however, we will not be assured that our data is stationary. Therefore, we need some methods to evaluate stationarity and also to deal with nonstationary data.
 
-We will discuss 2 common approaches to evaluating stationarity:
+We will discuss 3 common approaches to evaluating stationarity:
 
 1. Visual test
 2. Unit Root Test (ADF)
+3. KPSS
 
 ### Visual Test
 
